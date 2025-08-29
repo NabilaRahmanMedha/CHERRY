@@ -16,6 +16,4 @@
 
         <Button Text="Create Account" Clicked="OnRegisterNavigateClicked" />
     </VerticalStackLayout>
-
-
-	</ContentPage>
+</ContentPage>
