@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="CHERRY.Views.MainPage"
+    Title="CHERRY Dashboard">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="15">
+
+            <Label Text="Welcome to CHERRY 🌸"
+                   FontSize="28"
+                   HorizontalOptions="Center" />
+
+            <!-- Cycle Tracking -->
+            <Button Text="Log Period" 
+                    BackgroundColor="HotPink" 
+                    TextColor="White"
+                    Clicked="OnLogPeriodClicked"/>
+
+            <!-- Calendar -->
+            <Button Text="View Cycle Calendar"
+                    BackgroundColor="LightPink"
+                    TextColor="Black"
+                    Clicked="OnCalendarClicked"/>
+
+            <!-- Settings -->
+            <Button Text="Settings"
+                    BackgroundColor="Gray"
+                    TextColor="White"
+                    Clicked="OnSettingsClicked"/>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
