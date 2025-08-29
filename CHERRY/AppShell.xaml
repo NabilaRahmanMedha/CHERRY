@@ -1,14 +1,24 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<Shell
-    x:Class="CHERRY.AppShell"
-    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:views="clr-namespace:CHERRY.Views"
-    Title="CHERRY">
+<Shell xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+       xmlns:views="clr-namespace:CHERRY.Views"
+       x:Class="CHERRY.AppShell"
+       BackgroundColor="White"
+       Title="CHERRY">
 
-    <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate views:MainPage}"
-        Route="MainPage" />
+    <TabBar>
+        <Tab Title="Cycle" >
+            <ShellContent ContentTemplate="{DataTemplate views:CyclePage}" />
+        </Tab>
+        <Tab Title="Calendar" >
+            <ShellContent ContentTemplate="{DataTemplate views:CalendarPage}" />
+        </Tab>
+        <Tab Title="Reports" >
+            <ShellContent ContentTemplate="{DataTemplate views:ReportsPage}" />
+        </Tab>
+        <Tab Title="Read" >
+            <ShellContent ContentTemplate="{DataTemplate views:ReadPage}" />
+        </Tab>
+    </TabBar>
 
 </Shell>

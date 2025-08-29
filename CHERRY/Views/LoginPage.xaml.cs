@@ -1,22 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CHERRY.Services;
+﻿using CHERRY.Services;
 using Microsoft.Maui.Controls;
-using CHERRY.Models;
 
 namespace CHERRY.Views
 {
-
     public partial class LoginPage : ContentPage
     {
         private readonly DatabaseService _db;
 
         public LoginPage(DatabaseService db)
         {
-            InitializeComponent();
+            InitializeComponent(); // This connects with your XAML
             _db = db;
         }
 
@@ -30,8 +23,8 @@ namespace CHERRY.Views
             if (user != null)
             {
                 await DisplayAlert("Welcome", $"Hello {user.Email}", "OK");
-                // Navigate to Main Dashboard
-                await Navigation.PushAsync(new MainPage());
+                // Navigate to AppShell instead of MainPage
+                Application.Current.MainPage = new AppShell();
             }
             else
             {
@@ -44,5 +37,4 @@ namespace CHERRY.Views
             await Navigation.PushAsync(new RegistrationPage(_db));
         }
     }
-
 }
