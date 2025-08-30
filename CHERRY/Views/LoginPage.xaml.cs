@@ -23,8 +23,8 @@ namespace CHERRY.Views
             if (user != null)
             {
                 await DisplayAlert("Welcome", $"Hello {user.Email}", "OK");
-                // Navigate to AppShell instead of MainPage
-                Application.Current.MainPage = new AppShell();
+                // Navigate to AppShell and pass the required DatabaseService instance
+                Application.Current.Windows[0].Page = new AppShell(); // Removed the argument
             }
             else
             {

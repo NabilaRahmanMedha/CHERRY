@@ -1,5 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
-using CHERRY.Services;
+﻿using CHERRY.Services;
+using CHERRY.Views;
+using Microsoft.Extensions.Logging;
 
 namespace CHERRY
 {
@@ -8,13 +9,33 @@ namespace CHERRY
         public static MauiApp CreateMauiApp()
         {
             var builder = MauiApp.CreateBuilder();
-
             builder
-                .UseMauiApp<App>();
+                .UseMauiApp<App>()
+                .ConfigureFonts(fonts =>
+                {
+                    fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
+                    fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+                });
 
-            // Setup DB path
-            string dbPath = Path.Combine(FileSystem.AppDataDirectory, "periodtracker.db3");
-            builder.Services.AddSingleton(new DatabaseService(dbPath));
+            // Register services
+            builder.Services.AddSingleton<DatabaseService>();
+            builder.Services.AddSingleton<UserService>();
+
+            // Register pages
+            builder.Services.AddTransient<LoginPage>();
+            builder.Services.AddTransient<RegistrationPage>();
+            builder.Services.AddTransient<ProfilePage>();
+            builder.Services.AddTransient<EditProfilePage>();
+            builder.Services.AddTransient<CyclePage>();
+            builder.Services.AddTransient<CalendarPage>();
+            builder.Services.AddTransient<ReportsPage>();
+
+            // Register AppShell
+            builder.Services.AddSingleton<AppShell>();
+
+#if DEBUG
+            builder.Logging.AddDebug();
+#endif
 
             return builder.Build();
         }
