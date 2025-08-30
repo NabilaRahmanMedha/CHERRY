@@ -128,13 +128,14 @@ namespace CHERRY.Views
 
         private async void OnLogPeriodClicked(object sender, EventArgs e)
         {
-            await Navigation.PushAsync(new CalendarPage());
+            await Shell.Current.GoToAsync("//CalendarPage");
         }
 
         private async void OnCalendarClicked(object sender, EventArgs e)
         {
-            await Navigation.PushAsync(new CalendarPage());
+            await Shell.Current.GoToAsync("//CalendarPage");
         }
+
 
         private async void OnSettingsClicked(object sender, EventArgs e)
         {
