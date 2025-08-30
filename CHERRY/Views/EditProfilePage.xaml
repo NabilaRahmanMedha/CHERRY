@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="CHERRY.Views.EditProfilePage"
+             Title="Edit Profile"
+             BackgroundColor="#F8F9FA">
+
+	<ScrollView>
+		<StackLayout Padding="20" Spacing="15">
+
+			<!-- Profile Image -->
+			<Frame HorizontalOptions="Center" CornerRadius="50" HeightRequest="100" WidthRequest="100"
+                   BackgroundColor="#EEEEEE" Margin="0,0,0,20">
+				<Image x:Name="ProfileImage" Aspect="AspectFill" HeightRequest="100" WidthRequest="100"
+                       Source="default_profile.png"/>
+
+				<Button Text="✏️" CornerRadius="50" WidthRequest="30" HeightRequest="30"
+                        BackgroundColor="#6A5ACD" TextColor="White" FontSize="12"
+                        HorizontalOptions="End" VerticalOptions="End"
+                        Clicked="OnChangePhotoClicked"/>
+			</Frame>
+
+			<!-- Nickname -->
+			<Label Text="Nickname" FontSize="14" TextColor="#333333" Margin="0,10,0,5"/>
+			<Entry x:Name="NicknameEntry" Placeholder="Enter your nickname" TextColor="#333333"/>
+
+			<!-- Email -->
+			<Label Text="Email" FontSize="14" TextColor="#333333" Margin="0,20,0,5"/>
+			<Entry x:Name="EmailEntry" Placeholder="Enter your email" Keyboard="Email" TextColor="#333333"/>
+
+			<!-- Period Length -->
+			<Label Text="Period Length (days)" FontSize="14" TextColor="#333333" Margin="0,20,0,5"/>
+			<Entry x:Name="PeriodLengthEntry" Placeholder="e.g., 5" Keyboard="Numeric" TextColor="#333333"/>
+
+			<!-- Cycle Length -->
+			<Label Text="Cycle Length (days)" FontSize="14" TextColor="#333333" Margin="0,20,0,5"/>
+			<Entry x:Name="CycleLengthEntry" Placeholder="e.g., 28" Keyboard="Numeric" TextColor="#333333"/>
+
+			<!-- Save Button -->
+			<Button Text="Save Changes" BackgroundColor="#6A5ACD" TextColor="White"
+                    CornerRadius="10" Padding="20,10" FontAttributes="Bold"
+                    Margin="0,30,0,20" Clicked="OnSaveClicked"/>
+
+			<!-- Cancel Button -->
+			<Button Text="Cancel" BackgroundColor="Transparent" TextColor="#6A5ACD"
+                    CornerRadius="10" Padding="20,10" FontAttributes="Bold"
+                    Clicked="OnCancelClicked"/>
+		</StackLayout>
+	</ScrollView>
+</ContentPage>

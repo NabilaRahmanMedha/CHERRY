@@ -20,10 +20,9 @@
         <Tab Title="Reports" Route="ReportsPage">
             <ShellContent ContentTemplate="{DataTemplate views:ReportsPage}" />
         </Tab>
-        <Tab Title="Read" Route="ReadPage">
-            <ShellContent ContentTemplate="{DataTemplate views:ReadPage}" />
+        <Tab Title="Profile" Route="ProfilePage">
+            <ShellContent ContentTemplate="{DataTemplate views:ProfilePage}" />
         </Tab>
     </TabBar>
-
 
 </Shell>
