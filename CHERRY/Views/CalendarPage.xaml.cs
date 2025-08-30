@@ -205,22 +205,24 @@ namespace CHERRY.Views
                 bool isToday = currentDay.Date == DateTime.Today.Date;
                 bool isFutureDate = currentDay.Date > DateTime.Today.Date;
 
-                var dayFrame = new Frame
+                Border dayBorder = new Border
                 {
                     Style = (Style)Resources["DayFrameStyle"]
                 };
 
                 if (isPeriodDay)
-                    dayFrame.BackgroundColor = (Color)Resources["PeriodColor"];
+                    dayBorder.BackgroundColor = (Color)Resources["PeriodColor"];
                 else if (isPredictedDay)
-                    dayFrame.BackgroundColor = (Color)Resources["PredictedPeriodColor"];
+                    dayBorder.BackgroundColor = (Color)Resources["PredictedPeriodColor"];
                 else if (isOvulationDay)
-                    dayFrame.BackgroundColor = (Color)Resources["OvulationColor"];
+                    dayBorder.BackgroundColor = (Color)Resources["OvulationColor"];
                 else if (isFutureDate)
-                    dayFrame.BackgroundColor = (Color)Resources["FutureDateColor"];
+                    dayBorder.BackgroundColor = (Color)Resources["LightCreamColor"];
 
                 if (isToday)
-                    dayFrame.BorderColor = (Color)Resources["TodayBorderColor"];
+                {
+                    dayBorder.Stroke = (Color)Resources["TodayBorderColor"];
+                }
 
                 var dayLabel = new Label
                 {
@@ -229,26 +231,26 @@ namespace CHERRY.Views
                 };
 
                 if (isFutureDate)
-                    dayLabel.TextColor = (Color)Resources["FutureTextColor"];
+                    dayLabel.TextColor = (Color)Resources["DarkGrayTextColor"];
                 else if (isPredictedDay)
                     dayLabel.TextColor = (Color)Resources["GrayTextColor"];
 
-                dayFrame.Content = dayLabel;
+                dayBorder.Content = dayLabel;
 
                 if (!isFutureDate)
                 {
                     var tapGesture = new TapGestureRecognizer();
                     tapGesture.Tapped += (s, e) => OnDayClicked(currentDay);
-                    dayFrame.GestureRecognizers.Add(tapGesture);
+                    dayBorder.GestureRecognizers.Add(tapGesture);
                 }
                 else if (isPredictedDay || isOvulationDay)
                 {
                     var tapGesture = new TapGestureRecognizer();
                     tapGesture.Tapped += (s, e) => OnFutureDayTapped(currentDay, isPredictedDay, isOvulationDay);
-                    dayFrame.GestureRecognizers.Add(tapGesture);
+                    dayBorder.GestureRecognizers.Add(tapGesture);
                 }
 
-                CalendarGrid.Add(dayFrame, col, row);
+                CalendarGrid.Add(dayBorder, col, row);
                 col++;
 
                 if (col > 6)
