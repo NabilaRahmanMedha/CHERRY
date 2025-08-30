@@ -4,21 +4,26 @@
        xmlns:views="clr-namespace:CHERRY.Views"
        x:Class="CHERRY.AppShell"
        BackgroundColor="White"
-       Title="CHERRY">
+       Title="CHERRY"
+       Shell.TabBarBackgroundColor="White"
+       Shell.TabBarForegroundColor="Black"
+       Shell.TabBarTitleColor="HotPink"
+       Shell.TabBarUnselectedColor="Gray">
 
     <TabBar>
-        <Tab Title="Cycle" >
+        <Tab Title="Cycle" Route="CyclePage">
             <ShellContent ContentTemplate="{DataTemplate views:CyclePage}" />
         </Tab>
-        <Tab Title="Calendar" >
+        <Tab Title="Calendar" Route="CalendarPage">
             <ShellContent ContentTemplate="{DataTemplate views:CalendarPage}" />
         </Tab>
-        <Tab Title="Reports" >
+        <Tab Title="Reports" Route="ReportsPage">
             <ShellContent ContentTemplate="{DataTemplate views:ReportsPage}" />
         </Tab>
-        <Tab Title="Read" >
+        <Tab Title="Read" Route="ReadPage">
             <ShellContent ContentTemplate="{DataTemplate views:ReadPage}" />
         </Tab>
     </TabBar>
+
 
 </Shell>
