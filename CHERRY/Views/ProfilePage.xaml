@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="CHERRY.Views.ProfilePage"
+             Title="Profile"
+             BackgroundColor="#F8F9FA">
+
+	<ScrollView>
+		<StackLayout Padding="20" Spacing="20">
+
+			<!-- Profile Header -->
+			<Frame CornerRadius="15" BackgroundColor="White" Padding="20" HasShadow="True">
+				<Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto" ColumnSpacing="20">
+
+					<!-- Profile Image -->
+					<Frame Grid.Row="0" Grid.Column="0" Grid.RowSpan="2"
+                           CornerRadius="50" HeightRequest="100" WidthRequest="100"
+                           BackgroundColor="#EEEEEE" HorizontalOptions="Center" VerticalOptions="Center">
+						<Image x:Name="ProfileImage" Aspect="AspectFill"
+                               HeightRequest="100" WidthRequest="100" Source="default_profile.png" />
+					</Frame>
+
+					<!-- Edit Photo Button -->
+					<Button Grid.Row="0" Grid.Column="0" Grid.RowSpan="2"
+                            Text="✏️" CornerRadius="50" WidthRequest="30" HeightRequest="30"
+                            BackgroundColor="#6A5ACD" TextColor="White" FontSize="12"
+                            HorizontalOptions="End" VerticalOptions="End"
+                            Clicked="OnEditPhotoClicked"/>
+
+					<!-- User Info -->
+					<Label x:Name="NicknameLabel" Grid.Row="0" Grid.Column="1"
+                           Text="Set Nickname" FontSize="20" FontAttributes="Bold"
+                           TextColor="#333333" VerticalOptions="End"/>
+
+					<Label x:Name="EmailLabel" Grid.Row="1" Grid.Column="1"
+                           Text="user@example.com" FontSize="14" TextColor="#666666"
+                           VerticalOptions="Start"/>
+
+					<!-- Edit Profile Button -->
+					<Button Grid.Row="1" Grid.Column="1" Text="Edit Profile"
+                            BackgroundColor="Transparent" TextColor="#6A5ACD" FontSize="12"
+                            HorizontalOptions="End" VerticalOptions="End"
+                            Clicked="OnEditProfileClicked"/>
+				</Grid>
+			</Frame>
+
+			<!-- Period and Cycle Stats -->
+			<Grid ColumnDefinitions="*,*" ColumnSpacing="15">
+				<!-- Period Length -->
+				<Frame CornerRadius="10" BackgroundColor="White" Padding="15" HasShadow="True">
+					<VerticalStackLayout Spacing="5">
+						<Label Text="PERIOD LENGTH" FontSize="12" TextColor="#666666" HorizontalOptions="Center"/>
+						<Label x:Name="PeriodLengthLabel" Text="5 days" FontSize="20" FontAttributes="Bold"
+                               TextColor="#6A5ACD" HorizontalOptions="Center"/>
+					</VerticalStackLayout>
+				</Frame>
+
+				<!-- Cycle Length -->
+				<Frame CornerRadius="10" BackgroundColor="White" Padding="15" HasShadow="True">
+					<VerticalStackLayout Spacing="5">
+						<Label Text="CYCLE LENGTH" FontSize="12" TextColor="#666666" HorizontalOptions="Center"/>
+						<Label x:Name="CycleLengthLabel" Text="28 days" FontSize="20" FontAttributes="Bold"
+                               TextColor="#6A5ACD" HorizontalOptions="Center"/>
+					</VerticalStackLayout>
+				</Frame>
+			</Grid>
+
+			<!-- Settings Options -->
+			<Label Text="SETTINGS" FontSize="16" FontAttributes="Bold" TextColor="#333333" Margin="0,10,0,5"/>
+
+			<Frame CornerRadius="10" BackgroundColor="White" Padding="15" HasShadow="True">
+				<VerticalStackLayout Spacing="15">
+
+					<Grid ColumnDefinitions="*,Auto">
+						<Label Text="My Goals" TextColor="#333333"/>
+						<ImageButton Grid.Column="1" Source="arrow_right.png" BackgroundColor="Transparent"
+                                    Clicked="OnMyGoalsClicked"/>
+					</Grid>
+
+					<BoxView HeightRequest="1" Color="#EEEEEE" HorizontalOptions="Fill"/>
+
+					<Grid ColumnDefinitions="*,Auto">
+						<Label Text="Subscription" TextColor="#333333"/>
+						<ImageButton Grid.Column="1" Source="arrow_right.png" BackgroundColor="Transparent"
+                                    Clicked="OnSubscriptionClicked"/>
+					</Grid>
+
+					<BoxView HeightRequest="1" Color="#EEEEEE" HorizontalOptions="Fill"/>
+
+					<Grid ColumnDefinitions="*,Auto">
+						<Label Text="Health Report" TextColor="#333333"/>
+						<ImageButton Grid.Column="1" Source="arrow_right.png" BackgroundColor="Transparent"
+                                    Clicked="OnHealthReportClicked"/>
+					</Grid>
+
+					<BoxView HeightRequest="1" Color="#EEEEEE" HorizontalOptions="Fill"/>
+
+					<Grid ColumnDefinitions="*,Auto">
+						<Label Text="Terms and Conditions" TextColor="#333333"/>
+						<ImageButton Grid.Column="1" Source="arrow_right.png" BackgroundColor="Transparent"
+                                    Clicked="OnTermsClicked"/>
+					</Grid>
+
+					<BoxView HeightRequest="1" Color="#EEEEEE" HorizontalOptions="Fill"/>
+
+					<Grid ColumnDefinitions="*,Auto">
+						<Label Text="Delete Profile" TextColor="#FF0000"/>
+						<ImageButton Grid.Column="1" Source="arrow_right.png" BackgroundColor="Transparent"
+                                    Clicked="OnDeleteProfileClicked"/>
+					</Grid>
+				</VerticalStackLayout>
+			</Frame>
+
+			<!-- Logout Button -->
+			<Button Text="Log Out" BackgroundColor="#6A5ACD" TextColor="White"
+                    CornerRadius="10" Padding="20,10" FontAttributes="Bold"
+                    Margin="0,30,0,20" Clicked="OnLogoutClicked"/>
+		</StackLayout>
+	</ScrollView>
+</ContentPage>

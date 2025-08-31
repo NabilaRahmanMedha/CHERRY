@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using SQLite;
 using CHERRY.Models;
 using System.Security.Cryptography;
+using Microsoft.Maui.Storage;
 
 namespace CHERRY.Services
 {
@@ -13,10 +14,28 @@ namespace CHERRY.Services
     {
         private readonly SQLiteAsyncConnection _db;
 
-        public DatabaseService(string dbPath)
+        public DatabaseService()
         {
+            var dbPath = Path.Combine(FileSystem.AppDataDirectory, "cherry.db3");
             _db = new SQLiteAsyncConnection(dbPath);
-            _db.CreateTableAsync<User>().Wait();
+            InitializeDatabase();
+        }
+
+        private async void InitializeDatabase()
+        {
+            // Create User table if it doesn't exist
+            await _db.CreateTableAsync<User>();
+
+            // Check if we need to add new columns to existing table
+            var tableInfo = await _db.GetTableInfoAsync("User");
+            if (!tableInfo.Any(c => c.Name == "Nickname"))
+            {
+                // Add new columns to existing table
+                await _db.ExecuteAsync("ALTER TABLE User ADD COLUMN Nickname TEXT");
+                await _db.ExecuteAsync("ALTER TABLE User ADD COLUMN ProfileImagePath TEXT");
+                await _db.ExecuteAsync("ALTER TABLE User ADD COLUMN PeriodLength INTEGER DEFAULT 0");
+                await _db.ExecuteAsync("ALTER TABLE User ADD COLUMN CycleLength INTEGER DEFAULT 0");
+            }
         }
 
         private string HashPassword(string password)
@@ -29,12 +48,16 @@ namespace CHERRY.Services
         public async Task<bool> RegisterUserAsync(string email, string password)
         {
             var existingUser = await _db.Table<User>().FirstOrDefaultAsync(u => u.Email == email);
-            if (existingUser != null) return false; 
+            if (existingUser != null) return false;
 
             var newUser = new User
             {
                 Email = email,
-                PasswordHash = HashPassword(password)
+                PasswordHash = HashPassword(password),
+                Nickname = "",
+                ProfileImagePath = "",
+                PeriodLength = 0,
+                CycleLength = 0
             };
 
             await _db.InsertAsync(newUser);
@@ -46,6 +69,45 @@ namespace CHERRY.Services
             var hashedPassword = HashPassword(password);
             return await _db.Table<User>()
                             .FirstOrDefaultAsync(u => u.Email == email && u.PasswordHash == hashedPassword);
+        }
+
+        // New method to get user by email
+        public async Task<User?> GetUserByEmailAsync(string email)
+        {
+            return await _db.Table<User>().FirstOrDefaultAsync(u => u.Email == email);
+        }
+
+        // New method to update user profile
+        public async Task<bool> UpdateUserAsync(User user)
+        {
+            try
+            {
+                await _db.UpdateAsync(user);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        // New method to delete user
+        public async Task<bool> DeleteUserAsync(string email)
+        {
+            try
+            {
+                var user = await GetUserByEmailAsync(email);
+                if (user != null)
+                {
+                    await _db.DeleteAsync(user);
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
     }
 }
