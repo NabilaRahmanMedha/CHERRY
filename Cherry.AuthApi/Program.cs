@@ -12,7 +12,9 @@ var config = builder.Configuration;
 
 builder.Services.AddDbContext<AppDbContext>(opt =>
 {
-	opt.UseSqlite(config.GetConnectionString("Default"));
+	var cs = config.GetConnectionString("Default");
+	var serverVersion = ServerVersion.AutoDetect(cs);
+	opt.UseMySql(cs, serverVersion);
 });
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
