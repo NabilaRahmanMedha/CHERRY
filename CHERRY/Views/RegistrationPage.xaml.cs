@@ -11,12 +11,12 @@ namespace CHERRY.Views
 {
     public partial class RegistrationPage : ContentPage
     {
-        private readonly DatabaseService _db;
+        private readonly AuthService _auth;
 
-        public RegistrationPage(DatabaseService db)
+        public RegistrationPage(AuthService auth)
         {
             InitializeComponent();
-            _db = db;
+            _auth = auth;
         }
 
         private async void OnRegisterClicked(object sender, EventArgs e)
@@ -30,11 +30,11 @@ namespace CHERRY.Views
                 return;
             }
 
-            bool success = await _db.RegisterUserAsync(email, password);
+            bool success = await _auth.RegisterAsync(email, password);
             if (success)
             {
                 await DisplayAlert("Success", "Account created!", "OK");
-                await Navigation.PushAsync(new LoginPage(_db));
+                await Navigation.PushAsync(new LoginPage(_auth));
             }
             else
             {

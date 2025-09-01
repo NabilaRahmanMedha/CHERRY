@@ -5,12 +5,12 @@ namespace CHERRY.Views
 {
     public partial class LoginPage : ContentPage
     {
-        private readonly DatabaseService _db;
+        private readonly AuthService _auth;
 
-        public LoginPage(DatabaseService db)
+        public LoginPage(AuthService auth)
         {
-            InitializeComponent(); // This connects with your XAML
-            _db = db;
+            InitializeComponent();
+            _auth = auth;
         }
 
         private async void OnLoginClicked(object sender, EventArgs e)
@@ -18,13 +18,12 @@ namespace CHERRY.Views
             var email = EmailEntry.Text;
             var password = PasswordEntry.Text;
 
-            var user = await _db.LoginUserAsync(email, password);
+            var ok = await _auth.LoginAsync(email, password);
 
-            if (user != null)
+            if (ok)
             {
-                await DisplayAlert("Welcome", $"Hello {user.Email}", "OK");
-                // Navigate to AppShell and pass the required DatabaseService instance
-                Application.Current.Windows[0].Page = new AppShell(); // Removed the argument
+                await DisplayAlert("Welcome", $"Hello {email}", "OK");
+                Application.Current.Windows[0].Page = new AppShell();
             }
             else
             {
@@ -34,7 +33,7 @@ namespace CHERRY.Views
 
         private async void OnRegisterNavigateClicked(object sender, EventArgs e)
         {
-            await Navigation.PushAsync(new RegistrationPage(_db));
+            await Navigation.PushAsync(new RegistrationPage(_auth));
         }
     }
 }
