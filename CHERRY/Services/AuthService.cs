@@ -28,11 +28,13 @@ namespace CHERRY.Services
 			return await StoreTokensAsync(res, email);
 		}
 
-		public async Task LogoutAsync()
+
+		public Task LogoutAsync()
 		{
-			await SecureStorage.Default.RemoveAsync(AccessTokenKey);
-			await SecureStorage.Default.RemoveAsync(RefreshTokenKey);
-			await SecureStorage.Default.RemoveAsync(EmailKey);
+			SecureStorage.Default.Remove(AccessTokenKey);
+			SecureStorage.Default.Remove(RefreshTokenKey);
+			SecureStorage.Default.Remove(EmailKey);
+			return Task.CompletedTask;
 		}
 
 		public async Task<string?> GetAccessTokenAsync() => await SecureStorage.Default.GetAsync(AccessTokenKey);

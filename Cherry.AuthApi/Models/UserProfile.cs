@@ -1,7 +1,10 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Cherry.AuthApi.Models
 {
 	public class UserProfile
 	{
+		[Key]
 		public string UserId { get; set; } = default!;
 		public ApplicationUser? User { get; set; }
 
