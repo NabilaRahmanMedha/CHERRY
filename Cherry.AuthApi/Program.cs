@@ -22,6 +22,10 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {
 	options.Password.RequiredLength = 6;
 	options.Password.RequireNonAlphanumeric = false;
+	options.Password.RequireDigit = false;
+	options.Password.RequireLowercase = false;
+	options.Password.RequireUppercase = false;
+	options.Password.RequiredUniqueChars = 0;
 	options.User.RequireUniqueEmail = true;
 })
 	.AddEntityFrameworkStores<AppDbContext>()
@@ -71,13 +75,10 @@ using (var scope = app.Services.CreateScope())
 	await SeedData.SeedAsync(roleMgr, userMgr);
 }
 
-if (app.Environment.IsDevelopment())
-{
-	app.UseSwagger();
-	app.UseSwaggerUI();
-}
+// Enable Swagger in all environments so it works even when ASPNETCORE_ENVIRONMENT is Production
+app.UseSwagger();
+app.UseSwaggerUI();
 
-app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
