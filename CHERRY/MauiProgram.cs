@@ -20,6 +20,8 @@ namespace CHERRY
             // Register services
             builder.Services.AddSingleton<DatabaseService>();
             builder.Services.AddSingleton<UserService>();
+            builder.Services.AddSingleton(sp => new HttpClient { BaseAddress = new Uri("https://localhost:5001/") });
+            builder.Services.AddSingleton<AuthService>();
 
             // Register pages
             builder.Services.AddTransient<LoginPage>();
