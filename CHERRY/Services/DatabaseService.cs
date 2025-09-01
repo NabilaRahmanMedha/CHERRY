@@ -7,6 +7,7 @@ using SQLite;
 using CHERRY.Models;
 using System.Security.Cryptography;
 using Microsoft.Maui.Storage;
+using System.Diagnostics;
 
 namespace CHERRY.Services
 {
@@ -17,8 +18,14 @@ namespace CHERRY.Services
         public DatabaseService()
         {
             var dbPath = Path.Combine(FileSystem.AppDataDirectory, "cherry.db3");
+            Debug.WriteLine("=== DB PATH: " + dbPath + " ===");
             _db = new SQLiteAsyncConnection(dbPath);
+
+            
             InitializeDatabase();
+            
+           
+
         }
 
         private async void InitializeDatabase()
