@@ -4,7 +4,7 @@ using Microsoft.Maui.Controls;
 
 namespace CHERRY
 {
-    public partial class App : Application
+    public partial class App : Microsoft.Maui.Controls.Application
     {
         private readonly AuthService _auth;
 
@@ -14,7 +14,7 @@ namespace CHERRY
             _auth = auth;
 
             // Set the main page with navigation
-            MainPage = new NavigationPage(new LoginPage(_auth));
+            Microsoft.Maui.Controls.Application.Current.MainPage = new NavigationPage(new LoginPage(_auth));
         }
 
         protected override Window CreateWindow(IActivationState? activationState)

@@ -151,7 +151,7 @@ namespace CHERRY.Views
                         SecureStorage.Remove("user_email");
 
                         // Navigate to login page
-                        Application.Current.MainPage = new LoginPage(ServiceHelper.GetService<AuthService>());
+                        Microsoft.Maui.Controls.Application.Current.MainPage = new LoginPage(ServiceHelper.GetService<AuthService>());
                     }
                     else
                     {
@@ -170,7 +170,7 @@ namespace CHERRY.Views
                 SecureStorage.Remove("user_email");
 
                 // Navigate to login page
-                Application.Current.MainPage = new LoginPage(ServiceHelper.GetService<AuthService>());
+                Microsoft.Maui.Controls.Application.Current.MainPage = new LoginPage(ServiceHelper.GetService<AuthService>());
             }
         }
     }
