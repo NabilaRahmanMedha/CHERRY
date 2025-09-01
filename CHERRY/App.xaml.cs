@@ -6,15 +6,15 @@ namespace CHERRY
 {
     public partial class App : Application
     {
-        private readonly DatabaseService _db;
+        private readonly AuthService _auth;
 
-        public App(DatabaseService db)
+        public App(AuthService auth)
         {
             InitializeComponent(); // Ensure this method is defined in App.xaml
-            _db = db;
+            _auth = auth;
 
             // Set the main page with navigation
-            MainPage = new NavigationPage(new LoginPage(_db));
+            MainPage = new NavigationPage(new LoginPage(_auth));
         }
 
         protected override Window CreateWindow(IActivationState? activationState)
