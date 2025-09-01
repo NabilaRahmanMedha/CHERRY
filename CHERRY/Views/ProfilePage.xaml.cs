@@ -150,8 +150,8 @@ namespace CHERRY.Views
                         // Clear secure storage
                         SecureStorage.Remove("user_email");
 
-                        // Navigate to login page
-                        Application.Current.MainPage = new LoginPage(_db);
+                        // Navigate to login page (AuthService will be resolved via DI if needed)
+                        Application.Current.MainPage = new LoginPage((App.Current as App)!.Services.GetService<AuthService>()!);
                     }
                     else
                     {
@@ -170,7 +170,7 @@ namespace CHERRY.Views
                 SecureStorage.Remove("user_email");
 
                 // Navigate to login page
-                Application.Current.MainPage = new LoginPage(_db);
+                Application.Current.MainPage = new LoginPage((App.Current as App)!.Services.GetService<AuthService>()!);
             }
         }
     }
