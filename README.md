@@ -1,5 +1,5 @@
 # **CHERRY**  
-**A simple go to mobile application for period and cycle trackig**
+**A simple go to mobile application for period and cycle tracking**
 
 ---
 
@@ -7,7 +7,7 @@
 | Name                     | ID Number     | Email                                   
 |--------------------------|---------------|-----------------------------------------|
 | **Nabila Rahman**        | 20220104001   | rahman.nabilamedha@gmail.com            |
-| **Arkanullah Saad**      | 20220104018   | arkanullah.cse.20220104011@aust.edu     |
+| **Arkanullah Saad**      | 20220104011   | arkanullah.cse.20220104011@aust.edu     |
 | **Hridoy Nandi**         | 20220104019   | hrkisdead01221@gmail.com                |
 | **Khairun Nahar Shila**  | 20220104020   | kamrunhasan12@gmail.com                 |
 
