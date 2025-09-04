@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Maui;
 using Microsoft.Maui.Controls.Hosting;
 using Microsoft.Maui.Hosting;
+using Microcharts.Maui;
 
 namespace CHERRY
 {
@@ -18,7 +19,8 @@ namespace CHERRY
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
-                });
+                })
+            .UseMicrocharts();
 
             // Register services
             builder.Services.AddSingleton<DatabaseService>();

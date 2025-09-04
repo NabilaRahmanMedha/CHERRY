@@ -1,13 +1,208 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:charts="clr-namespace:Microcharts.Maui;assembly=Microcharts.Maui"
              x:Class="CHERRY.Views.ReportsPage"
-             Title="Reports">
+             Title="Cycle Reports">
 
-    <VerticalStackLayout Padding="20">
-        <Label Text="Reports Page"
-               FontSize="24"
-               HorizontalOptions="Center"
-               TextColor="Purple"/>
-    </VerticalStackLayout>
+    <ContentPage.Resources>
+        <!-- Color Resources -->
+        <Color x:Key="PrimaryColor">#6A5ACD</Color>
+        <Color x:Key="PeriodColor">#ff809b</Color>
+        <Color x:Key="PredictedPeriodColor">#FFD6DC</Color>
+        <Color x:Key="OvulationColor">#E0BBE4</Color>
+        <Color x:Key="FutureDateColor">#DBD4CC</Color>
+        <Color x:Key="FutureTextColor">#CCCCCC</Color>
+        <Color x:Key="TodayBorderColor">#1f1657</Color>
+        <Color x:Key="PredictedBorderColor">#ff809b</Color>
+        <Color x:Key="GrayTextColor">#666666</Color>
+        <Color x:Key="DarkTextColor">#333333</Color>
+        <Color x:Key="LightCreamColor">#FFEDCE</Color>
+        <Color x:Key="DarkGrayTextColor">#444444</Color>
+        <Color x:Key="NormalColor">#4CAF50</Color>
+        <Color x:Key="ShortColor">#FF5252</Color>
+        <Color x:Key="LongColor">#FF9800</Color>
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="20">
+
+            <!-- Cycle Trends Chart -->
+            <Frame BackgroundColor="White" CornerRadius="10" Padding="15" HasShadow="True">
+                <VerticalStackLayout Spacing="15">
+                    <Label Text="Cycle Trends" 
+                           TextColor="{StaticResource PrimaryColor}"
+                           FontSize="18" 
+                           FontAttributes="Bold" 
+                           HorizontalOptions="Center" />
+
+                    <charts:ChartView x:Name="CycleLengthChart"
+                                     HeightRequest="250"
+                                     HorizontalOptions="FillAndExpand" />
+
+                    <!-- Chart Legend -->
+                    <Grid ColumnDefinitions="*, *, *" ColumnSpacing="5" HorizontalOptions="Center">
+                        <!-- Normal -->
+                        <Frame BackgroundColor="Transparent" Padding="5" HorizontalOptions="Center">
+                            <HorizontalStackLayout Spacing="5">
+                                <BoxView Color="{StaticResource NormalColor}" WidthRequest="12" HeightRequest="12" 
+                                         CornerRadius="6" VerticalOptions="Center"/>
+                                <Label Text="Normal (21-35)" 
+                                       TextColor="{StaticResource DarkTextColor}"
+                                       FontSize="12"
+                                       VerticalOptions="Center"/>
+                            </HorizontalStackLayout>
+                        </Frame>
+
+                        <!-- Too Short -->
+                        <Frame BackgroundColor="Transparent" Padding="5" HorizontalOptions="Center" Grid.Column="1">
+                            <HorizontalStackLayout Spacing="5">
+                                <BoxView Color="{StaticResource ShortColor}" WidthRequest="12" HeightRequest="12" 
+                                         CornerRadius="6" VerticalOptions="Center"/>
+                                <Label Text="Too Short" 
+                                       TextColor="{StaticResource DarkTextColor}"
+                                       FontSize="12"
+                                       VerticalOptions="Center"/>
+                            </HorizontalStackLayout>
+                        </Frame>
+
+                        <!-- Too Long -->
+                        <Frame BackgroundColor="Transparent" Padding="5" HorizontalOptions="Center" Grid.Column="2">
+                            <HorizontalStackLayout Spacing="5">
+                                <BoxView Color="{StaticResource LongColor}" WidthRequest="12" HeightRequest="12" 
+                                         CornerRadius="6" VerticalOptions="Center"/>
+                                <Label Text="Too Long" 
+                                       TextColor="{StaticResource DarkTextColor}"
+                                       FontSize="12"
+                                       VerticalOptions="Center"/>
+                            </HorizontalStackLayout>
+                        </Frame>
+                    </Grid>
+
+                    <!-- Statistics Label -->
+                    <Label x:Name="StatsLabel"
+                           TextColor="{StaticResource PrimaryColor}"
+                           FontSize="12"
+                           FontAttributes="Italic"
+                           HorizontalOptions="Center"
+                           HorizontalTextAlignment="Center"
+                           Margin="0,10,0,0"/>
+
+                    <Label x:Name="ChartEmptyLabel" 
+                           Text="No cycle data available. Track your periods to see trends."
+                           TextColor="{StaticResource GrayTextColor}"
+                           IsVisible="False"
+                           HorizontalOptions="Center"
+                           HorizontalTextAlignment="Center"
+                           Margin="0,20,0,0"/>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Statistics Section -->
+            <Frame BackgroundColor="White" CornerRadius="10" Padding="15" HasShadow="True">
+                <VerticalStackLayout Spacing="15">
+                    <Label Text="Cycle Statistics" 
+                           TextColor="{StaticResource PrimaryColor}"
+                           FontSize="18" 
+                           FontAttributes="Bold" 
+                           HorizontalOptions="Center" />
+
+                    <Grid ColumnDefinitions="*, *" RowDefinitions="Auto, Auto, Auto, Auto" RowSpacing="10">
+                        <Label Text="Average Cycle Length:" 
+                               TextColor="{StaticResource DarkTextColor}"
+                               Grid.Column="0" Grid.Row="0"/>
+                        <Label x:Name="AvgCycleLengthLabel" 
+                               Text="28 days" 
+                               TextColor="{StaticResource PrimaryColor}"
+                               FontAttributes="Bold"
+                               Grid.Column="1" Grid.Row="0"
+                               HorizontalOptions="End"/>
+
+                        <Label Text="Shortest Cycle:" 
+                               TextColor="{StaticResource DarkTextColor}"
+                               Grid.Column="0" Grid.Row="1"/>
+                        <Label x:Name="ShortestCycleLabel" 
+                               Text="-" 
+                               TextColor="{StaticResource PrimaryColor}"
+                               FontAttributes="Bold"
+                               Grid.Column="1" Grid.Row="1"
+                               HorizontalOptions="End"/>
+
+                        <Label Text="Longest Cycle:" 
+                               TextColor="{StaticResource DarkTextColor}"
+                               Grid.Column="0" Grid.Row="2"/>
+                        <Label x:Name="LongestCycleLabel" 
+                               Text="-" 
+                               TextColor="{StaticResource PrimaryColor}"
+                               FontAttributes="Bold"
+                               Grid.Column="1" Grid.Row="2"
+                               HorizontalOptions="End"/>
+
+                        <Label Text="Regularity Score:" 
+                               TextColor="{StaticResource DarkTextColor}"
+                               Grid.Column="0" Grid.Row="3"/>
+                        <Label x:Name="RegularityLabel" 
+                               Text="-" 
+                               TextColor="{StaticResource PrimaryColor}"
+                               FontAttributes="Bold"
+                               Grid.Column="1" Grid.Row="3"
+                               HorizontalOptions="End"/>
+                    </Grid>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Recent Cycles -->
+            <Frame BackgroundColor="White" CornerRadius="10" Padding="15" HasShadow="True">
+                <VerticalStackLayout Spacing="15">
+                    <Label Text="Recent Cycles" 
+                           TextColor="{StaticResource PrimaryColor}"
+                           FontSize="18" 
+                           FontAttributes="Bold" 
+                           HorizontalOptions="Center" />
+
+                    <CollectionView x:Name="RecentCyclesCollectionView"
+                                   HeightRequest="150">
+                        <CollectionView.Header>
+                            <Grid ColumnDefinitions="*, *, *" Padding="10,0,10,5">
+                                <Label Text="Start Date" 
+                                       TextColor="{StaticResource DarkGrayTextColor}"
+                                       FontAttributes="Bold"
+                                       Grid.Column="0"/>
+                                <Label Text="Duration" 
+                                       TextColor="{StaticResource DarkGrayTextColor}"
+                                       FontAttributes="Bold"
+                                       Grid.Column="1"
+                                       HorizontalOptions="Center"/>
+                                <Label Text="Cycle Length" 
+                                       TextColor="{StaticResource DarkGrayTextColor}"
+                                       FontAttributes="Bold"
+                                       Grid.Column="2"
+                                       HorizontalOptions="End"/>
+                            </Grid>
+                        </CollectionView.Header>
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Frame Padding="12" CornerRadius="8" BackgroundColor="#F8F9FA" Margin="0,5">
+                                    <Grid ColumnDefinitions="*, *, *">
+                                        <Label Text="{Binding StartDate, StringFormat='{0:MMM dd, yyyy}'}"
+                                               TextColor="{StaticResource DarkTextColor}"
+                                               Grid.Column="0"/>
+                                        <Label Text="{Binding Duration, StringFormat='{0} days'}"
+                                               TextColor="{StaticResource DarkTextColor}"
+                                               Grid.Column="1"
+                                               HorizontalOptions="Center"/>
+                                        <Label Text="{Binding CycleLength, StringFormat='{0} days'}"
+                                               TextColor="{StaticResource DarkTextColor}"
+                                               Grid.Column="2"
+                                               HorizontalOptions="End"/>
+                                    </Grid>
+                                </Frame>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+            </Frame>
+
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

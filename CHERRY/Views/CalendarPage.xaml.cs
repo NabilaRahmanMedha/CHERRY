@@ -3,6 +3,7 @@ using Microsoft.Maui;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using CHERRY.Services;
 
 namespace CHERRY.Views
 {
@@ -414,11 +415,5 @@ namespace CHERRY.Views
                 }
             }
         }
-    }
-
-    public class Cycle
-    {
-        public DateTime StartDate { get; set; }
-        public int Duration { get; set; }
     }
 }
