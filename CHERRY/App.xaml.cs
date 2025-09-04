@@ -16,6 +16,14 @@ namespace CHERRY
             // Set the main page with navigation
             Microsoft.Maui.Controls.Application.Current.MainPage = new NavigationPage(new LoginPage(_auth));
         }
+        /*public App()
+        {
+            InitializeComponent(); // Ensure this method is defined in App.xaml
+           // _auth = auth;
+
+            // Set the main page with navigation
+            Microsoft.Maui.Controls.Application.Current.MainPage = new NavigationPage(new AppShell());
+        }*/
 
         protected override Window CreateWindow(IActivationState? activationState)
         {
