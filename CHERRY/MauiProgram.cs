@@ -1,6 +1,9 @@
 ﻿using CHERRY.Services;
 using CHERRY.Views;
 using Microsoft.Extensions.Logging;
+using Microsoft.Maui;
+using Microsoft.Maui.Controls.Hosting;
+using Microsoft.Maui.Hosting;
 
 namespace CHERRY
 {
@@ -20,6 +23,8 @@ namespace CHERRY
             // Register services
             builder.Services.AddSingleton<DatabaseService>();
             builder.Services.AddSingleton<UserService>();
+            builder.Services.AddSingleton(sp => new HttpClient { BaseAddress = new Uri("http://10.0.2.2:5000/") });
+            builder.Services.AddSingleton<AuthService>();
 
             // Register pages
             builder.Services.AddTransient<LoginPage>();
