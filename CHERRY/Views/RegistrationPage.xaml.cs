@@ -41,5 +41,9 @@ namespace CHERRY.Views
                 MessageLabel.Text = "Email already registered.";
             }
         }
+        private async void OnLoginNavigateClicked(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new LoginPage(_auth));
+        }
     }
 }
