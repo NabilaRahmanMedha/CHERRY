@@ -2,9 +2,7 @@
 <ContentPage
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    x:Class="CHERRY.Views.RegistrationPage"
-    Title="Register"
-    BackgroundColor="#FAF7F5">
+    x:Class="CHERRY.Views.RegistrationPage">
 
     <ContentPage.Resources>
         <!-- Color Resources -->
@@ -25,6 +23,7 @@
         <Color x:Key="CardBackground">#FFFFFF</Color>
         <Color x:Key="BorderColor">#E8E6E4</Color>
         <Color x:Key="PlaceholderColor">#9CA3AF</Color>
+
     </ContentPage.Resources>
 
     <ScrollView>
@@ -90,7 +89,7 @@
                                    PlaceholderColor="{StaticResource PlaceholderColor}"
                                    TextColor="{StaticResource DarkTextColor}"
                                    IsPassword="True"
-                                   ClearButtonVisibility="WhileEditing" />
+                                   ClearButtonVisibility="WhileEditing"/>
                         </Frame>
                     </VerticalStackLayout>
 

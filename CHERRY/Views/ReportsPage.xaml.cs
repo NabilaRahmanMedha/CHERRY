@@ -9,19 +9,22 @@ namespace CHERRY.Views
     {
         private const int NormalCycleMin = 21;
         private const int NormalCycleMax = 35;
+        private const int NormalDurationMin = 3;
+        private const int NormalDurationMax = 7;
+
         private readonly SKColor _normalColor = SKColor.Parse("#4CAF50"); // Green
         private readonly SKColor _shortColor = SKColor.Parse("#FF5252");  // Red (too short)
         private readonly SKColor _longColor = SKColor.Parse("#FF9800");   // Orange (too long)
         private readonly SKColor _textColor = SKColor.Parse("#333333");
 
         private readonly CycleService _cycleService;
-        private ObservableCollection<CycleWithLength> _recentCycles;
+        private ObservableCollection<CycleWithStats> _recentCycles;
 
         public ReportsPage()
         {
             InitializeComponent();
             _cycleService = new CycleService();
-            _recentCycles = new ObservableCollection<CycleWithLength>();
+            _recentCycles = new ObservableCollection<CycleWithStats>();
             RecentCyclesCollectionView.ItemsSource = _recentCycles;
         }
 
@@ -50,29 +53,49 @@ namespace CHERRY.Views
                     ShortestCycleLabel.Text = $"{shortest} days";
                     LongestCycleLabel.Text = $"{longest} days";
 
-                    // Calculate regularity score
-                    var regularity = CalculateRegularityScore(cycleLengths);
-                    RegularityLabel.Text = $"{regularity}%";
+                    // Calculate regularity scores
+                    var cycleRegularity = CalculateCycleRegularityScore(cycleLengths);
+                    var durationRegularity = CalculateDurationRegularityScore(cycleHistory.Select(c => c.Duration).ToList());
+
+                    CycleRegularityLabel.Text = $"{cycleRegularity}%";
+                    DurationRegularityLabel.Text = $"{durationRegularity}%";
+
+                    // Update period duration stats
+                    var durations = cycleHistory.Select(c => c.Duration).ToList();
+                    AvgDurationLabel.Text = $"{durations.Average():0.#} days";
                 }
                 else
                 {
-                    ShortestCycleLabel.Text = "-";
-                    LongestCycleLabel.Text = "-";
-                    RegularityLabel.Text = "-";
+                    SetDefaultStats();
                 }
+            }
+            else if (cycleHistory.Count == 1)
+            {
+                // Only one cycle - show duration stats only
+                var cycle = cycleHistory[0];
+                AvgDurationLabel.Text = $"{cycle.Duration} days";
+                SetDefaultStats();
             }
             else
             {
-                ShortestCycleLabel.Text = "-";
-                LongestCycleLabel.Text = "-";
-                RegularityLabel.Text = "-";
+                SetDefaultStats();
             }
 
             // Update recent cycles
             UpdateRecentCycles(cycleHistory);
 
-            // Update chart
-            UpdateCycleChart(cycleHistory);
+            // Update both charts
+            UpdateCycleLengthChart(cycleHistory);
+            UpdatePeriodDurationChart(cycleHistory);
+        }
+
+        private void SetDefaultStats()
+        {
+            ShortestCycleLabel.Text = "-";
+            LongestCycleLabel.Text = "-";
+            CycleRegularityLabel.Text = "-";
+            DurationRegularityLabel.Text = "-";
+            AvgDurationLabel.Text = "-";
         }
 
         private void UpdateRecentCycles(List<Cycle> cycles)
@@ -88,28 +111,39 @@ namespace CHERRY.Views
             for (int i = 0; i < sortedCycles.Count; i++)
             {
                 int? cycleLength = null;
-                string statusColor = null;
+                string cycleLengthStatusColor = null;
+                string durationStatusColor = null;
 
                 // Calculate cycle length and determine status
                 if (i < sortedCycles.Count - 1)
                 {
                     cycleLength = (sortedCycles[i].StartDate - sortedCycles[i + 1].StartDate).Days;
 
-                    // Determine status color
+                    // Determine cycle length status color
                     if (cycleLength < NormalCycleMin)
-                        statusColor = "#FF5252"; // Red
+                        cycleLengthStatusColor = "#FF5252";
                     else if (cycleLength > NormalCycleMax)
-                        statusColor = "#FF9800"; // Orange
+                        cycleLengthStatusColor = "#FF9800";
                     else
-                        statusColor = "#4CAF50"; // Green
+                        cycleLengthStatusColor = "#4CAF50";
                 }
 
-                _recentCycles.Add(new CycleWithLength
+                // Determine duration status color
+                var duration = sortedCycles[i].Duration;
+                if (duration < NormalDurationMin)
+                    durationStatusColor = "#FF5252";
+                else if (duration > NormalDurationMax)
+                    durationStatusColor = "#FF9800";
+                else
+                    durationStatusColor = "#4CAF50";
+
+                _recentCycles.Add(new CycleWithStats
                 {
                     StartDate = sortedCycles[i].StartDate,
                     Duration = sortedCycles[i].Duration,
                     CycleLength = cycleLength,
-                    StatusColor = statusColor
+                    CycleLengthStatusColor = cycleLengthStatusColor,
+                    DurationStatusColor = durationStatusColor
                 });
             }
         }
@@ -132,7 +166,7 @@ namespace CHERRY.Views
             return lengths;
         }
 
-        private double CalculateRegularityScore(List<int> cycleLengths)
+        private double CalculateCycleRegularityScore(List<int> cycleLengths)
         {
             if (cycleLengths.Count < 2) return 0;
 
@@ -140,28 +174,34 @@ namespace CHERRY.Views
             return Math.Round((double)normalCount / cycleLengths.Count * 100);
         }
 
-        private void UpdateCycleChart(List<Cycle> cycles)
+        private double CalculateDurationRegularityScore(List<int> durations)
+        {
+            if (durations.Count == 0) return 0;
+
+            int normalCount = durations.Count(d => d >= NormalDurationMin && d <= NormalDurationMax);
+            return Math.Round((double)normalCount / durations.Count * 100);
+        }
+
+        private void UpdateCycleLengthChart(List<Cycle> cycles)
         {
             if (cycles == null || cycles.Count < 2)
             {
                 CycleLengthChart.Chart = null;
-                ChartEmptyLabel.IsVisible = true;
-                StatsLabel.Text = string.Empty;
+                CycleChartEmptyLabel.IsVisible = true;
+                CycleStatsLabel.Text = string.Empty;
                 return;
             }
 
-            ChartEmptyLabel.IsVisible = false;
+            CycleChartEmptyLabel.IsVisible = false;
 
             var cycleLengths = CalculateCycleLengths(cycles);
             var entries = new List<ChartEntry>();
 
             // Calculate statistics for the label
             int normalCount = cycleLengths.Count(l => l >= NormalCycleMin && l <= NormalCycleMax);
-            int shortCount = cycleLengths.Count(l => l < NormalCycleMin);
-            int longCount = cycleLengths.Count(l => l > NormalCycleMax);
-            double regularityScore = CalculateRegularityScore(cycleLengths);
+            double regularityScore = CalculateCycleRegularityScore(cycleLengths);
 
-            StatsLabel.Text = $"{normalCount}/{cycleLengths.Count} cycles ({regularityScore}%) in normal range";
+            CycleStatsLabel.Text = $"{normalCount}/{cycleLengths.Count} cycles ({regularityScore}%) in normal range";
 
             for (int i = 0; i < cycleLengths.Count; i++)
             {
@@ -172,15 +212,15 @@ namespace CHERRY.Views
                 SKColor pointColor;
                 if (length < NormalCycleMin)
                 {
-                    pointColor = _shortColor; // Too short
+                    pointColor = _shortColor;
                 }
                 else if (length > NormalCycleMax)
                 {
-                    pointColor = _longColor;  // Too long
+                    pointColor = _longColor;
                 }
                 else
                 {
-                    pointColor = _normalColor; // Normal
+                    pointColor = _normalColor;
                 }
 
                 var entry = new ChartEntry(length)
@@ -212,14 +252,85 @@ namespace CHERRY.Views
 
             CycleLengthChart.Chart = chart;
         }
+
+        private void UpdatePeriodDurationChart(List<Cycle> cycles)
+        {
+            if (cycles == null || cycles.Count == 0)
+            {
+                PeriodDurationChart.Chart = null;
+                PeriodChartEmptyLabel.IsVisible = true;
+                PeriodStatsLabel.Text = string.Empty;
+                return;
+            }
+
+            PeriodChartEmptyLabel.IsVisible = false;
+
+            var entries = new List<ChartEntry>();
+            var sortedCycles = cycles.OrderBy(c => c.StartDate).ToList();
+
+            // Calculate statistics for the label
+            int normalCount = cycles.Count(c => c.Duration >= NormalDurationMin && c.Duration <= NormalDurationMax);
+            double regularityScore = CalculateDurationRegularityScore(cycles.Select(c => c.Duration).ToList());
+
+            PeriodStatsLabel.Text = $"{normalCount}/{cycles.Count} periods ({regularityScore}%) in normal range";
+
+            for (int i = 0; i < sortedCycles.Count; i++)
+            {
+                var cycle = sortedCycles[i];
+                var cycleNumber = sortedCycles.Count - i;
+
+                // Determine color based on period duration
+                SKColor barColor;
+                if (cycle.Duration < NormalDurationMin)
+                {
+                    barColor = _shortColor;
+                }
+                else if (cycle.Duration > NormalDurationMax)
+                {
+                    barColor = _longColor;
+                }
+                else
+                {
+                    barColor = _normalColor;
+                }
+
+                var entry = new ChartEntry(cycle.Duration)
+                {
+                    Label = $"P{cycleNumber}",
+                    ValueLabel = cycle.Duration.ToString(),
+                    Color = barColor,
+                    TextColor = _textColor,
+                    ValueLabelColor = barColor
+                };
+
+                entries.Add(entry);
+            }
+
+            // Reverse to show chronological order
+            entries.Reverse();
+
+            var chart = new BarChart
+            {
+                Entries = entries,
+                LabelTextSize = 12,
+                Margin = 20,
+                BackgroundColor = SKColors.Transparent,
+                LabelOrientation = Orientation.Horizontal,
+                ValueLabelOrientation = Orientation.Horizontal,
+                BarAreaAlpha = 150
+            };
+
+            PeriodDurationChart.Chart = chart;
+        }
     }
 
-    public class CycleWithLength
+    public class CycleWithStats
     {
         public DateTime StartDate { get; set; }
         public int Duration { get; set; }
         public int? CycleLength { get; set; }
-        public string StatusColor { get; set; }
+        public string CycleLengthStatusColor { get; set; }
+        public string DurationStatusColor { get; set; }
 
         public string CycleLengthDisplay => CycleLength.HasValue ? $"{CycleLength.Value} days" : "N/A";
     }

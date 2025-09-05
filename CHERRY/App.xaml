@@ -11,6 +11,7 @@
             <Style TargetType="ContentPage" ApplyToDerivedTypes="True">
                 <Setter Property="BackgroundColor" Value="{StaticResource GlobalBackgroundColor}" />
             </Style>
+            
         </ResourceDictionary>
     </Application.Resources>
 </Application>
