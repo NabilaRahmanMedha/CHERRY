@@ -20,12 +20,13 @@ namespace CHERRY.Views
         {
             base.OnAppearing();
             UpdateUI();
+
         }
 
         private void UpdateUI()
         {
             // Set current date
-            CurrentDateLabel.Text = DateTime.Now.ToString("dddd, MMMM dd, yyyy");
+            CurrentDateLabel.Text = DateTime.Now.ToString("dddd, MMM dd");
 
             var cycleData = _cycleService.GetCycleData();
 
@@ -136,8 +137,17 @@ namespace CHERRY.Views
             await Shell.Current.GoToAsync("//CalendarPage");
         }
 
+        private async void OnProfileClicked(object sender, EventArgs e)
+        {
+            await Shell.Current.GoToAsync("//ProfilePage");
+        }
 
         private async void OnSettingsClicked(object sender, EventArgs e)
+        {
+            await DisplayAlert("Settings", "Here you can change app settings.", "OK");
+        }
+
+        private async void OnMenuClicked(object sender, EventArgs e)
         {
             await DisplayAlert("Settings", "Here you can change app settings.", "OK");
         }
