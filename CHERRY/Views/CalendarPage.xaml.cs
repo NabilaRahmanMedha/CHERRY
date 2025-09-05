@@ -1,26 +1,26 @@
-﻿using Microsoft.Maui.Controls;
-using Microsoft.Maui;
+﻿using CHERRY.Services;
+using Microsoft.Maui.Controls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using CHERRY.Services;
+using System.Threading.Tasks;
 
 namespace CHERRY.Views
 {
     public partial class CalendarPage : ContentPage
     {
         private DateTime _currentDate;
+        private DateTime? _selectedStartDate = null;
+        private readonly CycleService _cycleService = new CycleService();
         private List<DateTime> _periodDays = new List<DateTime>();
         private List<DateTime> _predictedPeriodDays = new List<DateTime>();
         private List<DateTime> _ovulationDays = new List<DateTime>();
-        private List<Cycle> _cycleHistory = new List<Cycle>();
-        private int _averageCycleLength = 28;
 
         public CalendarPage()
         {
             InitializeComponent();
             _currentDate = DateTime.Today;
-            LoadUserData();
+            LoadCalendarData();
             UpdateCalendar();
             UpdateStats();
         }
@@ -28,26 +28,17 @@ namespace CHERRY.Views
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            LoadUserData();
+            LoadCalendarData();
             UpdateCalendar();
             UpdateStats();
         }
 
-        private void LoadUserData()
+        private void LoadCalendarData()
         {
-            if (Preferences.ContainsKey("CycleHistory"))
-            {
-                string historyJson = Preferences.Get("CycleHistory", string.Empty);
-                if (!string.IsNullOrEmpty(historyJson))
-                {
-                    _cycleHistory = System.Text.Json.JsonSerializer.Deserialize<List<Cycle>>(historyJson);
-                }
-            }
-
-            _averageCycleLength = Preferences.Get("AverageCycleLength", 28);
-
+            // Load period days from cycle history
             _periodDays.Clear();
-            foreach (var cycle in _cycleHistory)
+            var cycleHistory = _cycleService.GetCycleHistory();
+            foreach (var cycle in cycleHistory)
             {
                 for (int i = 0; i < cycle.Duration; i++)
                 {
@@ -55,19 +46,15 @@ namespace CHERRY.Views
                 }
             }
 
-            CalculatePrediction();
+            // Load predictions
+            CalculatePredictions();
         }
 
-        private void SaveUserData()
+        private void CalculatePredictions()
         {
-            string historyJson = System.Text.Json.JsonSerializer.Serialize(_cycleHistory);
-            Preferences.Set("CycleHistory", historyJson);
-            Preferences.Set("AverageCycleLength", _averageCycleLength);
-        }
+            var cycleData = _cycleService.GetCycleData();
 
-        private void CalculatePrediction()
-        {
-            if (_cycleHistory.Count == 0)
+            if (!cycleData.HasData)
             {
                 PredictionLabel.Text = "Mark your period to get predictions";
                 _predictedPeriodDays.Clear();
@@ -75,33 +62,127 @@ namespace CHERRY.Views
                 return;
             }
 
-            var lastPeriod = _cycleHistory.OrderByDescending(c => c.StartDate).First();
-            DateTime nextPredictedStart = lastPeriod.StartDate.AddDays(_averageCycleLength);
+            // Get predicted period start dates for multiple cycles
+            var predictedPeriodStartDates = _cycleService.GetPredictedPeriodDates(6);
+            int averagePeriodLength = _cycleService.GetAveragePeriodLength();
 
-            _predictedPeriodDays.Clear();
-            for (int i = 0; i < 5; i++)
+            // Create full period predictions (multiple days for each period)
+            _predictedPeriodDays = new List<DateTime>();
+            foreach (var periodStartDate in predictedPeriodStartDates)
             {
-                _predictedPeriodDays.Add(nextPredictedStart.AddDays(i));
+                for (int i = 0; i < averagePeriodLength; i++)
+                {
+                    DateTime periodDay = periodStartDate.AddDays(i);
+                    if (!_predictedPeriodDays.Contains(periodDay.Date))
+                    {
+                        _predictedPeriodDays.Add(periodDay.Date);
+                    }
+                }
             }
 
-            DateTime ovulationDate = nextPredictedStart.AddDays(-14);
-            _ovulationDays.Clear();
-            for (int i = -2; i <= 2; i++)
+            // Get predicted ovulation dates - 9-day window
+            _ovulationDays = new List<DateTime>();
+            foreach (var periodStartDate in predictedPeriodStartDates)
             {
-                _ovulationDays.Add(ovulationDate.AddDays(i));
+                DateTime ovulationStart = periodStartDate.AddDays(-17); // 5 days before ovulation + ovulation day
+                DateTime ovulationEnd = periodStartDate.AddDays(-9);    // 4 days after ovulation
+
+                for (DateTime date = ovulationStart; date <= ovulationEnd; date = date.AddDays(1))
+                {
+                    if (!_ovulationDays.Contains(date.Date))
+                    {
+                        _ovulationDays.Add(date.Date);
+                    }
+                }
             }
 
-            PredictionLabel.Text = $"Next period: {nextPredictedStart:MMM d}\nOvulation: {ovulationDate:MMM d}";
-
-            if (_cycleHistory.Count >= 2)
+            // Update prediction label with average period length
+            if (predictedPeriodStartDates.Count > 0)
             {
-                RecalculateAverageCycleLength();
+                DateTime nextPeriodStart = predictedPeriodStartDates[0];
+                DateTime ovulationDate = nextPeriodStart.AddDays(-14);
+                int avgCycleLength = _cycleService.GetAverageCycleLength();
+
+                PredictionLabel.Text = $"Next period: {nextPeriodStart:MMM d}-{nextPeriodStart.AddDays(averagePeriodLength - 1):MMM d}\n" +
+                                      $"Ovulation window: {ovulationDate.AddDays(-4):MMM d}-{ovulationDate.AddDays(4):MMM d}\n" +
+                                      $"Avg period: {averagePeriodLength} days, Cycle: {avgCycleLength} days";
             }
+        }
+
+        private void CreateDayCell(DateTime date, int column, int row)
+        {
+            bool isPeriodDay = _periodDays.Contains(date.Date);
+            bool isPredictedDay = _predictedPeriodDays.Contains(date.Date);
+            bool isOvulationDay = _ovulationDays.Contains(date.Date);
+            bool isToday = date.Date == DateTime.Today.Date;
+            bool isFutureDate = date.Date > DateTime.Today.Date;
+            bool isSelectedStart = _selectedStartDate?.Date == date.Date;
+
+            Border dayBorder = new Border
+            {
+                Style = (Style)Resources["DayFrameStyle"]
+            };
+
+            // Set background color based on day type
+            if (isSelectedStart)
+            {
+                dayBorder.BackgroundColor = (Color)Resources["PrimaryColor"];
+            }
+            else if (isPeriodDay)
+            {
+                dayBorder.BackgroundColor = (Color)Resources["PeriodColor"];
+            }
+            else if (isPredictedDay)
+            {
+                dayBorder.BackgroundColor = (Color)Resources["PredictedPeriodColor"];
+            }
+            else if (isOvulationDay)
+            {
+                dayBorder.BackgroundColor = (Color)Resources["OvulationColor"];
+            }
+            else if (isFutureDate)
+            {
+                dayBorder.BackgroundColor = (Color)Resources["LightCreamColor"];
+            }
+
+            // Add border for today
+            if (isToday)
+            {
+                dayBorder.Stroke = (Color)Resources["TodayBorderColor"];
+                dayBorder.StrokeThickness = 2;
+            }
+
+            var dayLabel = new Label
+            {
+                Text = date.Day.ToString(),
+                Style = (Style)Resources["DayLabelStyle"]
+            };
+
+            // Set text color
+            if (isFutureDate || isPredictedDay)
+            {
+                dayLabel.TextColor = (Color)Resources["DarkGrayTextColor"];
+            }
+            else if (isSelectedStart)
+            {
+                dayLabel.TextColor = Colors.White;
+            }
+
+            dayBorder.Content = dayLabel;
+
+            // Add tap gesture
+            var tapGesture = new TapGestureRecognizer();
+            tapGesture.Tapped += (s, e) => OnDayTapped(date, isFutureDate, isPredictedDay, isOvulationDay);
+            dayBorder.GestureRecognizers.Add(tapGesture);
+
+            CalendarGrid.Add(dayBorder, column, row);
         }
 
         private void UpdateStats()
         {
-            if (_cycleHistory.Count == 0)
+            var cycleData = _cycleService.GetCycleData();
+
+            if (!cycleData.HasData)
             {
                 CycleDayLabel.Text = "-";
                 NextPeriodLabel.Text = "-";
@@ -110,53 +191,16 @@ namespace CHERRY.Views
                 return;
             }
 
-            // Calculate current cycle day
-            var lastPeriod = _cycleHistory.OrderByDescending(c => c.StartDate).First();
-            int daysSinceLastPeriod = (DateTime.Today - lastPeriod.StartDate).Days;
-            int currentCycleDay = (daysSinceLastPeriod % _averageCycleLength) + 1;
-            CycleDayLabel.Text = currentCycleDay.ToString();
+            // Update the labels with actual data
+            CycleDayLabel.Text = cycleData.CurrentCycleDay.ToString();
 
-            // Calculate days until next period
-            DateTime nextPeriodStart = lastPeriod.StartDate.AddDays(_averageCycleLength);
-            int daysUntilNextPeriod = (nextPeriodStart - DateTime.Today).Days;
-            NextPeriodLabel.Text = daysUntilNextPeriod > 0 ? $"{daysUntilNextPeriod}d" : "Today";
+            NextPeriodLabel.Text = cycleData.DaysUntilNextPeriod > 0 ?
+                $"{cycleData.DaysUntilNextPeriod}d" : "Today";
 
-            // Calculate days until ovulation
-            DateTime ovulationDate = nextPeriodStart.AddDays(-14);
-            int daysUntilOvulation = (ovulationDate - DateTime.Today).Days;
-            OvulationLabel.Text = Math.Abs(daysUntilOvulation) <= 2 ? "Now" : $"{daysUntilOvulation}d";
+            OvulationLabel.Text = Math.Abs(cycleData.DaysUntilOvulation) <= 2 ?
+                "Now" : $"{Math.Abs(cycleData.DaysUntilOvulation)}d";
 
-            // Determine fertility status
-            string fertilityStatus = "Low";
-            if (daysUntilOvulation >= -2 && daysUntilOvulation <= 2)
-            {
-                fertilityStatus = "High";
-            }
-            else if (daysUntilOvulation >= -5 && daysUntilOvulation <= 5)
-            {
-                fertilityStatus = "Medium";
-            }
-            FertilityLabel.Text = fertilityStatus;
-        }
-
-        private void RecalculateAverageCycleLength()
-        {
-            int totalDays = 0;
-            int cycleCount = 0;
-
-            var sortedCycles = _cycleHistory.OrderBy(c => c.StartDate).ToList();
-
-            for (int i = 1; i < sortedCycles.Count; i++)
-            {
-                TimeSpan cycleLength = sortedCycles[i].StartDate - sortedCycles[i - 1].StartDate;
-                totalDays += cycleLength.Days;
-                cycleCount++;
-            }
-
-            if (cycleCount > 0)
-            {
-                _averageCycleLength = totalDays / cycleCount;
-            }
+            FertilityLabel.Text = cycleData.FertilityStatus;
         }
 
         private void UpdateCalendar()
@@ -167,11 +211,13 @@ namespace CHERRY.Views
             CalendarGrid.RowDefinitions.Clear();
             CalendarGrid.ColumnDefinitions.Clear();
 
+            // Add columns for days of week
             for (int i = 0; i < 7; i++)
             {
                 CalendarGrid.ColumnDefinitions.Add(new ColumnDefinition());
             }
 
+            // Add header row for day names
             CalendarGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
 
             string[] days = { "MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN" };
@@ -185,6 +231,7 @@ namespace CHERRY.Views
                 CalendarGrid.Add(label, i, 0);
             }
 
+            // Calculate calendar dates
             DateTime firstDayOfMonth = new DateTime(_currentDate.Year, _currentDate.Month, 1);
             int daysInMonth = DateTime.DaysInMonth(_currentDate.Year, _currentDate.Month);
             int startPosition = ((int)firstDayOfMonth.DayOfWeek + 6) % 7;
@@ -200,60 +247,9 @@ namespace CHERRY.Views
                 }
 
                 DateTime currentDay = new DateTime(_currentDate.Year, _currentDate.Month, day);
-                bool isPeriodDay = _periodDays.Contains(currentDay.Date);
-                bool isPredictedDay = _predictedPeriodDays.Contains(currentDay.Date);
-                bool isOvulationDay = _ovulationDays.Contains(currentDay.Date);
-                bool isToday = currentDay.Date == DateTime.Today.Date;
-                bool isFutureDate = currentDay.Date > DateTime.Today.Date;
+                CreateDayCell(currentDay, col, row);
 
-                Border dayBorder = new Border
-                {
-                    Style = (Style)Resources["DayFrameStyle"]
-                };
-
-                if (isPeriodDay)
-                    dayBorder.BackgroundColor = (Color)Resources["PeriodColor"];
-                else if (isPredictedDay)
-                    dayBorder.BackgroundColor = (Color)Resources["PredictedPeriodColor"];
-                else if (isOvulationDay)
-                    dayBorder.BackgroundColor = (Color)Resources["OvulationColor"];
-                else if (isFutureDate)
-                    dayBorder.BackgroundColor = (Color)Resources["LightCreamColor"];
-
-                if (isToday)
-                {
-                    dayBorder.Stroke = (Color)Resources["TodayBorderColor"];
-                }
-
-                var dayLabel = new Label
-                {
-                    Text = day.ToString(),
-                    Style = (Style)Resources["DayLabelStyle"]
-                };
-
-                if (isFutureDate)
-                    dayLabel.TextColor = (Color)Resources["DarkGrayTextColor"];
-                else if (isPredictedDay)
-                    dayLabel.TextColor = (Color)Resources["GrayTextColor"];
-
-                dayBorder.Content = dayLabel;
-
-                if (!isFutureDate)
-                {
-                    var tapGesture = new TapGestureRecognizer();
-                    tapGesture.Tapped += (s, e) => OnDayClicked(currentDay);
-                    dayBorder.GestureRecognizers.Add(tapGesture);
-                }
-                else if (isPredictedDay || isOvulationDay)
-                {
-                    var tapGesture = new TapGestureRecognizer();
-                    tapGesture.Tapped += (s, e) => OnFutureDayTapped(currentDay, isPredictedDay, isOvulationDay);
-                    dayBorder.GestureRecognizers.Add(tapGesture);
-                }
-
-                CalendarGrid.Add(dayBorder, col, row);
                 col++;
-
                 if (col > 6)
                 {
                     col = 0;
@@ -262,157 +258,250 @@ namespace CHERRY.Views
             }
         }
 
-        private async void OnFutureDayTapped(DateTime date, bool isPredicted, bool isOvulation)
+
+        private async void OnDayTapped(DateTime date, bool isFutureDate, bool isPredictedDay, bool isOvulationDay)
         {
-            string message = "";
-
-            if (isPredicted)
-                message = $"Predicted period day based on your cycle history.";
-            else if (isOvulation)
-                message = $"Predicted ovulation day based on your cycle history.";
-
-            await DisplayAlert("Prediction", message, "OK");
-        }
-
-        private void OnDayClicked(DateTime date)
-        {
-            if (date.Date > DateTime.Today.Date)
+            if (isFutureDate)
             {
-                DisplayAlert("Invalid Date", "You cannot mark periods for future dates.", "OK");
+                if (isPredictedDay)
+                {
+                    await DisplayAlert("Predicted Period",
+                        "This is a predicted period day based on your cycle history.", "OK");
+                }
+                else if (isOvulationDay)
+                {
+                    await DisplayAlert("Predicted Ovulation",
+                        "This is a predicted ovulation day based on your cycle history.", "OK");
+                }
                 return;
             }
 
-            bool isPeriodDay = _periodDays.Contains(date.Date);
-
-            if (!isPeriodDay)
+            // Two-tap period marking logic
+            if (_selectedStartDate == null)
             {
-                int daysToAdd = 5;
-                for (int i = 0; i < daysToAdd; i++)
-                {
-                    DateTime periodDay = date.AddDays(i);
-                    if (periodDay.Date > DateTime.Today.Date)
-                    {
-                        daysToAdd = i;
-                        break;
-                    }
-
-                    if (!_periodDays.Contains(periodDay.Date))
-                    {
-                        _periodDays.Add(periodDay.Date);
-                    }
-                }
-
-                _cycleHistory.Add(new Cycle
-                {
-                    StartDate = date.Date,
-                    Duration = daysToAdd
-                });
-
-                CalculatePrediction();
+                // First tap - select start date
+                _selectedStartDate = date;
+                await DisplayAlert("Start Date Selected",
+                    $"Selected {date:MMM d} as period start. Tap the end date.", "OK");
+                UpdateCalendar();
             }
             else
             {
-                var periodToRemove = _cycleHistory.FirstOrDefault(c =>
-                    date.Date >= c.StartDate && date.Date < c.StartDate.AddDays(c.Duration));
+                // Second tap - select end date and save period
+                DateTime startDate = _selectedStartDate.Value;
+                DateTime endDate = date;
 
-                if (periodToRemove != null)
+                if (endDate < startDate)
                 {
-                    for (int i = 0; i < periodToRemove.Duration; i++)
+                    await DisplayAlert("Invalid Selection",
+                        "End date cannot be before start date.", "OK");
+                    _selectedStartDate = null;
+                    UpdateCalendar();
+                    return;
+                }
+
+                int duration = (endDate - startDate).Days + 1;
+
+                // Confirm period entry
+                bool confirm = await DisplayAlert("Confirm Period",
+                    $"Mark period from {startDate:MMM d} to {endDate:MMM d} ({duration} days)?",
+                    "Yes", "No");
+
+                if (confirm)
+                {
+                    // Check if this period overlaps with existing period
+                    var existingPeriod = _cycleService.GetCycleHistory()
+                        .FirstOrDefault(c =>
+                            (startDate >= c.StartDate && startDate <= c.EndDate) ||
+                            (endDate >= c.StartDate && endDate <= c.EndDate));
+
+                    if (existingPeriod != null)
                     {
-                        DateTime periodDay = periodToRemove.StartDate.AddDays(i);
-                        _periodDays.Remove(periodDay);
+                        bool overwrite = await DisplayAlert("Overlap Detected",
+                            "This period overlaps with an existing period. Overwrite?",
+                            "Yes", "No");
+
+                        if (!overwrite)
+                        {
+                            _selectedStartDate = null;
+                            UpdateCalendar();
+                            return;
+                        }
                     }
 
-                    _cycleHistory.Remove(periodToRemove);
-                    CalculatePrediction();
-                }
-            }
+                    // Add period using CycleService
+                    _cycleService.AddPeriodWithDates(startDate, endDate);
 
-            SaveUserData();
-            UpdateCalendar();
-            UpdateStats();
+                    await DisplayAlert("Period Added",
+                        $"Period marked for {duration} days.", "OK");
+
+                    // Reload data and update UI
+                    LoadCalendarData();
+                    UpdateCalendar();
+                    UpdateStats();
+                }
+
+                _selectedStartDate = null;
+            }
         }
 
         private void OnPrevMonthClicked(object sender, EventArgs e)
         {
             _currentDate = _currentDate.AddMonths(-1);
+            _selectedStartDate = null; // Reset selection when changing months
             UpdateCalendar();
         }
 
         private void OnNextMonthClicked(object sender, EventArgs e)
         {
             _currentDate = _currentDate.AddMonths(1);
+            _selectedStartDate = null; // Reset selection when changing months
             UpdateCalendar();
         }
 
         private async void OnEditClicked(object sender, EventArgs e)
         {
-            string action = await DisplayActionSheet("Edit Period", "Cancel", null,
-                "Mark Period", "Clear All", "View Cycle Info", "Set Cycle Length");
+            string action = await DisplayActionSheet("Calendar Options", "Cancel", null,
+                "Mark Period", "Clear All Data", "View Cycle History", "Set Cycle Length", "View Predictions");
 
-            if (action == "Mark Period")
+            switch (action)
             {
-                await DisplayAlert("Info", "Click on a day to mark the start of your period. The next 5 days will be marked automatically. You can only mark past or current dates.", "OK");
+                case "Mark Period":
+                    await DisplayAlert("How to Mark Period",
+                        "Tap once to select start date, then tap again to select end date.", "OK");
+                    break;
+
+                case "Clear All Data":
+                    await ClearAllData();
+                    break;
+
+                case "View Cycle History":
+                    await ViewCycleHistory();
+                    break;
+
+                case "Set Cycle Length":
+                    await SetCycleLength();
+                    break;
+
+                case "View Predictions":
+                    await ViewPredictions();
+                    break;
             }
-            else if (action == "Clear All")
+        }
+
+        private async Task ClearAllData()
+        {
+            bool confirm = await DisplayAlert("Confirm",
+                "Are you sure you want to clear all period data?", "Yes", "No");
+
+            if (confirm)
             {
-                bool confirm = await DisplayAlert("Confirm", "Are you sure you want to clear all period data?", "Yes", "No");
-                if (confirm)
-                {
-                    _periodDays.Clear();
-                    _cycleHistory.Clear();
-                    _predictedPeriodDays.Clear();
-                    _ovulationDays.Clear();
-                    PredictionLabel.Text = "Track your cycles to get predictions";
-                    SaveUserData();
-                    UpdateCalendar();
-                    UpdateStats();
-                }
+                _cycleService.SaveCycleHistory(new List<Cycle>());
+                _selectedStartDate = null;
+                LoadCalendarData();
+                UpdateCalendar();
+                UpdateStats();
+                await DisplayAlert("Cleared", "All period data has been cleared.", "OK");
             }
-            else if (action == "View Cycle Info")
+        }
+
+        private async Task ViewCycleHistory()
+        {
+            var cycleHistory = _cycleService.GetCycleHistory();
+
+            if (cycleHistory.Count == 0)
             {
-                string info = "Cycle Information:\n\n";
-
-                if (_cycleHistory.Count > 0)
-                {
-                    var sortedCycles = _cycleHistory.OrderBy(c => c.StartDate).ToList();
-                    info += "Your cycle history:\n";
-
-                    foreach (var cycle in sortedCycles)
-                    {
-                        info += $"{cycle.StartDate:MMM d} ({cycle.Duration} days)\n";
-                    }
-
-                    info += $"\nAverage cycle length: {_averageCycleLength} days\n";
-
-                    if (_predictedPeriodDays.Count > 0)
-                    {
-                        info += $"\nNext period: {_predictedPeriodDays[0]:MMM d}";
-                        info += $"\nOvulation: {_ovulationDays[2]:MMM d}";
-                    }
-                }
-                else
-                {
-                    info += "No cycle data available. Mark your period to get predictions.";
-                }
-
-                await DisplayAlert("Cycle Information", info, "OK");
+                await DisplayAlert("Cycle History", "No period data available.", "OK");
+                return;
             }
-            else if (action == "Set Cycle Length")
-            {
-                string result = await DisplayPromptAsync("Set Cycle Length",
-                    "Enter your average cycle length (days):",
-                    keyboard: Keyboard.Numeric,
-                    initialValue: _averageCycleLength.ToString());
 
-                if (int.TryParse(result, out int newLength) && newLength > 0)
-                {
-                    _averageCycleLength = newLength;
-                    CalculatePrediction();
-                    SaveUserData();
-                    UpdateCalendar();
-                    UpdateStats();
-                }
+            string historyText = "Your Cycle History:\n\n";
+            foreach (var cycle in cycleHistory.OrderByDescending(c => c.StartDate))
+            {
+                historyText += $"{cycle.StartDate:MMM d} - {cycle.EndDate:MMM d} ({cycle.Duration} days)\n";
+            }
+
+            // Add statistics
+            var cycleData = _cycleService.GetCycleData();
+            if (cycleData.HasData)
+            {
+                historyText += $"\nStatistics:\n";
+                historyText += $"Average Cycle: {cycleData.AverageCycleLength} days\n";
+                historyText += $"Average Period: {cycleData.AveragePeriodLength} days\n";
+                historyText += $"Regularity: {_cycleService.GetCycleRegularityScore()}%";
+            }
+
+            await DisplayAlert("Cycle History", historyText, "OK");
+        }
+
+        private async Task SetCycleLength()
+        {
+            int currentLength = _cycleService.GetAverageCycleLength();
+            string result = await DisplayPromptAsync("Set Cycle Length",
+                "Enter your average cycle length (21-35 days is typical):",
+                keyboard: Keyboard.Numeric,
+                initialValue: currentLength.ToString(),
+                maxLength: 2);
+
+            if (int.TryParse(result, out int newLength) && newLength >= 21 && newLength <= 35)
+            {
+                _cycleService.SaveAverageCycleLength(newLength);
+                CalculatePredictions();
+                UpdateCalendar();
+                UpdateStats();
+                await DisplayAlert("Updated", $"Cycle length set to {newLength} days.", "OK");
+            }
+            else if (!string.IsNullOrEmpty(result))
+            {
+                await DisplayAlert("Invalid", "Please enter a number between 21 and 35.", "OK");
+            }
+        }
+
+        private async Task ViewPredictions()
+        {
+            var predictions = _cycleService.GetPredictedPeriodDates(6);
+            var ovulations = _cycleService.GetPredictedOvulationDates(6);
+
+            if (predictions.Count == 0)
+            {
+                await DisplayAlert("Predictions", "Mark your period to get predictions.", "OK");
+                return;
+            }
+
+            string predictionText = "Upcoming Predictions:\n\n";
+
+            predictionText += "Next Periods:\n";
+            foreach (var date in predictions)
+            {
+                predictionText += $"{date:MMM d, yyyy}\n";
+            }
+
+            predictionText += "\nOvulation Days:\n";
+            foreach (var date in ovulations)
+            {
+                predictionText += $"{date:MMM d, yyyy}\n";
+            }
+
+            // Add average information
+            var cycleData = _cycleService.GetCycleData();
+            if (cycleData.HasData)
+            {
+                predictionText += $"\nBased on:\n";
+                predictionText += $"Average Cycle: {cycleData.AverageCycleLength} days\n";
+                predictionText += $"Average Period: {cycleData.AveragePeriodLength} days";
+            }
+
+            await DisplayAlert("Predictions", predictionText, "OK");
+        }
+
+        // Cancel selection if user wants to abort
+        private async void OnCancelSelectionClicked(object sender, EventArgs e)
+        {
+            if (_selectedStartDate != null)
+            {
+                _selectedStartDate = null;
+                UpdateCalendar();
+                await DisplayAlert("Selection Cancelled", "Period selection cancelled.", "OK");
             }
         }
     }
