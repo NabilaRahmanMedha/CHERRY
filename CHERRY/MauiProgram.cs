@@ -27,6 +27,7 @@ namespace CHERRY
             builder.Services.AddSingleton<UserService>();
             builder.Services.AddSingleton(sp => new HttpClient { BaseAddress = new Uri("http://10.0.2.2:5000/") });
             builder.Services.AddSingleton<AuthService>();
+            builder.Services.AddSingleton<CycleApiService>();
 
             // Register pages
             builder.Services.AddTransient<LoginPage>();
