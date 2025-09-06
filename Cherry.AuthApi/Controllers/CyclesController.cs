@@ -67,14 +67,46 @@ namespace Cherry.AuthApi.Controllers
 
 			return CreatedAtAction(nameof(GetHistory), new { }, CycleDto.FromEntity(entity));
 		}
+
+		[HttpPut("{id:int}")]
+		public async Task<ActionResult<CycleDto>> Update(int id, [FromBody] UpdateCycleDto dto)
+		{
+			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+			if (string.IsNullOrEmpty(userId)) return Unauthorized();
+			var entity = await _db.CycleEntries.FirstOrDefaultAsync(c => c.Id == id && c.UserId == userId);
+			if (entity == null) return NotFound();
+			if (dto.EndDate < dto.StartDate) return BadRequest("End date cannot be before start date.");
+			entity.StartDate = dto.StartDate;
+			entity.EndDate = dto.EndDate;
+			await _db.SaveChangesAsync();
+			return Ok(CycleDto.FromEntity(entity));
+		}
+
+		[HttpDelete("{id:int}")]
+		public async Task<IActionResult> Delete(int id)
+		{
+			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+			if (string.IsNullOrEmpty(userId)) return Unauthorized();
+			var entity = await _db.CycleEntries.FirstOrDefaultAsync(c => c.Id == id && c.UserId == userId);
+			if (entity == null) return NotFound();
+			_db.CycleEntries.Remove(entity);
+			await _db.SaveChangesAsync();
+			return NoContent();
+		}
 	}
 
-	public record CycleDto(DateOnly StartDate, DateOnly EndDate)
+	public record CycleDto(int Id, DateOnly StartDate, DateOnly EndDate)
 	{
-		public static CycleDto FromEntity(CycleEntry e) => new(e.StartDate, e.EndDate);
+		public static CycleDto FromEntity(CycleEntry e) => new(e.Id, e.StartDate, e.EndDate);
 	}
 
 	public class CreateCycleDto
+	{
+		public DateOnly StartDate { get; set; }
+		public DateOnly EndDate { get; set; }
+	}
+
+	public class UpdateCycleDto
 	{
 		public DateOnly StartDate { get; set; }
 		public DateOnly EndDate { get; set; }
