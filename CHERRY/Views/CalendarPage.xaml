@@ -116,7 +116,6 @@
 
                 <!-- Month and Year Header -->
                 <Label x:Name="MonthLabel"
-                       Text="NOVEMBER 2024"
                        Style="{StaticResource MonthLabelStyle}"
                        Grid.Column="1"
                        HorizontalOptions="Center"
@@ -131,7 +130,6 @@
 
             <!-- Prediction Label -->
             <Label x:Name="PredictionLabel"
-                   Text="Track your cycles to get predictions"
                    Style="{StaticResource PredictionLabelStyle}"
                    Margin="0,0,0,10"
                    Grid.Row="1"/>
@@ -148,25 +146,25 @@
                     <!-- Cycle Day -->
                     <VerticalStackLayout Grid.Column="0" Spacing="5">
                         <Label Text="CYCLE DAY" Style="{StaticResource StatLabel}"/>
-                        <Label x:Name="CycleDayLabel" Text="-" Style="{StaticResource StatValue}"/>
+                        <Label x:Name="CycleDayLabel"  Style="{StaticResource StatValue}"/>
                     </VerticalStackLayout>
 
                     <!-- Next Period -->
                     <VerticalStackLayout Grid.Column="1" Spacing="5">
                         <Label Text="NEXT PERIOD" Style="{StaticResource StatLabel}"/>
-                        <Label x:Name="NextPeriodLabel" Text="-" Style="{StaticResource StatValue}"/>
+                        <Label x:Name="NextPeriodLabel"  Style="{StaticResource StatValue}"/>
                     </VerticalStackLayout>
 
                     <!-- Ovulation -->
                     <VerticalStackLayout Grid.Column="2" Spacing="5">
                         <Label Text="OVULATION" Style="{StaticResource StatLabel}"/>
-                        <Label x:Name="OvulationLabel" Text="-" Style="{StaticResource StatValue}"/>
+                        <Label x:Name="OvulationLabel"  Style="{StaticResource StatValue}"/>
                     </VerticalStackLayout>
 
                     <!-- Fertility -->
                     <VerticalStackLayout Grid.Column="3" Spacing="5">
                         <Label Text="FERTILITY" Style="{StaticResource StatLabel}"/>
-                        <Label x:Name="FertilityLabel" Text="-" Style="{StaticResource StatValue}"/>
+                        <Label x:Name="FertilityLabel"  Style="{StaticResource StatValue}"/>
                     </VerticalStackLayout>
                 </Grid>
             </Border>

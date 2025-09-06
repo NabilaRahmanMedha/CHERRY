@@ -192,15 +192,37 @@ namespace CHERRY.Views
             }
 
             // Update the labels with actual data
-            CycleDayLabel.Text = cycleData.CurrentCycleDay.ToString();
+            CycleDayLabel.Text = cycleData.CurrentCycleDay > 0 ?
+                cycleData.CurrentCycleDay.ToString() : "-";
 
-            NextPeriodLabel.Text = cycleData.DaysUntilNextPeriod > 0 ?
-                $"{cycleData.DaysUntilNextPeriod}d" : "Today";
+            if (cycleData.DaysUntilNextPeriod > 0)
+            {
+                NextPeriodLabel.Text = $"{cycleData.DaysUntilNextPeriod}d";
+            }
+            else if (cycleData.DaysUntilNextPeriod == 0)
+            {
+                NextPeriodLabel.Text = "Today";
+            }
+            else
+            {
+                NextPeriodLabel.Text = "-";
+            }
 
-            OvulationLabel.Text = Math.Abs(cycleData.DaysUntilOvulation) <= 2 ?
-                "Now" : $"{Math.Abs(cycleData.DaysUntilOvulation)}d";
+            if (Math.Abs(cycleData.DaysUntilOvulation) <= 2)
+            {
+                OvulationLabel.Text = "Now";
+            }
+            else if (cycleData.DaysUntilOvulation != 0)
+            {
+                OvulationLabel.Text = $"{Math.Abs(cycleData.DaysUntilOvulation)}d";
+            }
+            else
+            {
+                OvulationLabel.Text = "-";
+            }
 
-            FertilityLabel.Text = cycleData.FertilityStatus;
+            FertilityLabel.Text = !string.IsNullOrEmpty(cycleData.FertilityStatus) ?
+                cycleData.FertilityStatus : "-";
         }
 
         private void UpdateCalendar()
@@ -257,7 +279,6 @@ namespace CHERRY.Views
                 }
             }
         }
-
 
         private async void OnDayTapped(DateTime date, bool isFutureDate, bool isPredictedDay, bool isOvulationDay)
         {
@@ -440,7 +461,7 @@ namespace CHERRY.Views
             string result = await DisplayPromptAsync("Set Cycle Length",
                 "Enter your average cycle length (21-35 days is typical):",
                 keyboard: Keyboard.Numeric,
-                initialValue: currentLength.ToString(),
+                initialValue: currentLength > 0 ? currentLength.ToString() : "",
                 maxLength: 2);
 
             if (int.TryParse(result, out int newLength) && newLength >= 21 && newLength <= 35)
