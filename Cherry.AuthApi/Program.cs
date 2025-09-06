@@ -1,4 +1,5 @@
 using System.Text;
+using System.IO;
 using Cherry.AuthApi; // for TokenService
 using Cherry.AuthApi.Data;
 using Cherry.AuthApi.Models;
@@ -78,6 +79,14 @@ using (var scope = app.Services.CreateScope())
 // Enable Swagger in all environments so it works even when ASPNETCORE_ENVIRONMENT is Production
 app.UseSwagger();
 app.UseSwaggerUI();
+
+// Serve static files for uploaded images
+app.UseStaticFiles();
+
+// Ensure upload directories exist
+var webRoot = app.Environment.WebRootPath ?? Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+var uploadsDir = Path.Combine(webRoot, "uploads", "profiles");
+Directory.CreateDirectory(uploadsDir);
 
 app.UseAuthentication();
 app.UseAuthorization();

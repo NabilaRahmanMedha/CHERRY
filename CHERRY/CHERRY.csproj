@@ -61,7 +61,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
-		<PackageReference Include="Microcharts.Maui" Version="0.1.0" />
+		<PackageReference Include="Microcharts.Maui" Version="1.0.1" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.8" />
 		<PackageReference Include="sqlite-net-pcl" Version="1.9.172" />
 	</ItemGroup>
@@ -77,7 +77,7 @@
 
 	<ItemGroup>
 	  <PackageReference Include="Microsoft.Maui.Controls" Version="9.0.100" />
-	  <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.5.2" />
+	  <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.14.0" />
 	</ItemGroup>
 
 </Project>
