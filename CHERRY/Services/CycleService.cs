@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using Microsoft.Maui.Storage;
 
 namespace CHERRY.Services
 {
@@ -11,12 +12,29 @@ namespace CHERRY.Services
         private const string AverageCycleLengthKey = "AverageCycleLength";
         private const string AveragePeriodLengthKey = "AveragePeriodLength";
         private const string LastPeriodDateKey = "LastPeriodDate";
+        private const string AuthEmailKey = "auth_email";
+
+        private static string GetUserScopedKey(string baseKey)
+        {
+            try
+            {
+                var emailTask = SecureStorage.Default.GetAsync(AuthEmailKey);
+                var email = emailTask.GetAwaiter().GetResult();
+                if (string.IsNullOrWhiteSpace(email)) email = "guest";
+                return $"{baseKey}:{email}";
+            }
+            catch
+            {
+                return baseKey;
+            }
+        }
 
         public List<Cycle> GetCycleHistory()
         {
-            if (Preferences.ContainsKey(CycleHistoryKey))
+            var scopedKey = GetUserScopedKey(CycleHistoryKey);
+            if (Preferences.ContainsKey(scopedKey))
             {
-                string historyJson = Preferences.Get(CycleHistoryKey, string.Empty);
+                string historyJson = Preferences.Get(scopedKey, string.Empty);
                 if (!string.IsNullOrEmpty(historyJson))
                 {
                     try
@@ -34,7 +52,7 @@ namespace CHERRY.Services
 
         public void SaveAverageCycleLength(int length)
         {
-            Preferences.Set(AverageCycleLengthKey, length);
+            Preferences.Set(GetUserScopedKey(AverageCycleLengthKey), length);
         }
 
         public void SaveCycleHistory(List<Cycle> cycleHistory)
@@ -43,7 +61,7 @@ namespace CHERRY.Services
                 cycleHistory = new List<Cycle>();
 
             string historyJson = JsonSerializer.Serialize(cycleHistory);
-            Preferences.Set(CycleHistoryKey, historyJson);
+            Preferences.Set(GetUserScopedKey(CycleHistoryKey), historyJson);
 
             // Update averages when saving history
             if (cycleHistory.Count > 0)
@@ -52,25 +70,26 @@ namespace CHERRY.Services
 
                 // Save last period date
                 var lastPeriod = cycleHistory.OrderByDescending(c => c.StartDate).First();
-                Preferences.Set(LastPeriodDateKey, lastPeriod.StartDate.ToString("O")); // ISO 8601 format
+                Preferences.Set(GetUserScopedKey(LastPeriodDateKey), lastPeriod.StartDate.ToString("O")); // ISO 8601 format
             }
         }
 
         public int GetAverageCycleLength()
         {
-            return Preferences.Get(AverageCycleLengthKey, 28);
+            return Preferences.Get(GetUserScopedKey(AverageCycleLengthKey), 28);
         }
 
         public int GetAveragePeriodLength()
         {
-            return Preferences.Get(AveragePeriodLengthKey, 5);
+            return Preferences.Get(GetUserScopedKey(AveragePeriodLengthKey), 5);
         }
 
         public DateTime? GetLastPeriodDate()
         {
-            if (Preferences.ContainsKey(LastPeriodDateKey))
+            var key = GetUserScopedKey(LastPeriodDateKey);
+            if (Preferences.ContainsKey(key))
             {
-                string lastPeriodDateString = Preferences.Get(LastPeriodDateKey, string.Empty);
+                string lastPeriodDateString = Preferences.Get(key, string.Empty);
                 if (!string.IsNullOrEmpty(lastPeriodDateString))
                 {
                     if (DateTime.TryParse(lastPeriodDateString, out DateTime lastPeriodDate))
