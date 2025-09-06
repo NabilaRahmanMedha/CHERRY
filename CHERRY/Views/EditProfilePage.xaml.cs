@@ -12,7 +12,7 @@ namespace CHERRY.Views
         private readonly ProfileApiService _profileApi;
         private readonly AuthService _auth;
         private ProfileApiService.UserProfileDto _profile = new ProfileApiService.UserProfileDto();
-        private Stream _pendingImageStream;
+        private byte[] _pendingImageBytes;
         private string _pendingImageName;
 
         public EditProfilePage()
@@ -41,7 +41,10 @@ namespace CHERRY.Views
             CycleLengthEntry.Text = _profile.CycleLength > 0 ? _profile.CycleLength.ToString() : "";
             if (!string.IsNullOrWhiteSpace(_profile.ProfileImageUrl))
             {
-                ProfileImage.Source = ImageSource.FromUri(new Uri(new Uri(ServiceHelper.GetService<HttpClient>().BaseAddress!, ".").ToString().TrimEnd('/') + _profile.ProfileImageUrl));
+                var baseUri = ServiceHelper.GetService<HttpClient>().BaseAddress!;
+                var relative = _profile.ProfileImageUrl.StartsWith("/") ? _profile.ProfileImageUrl.Substring(1) : _profile.ProfileImageUrl;
+                var absolute = new Uri(baseUri, relative);
+                ProfileImage.Source = ImageSource.FromUri(absolute);
             }
         }
 
@@ -57,9 +60,12 @@ namespace CHERRY.Views
 
                 if (result != null)
                 {
-                    _pendingImageStream = await result.OpenReadAsync();
+                    using var stream = await result.OpenReadAsync();
+                    using var ms = new MemoryStream();
+                    await stream.CopyToAsync(ms);
+                    _pendingImageBytes = ms.ToArray();
                     _pendingImageName = result.FileName;
-                    ProfileImage.Source = ImageSource.FromStream(() => _pendingImageStream);
+                    ProfileImage.Source = ImageSource.FromStream(() => new MemoryStream(_pendingImageBytes));
                 }
             }
             catch (Exception ex)
@@ -86,9 +92,10 @@ namespace CHERRY.Views
             if (int.TryParse(CycleLengthEntry.Text, out int cycleLength)) _profile.CycleLength = cycleLength; else _profile.CycleLength = 0;
             _profile.Nickname = NicknameEntry.Text;
 
-            if (_pendingImageStream != null)
+            if (_pendingImageBytes != null && _pendingImageBytes.Length > 0)
             {
-                var url = await _profileApi.UploadProfileImageAsync(_pendingImageStream, _pendingImageName, "image/*");
+                using var s = new MemoryStream(_pendingImageBytes);
+                var url = await _profileApi.UploadProfileImageAsync(s, _pendingImageName, "image/*");
                 if (!string.IsNullOrWhiteSpace(url)) _profile.ProfileImageUrl = url;
             }
 
