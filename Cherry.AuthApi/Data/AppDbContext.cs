@@ -9,6 +9,7 @@ namespace Cherry.AuthApi.Data
 		public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
 		public DbSet<UserProfile> UserProfiles => Set<UserProfile>();
+		public DbSet<CycleEntry> CycleEntries => Set<CycleEntry>();
 
 		protected override void OnModelCreating(ModelBuilder builder)
 		{
