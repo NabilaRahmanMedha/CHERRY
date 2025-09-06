@@ -316,28 +316,22 @@
                                    TextColor="#666666" />
 
                             <Label x:Name="RecentPeriod1Label"
-                                   Text="Aug 9, 2024"
                                    Grid.Row="1" Grid.Column="0"
                                    TextColor="#333333" />
                             <Label x:Name="RecentDuration1Label"
-                                   Text="5 days"
                                    Grid.Row="1" Grid.Column="1"
                                    TextColor="#333333" />
                             <Label x:Name="RecentCycle1Label"
-                                   Text="32 days"
                                    Grid.Row="1" Grid.Column="2"
                                    TextColor="#333333" />
 
                             <Label x:Name="RecentPeriod2Label"
-                                   Text="Jul 8, 2024"
                                    Grid.Row="2" Grid.Column="0"
                                    TextColor="#333333" />
                             <Label x:Name="RecentDuration2Label"
-                                   Text="5 days"
                                    Grid.Row="2" Grid.Column="1"
                                    TextColor="#333333" />
                             <Label x:Name="RecentCycle2Label"
-                                   Text="29 days"
                                    Grid.Row="2" Grid.Column="2"
                                    TextColor="#333333" />
                         </Grid>
@@ -367,7 +361,6 @@
                                 <VerticalStackLayout Spacing="5"
                                                      HorizontalOptions="Center">
                                     <Label x:Name="AvgCycleLabel"
-                                           Text="28"
                                            Style="{StaticResource StatValue}" />
                                     <Label Text="Avg Cycle"
                                            Style="{StaticResource StatLabel}" />
@@ -382,7 +375,6 @@
                                 <VerticalStackLayout Spacing="5"
                                                      HorizontalOptions="Center">
                                     <Label x:Name="AvgPeriodLabel"
-                                           Text="5"
                                            Style="{StaticResource StatValue}" />
                                     <Label Text="Avg Period"
                                            Style="{StaticResource StatLabel}" />
@@ -397,7 +389,6 @@
                                 <VerticalStackLayout Spacing="5"
                                                      HorizontalOptions="Center">
                                     <Label x:Name="OvulationDayLabel"
-                                           Text="14"
                                            Style="{StaticResource StatValue}" />
                                     <Label Text="Ovulation Day"
                                            Style="{StaticResource StatLabel}" />
@@ -412,7 +403,6 @@
                                 <VerticalStackLayout Spacing="5"
                                                      HorizontalOptions="Center">
                                     <Label x:Name="CyclePatternLabel"
-                                           Text="Regular"
                                            Style="{StaticResource StatValue}" />
                                     <Label Text="Cycle Pattern"
                                            Style="{StaticResource StatLabel}" />
@@ -421,28 +411,6 @@
                         </Grid>
                     </VerticalStackLayout>
                 </Frame>
-
-                <!-- Tips Section 
-                <Frame Grid.Row="5"
-                       CornerRadius="15"
-                       BackgroundColor="White"
-                       Padding="20"
-                       HasShadow="True">
-                    <VerticalStackLayout Spacing="15">
-                        <Label Text="TIPS FOR TODAY"
-                               Style="{StaticResource CardTitle}" />
-
-                        <Frame CornerRadius="12"
-                               BackgroundColor="#FFF5E6"
-                               Padding="15"
-                               HasShadow="False">
-                            <Label x:Name="DailyTipLabel"
-                                   FontSize="14"
-                                   TextColor="#E67E22" />
-                        </Frame>
-                    </VerticalStackLayout>
-                </Frame>  -->
-
             </Grid>
         </ScrollView>
     </Grid>
