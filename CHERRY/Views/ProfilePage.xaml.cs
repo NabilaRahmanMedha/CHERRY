@@ -39,7 +39,10 @@ namespace CHERRY.Views
                     CycleLengthLabel.Text = profile.CycleLength > 0 ? $"{profile.CycleLength} days" : "Not set";
                     if (!string.IsNullOrWhiteSpace(profile.ProfileImageUrl))
                     {
-                        ProfileImage.Source = ImageSource.FromUri(new Uri(new Uri(ServiceHelper.GetService<HttpClient>().BaseAddress!, ".").ToString().TrimEnd('/') + profile.ProfileImageUrl));
+                        var baseUri = ServiceHelper.GetService<HttpClient>().BaseAddress!;
+                        var relative = profile.ProfileImageUrl.StartsWith("/") ? profile.ProfileImageUrl.Substring(1) : profile.ProfileImageUrl;
+                        var absolute = new Uri(baseUri, relative);
+                        ProfileImage.Source = ImageSource.FromUri(absolute);
                     }
                 }
             }
@@ -53,16 +56,8 @@ namespace CHERRY.Views
         {
             try
             {
-                var userEmail = await SecureStorage.GetAsync("user_email");
-                if (!string.IsNullOrEmpty(userEmail))
-                {
-                    // Use Shell navigation instead of Navigation.PushAsync
-                    await Shell.Current.GoToAsync($"{nameof(EditProfilePage)}?email={userEmail}");
-                }
-                else
-                {
-                    await DisplayAlert("Error", "User not logged in", "OK");
-                }
+                // Navigate without passing email; edit page will load via API
+                await Shell.Current.GoToAsync($"{nameof(EditProfilePage)}");
             }
             catch (Exception ex)
             {
