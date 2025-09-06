@@ -109,7 +109,7 @@ namespace Cherry.AuthApi.Migrations
 
                     b.HasKey("UserId");
 
-                    b.ToTable("UserProfiles");
+                    b.ToTable("UserProfiles", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
