@@ -431,7 +431,7 @@ namespace CHERRY.Views
         private async void OnEditClicked(object sender, EventArgs e)
         {
             string action = await DisplayActionSheet("Calendar Options", "Cancel", null,
-                "Mark Period", "Clear All Data", "View Cycle History", "Set Cycle Length", "View Predictions");
+                "Mark Period", "Clear All Data", "View Cycle History", "Set Cycle Length", "View Predictions", "Edit Last Period", "Delete Last Period");
 
             switch (action)
             {
@@ -454,6 +454,14 @@ namespace CHERRY.Views
 
                 case "View Predictions":
                     await ViewPredictions();
+                    break;
+
+                case "Edit Last Period":
+                    await EditLastPeriod();
+                    break;
+
+                case "Delete Last Period":
+                    await DeleteLastPeriod();
                     break;
             }
         }
@@ -561,6 +569,97 @@ namespace CHERRY.Views
             }
 
             await DisplayAlert("Predictions", predictionText, "OK");
+        }
+
+        private async Task EditLastPeriod()
+        {
+            var history = _cycleService.GetCycleHistory().OrderByDescending(c => c.StartDate).ToList();
+            if (history.Count == 0)
+            {
+                await DisplayAlert("Edit Period", "No period data available.", "OK");
+                return;
+            }
+
+            var last = history[0];
+            string startStr = await DisplayPromptAsync("Edit Period", "Enter new start date (yyyy-MM-dd)", initialValue: last.StartDate.ToString("yyyy-MM-dd"));
+            if (string.IsNullOrWhiteSpace(startStr)) return;
+            string endStr = await DisplayPromptAsync("Edit Period", "Enter new end date (yyyy-MM-dd)", initialValue: last.EndDate.ToString("yyyy-MM-dd"));
+            if (string.IsNullOrWhiteSpace(endStr)) return;
+
+            if (!DateTime.TryParse(startStr, out var newStart) || !DateTime.TryParse(endStr, out var newEnd))
+            {
+                await DisplayAlert("Invalid", "Please enter valid dates in yyyy-MM-dd format.", "OK");
+                return;
+            }
+            if (newEnd < newStart)
+            {
+                await DisplayAlert("Invalid", "End date cannot be before start date.", "OK");
+                return;
+            }
+
+            // Update locally
+            _cycleService.UpdatePeriodEndDate(last.StartDate, newEnd);
+
+            // Update server
+            int? id = await GetServerCycleIdAsync(last.StartDate, last.EndDate);
+            if (id.HasValue)
+            {
+                var api = _apiService ?? ServiceHelper.GetService<CycleApiService>();
+                await api.UpdateAsync(id.Value, newStart, newEnd);
+            }
+
+            LoadCalendarData();
+            UpdateCalendar();
+            UpdateStats();
+            await DisplayAlert("Updated", "Period updated.", "OK");
+        }
+
+        private async Task DeleteLastPeriod()
+        {
+            var history = _cycleService.GetCycleHistory().OrderByDescending(c => c.StartDate).ToList();
+            if (history.Count == 0)
+            {
+                await DisplayAlert("Delete Period", "No period data available.", "OK");
+                return;
+            }
+
+            var last = history[0];
+            bool confirm = await DisplayAlert("Delete Period",
+                $"Delete period {last.StartDate:MMM d} - {last.EndDate:MMM d}?", "Yes", "No");
+            if (!confirm) return;
+
+            // Remove locally
+            var remaining = _cycleService.GetCycleHistory()
+                .Where(c => !(c.StartDate == last.StartDate && c.Duration == last.Duration))
+                .ToList();
+            _cycleService.SaveCycleHistory(remaining);
+
+            // Remove on server
+            int? id = await GetServerCycleIdAsync(last.StartDate, last.EndDate);
+            if (id.HasValue)
+            {
+                var api = _apiService ?? ServiceHelper.GetService<CycleApiService>();
+                await api.DeleteAsync(id.Value);
+            }
+
+            LoadCalendarData();
+            UpdateCalendar();
+            UpdateStats();
+            await DisplayAlert("Deleted", "Last period deleted.", "OK");
+        }
+
+        private async Task<int?> GetServerCycleIdAsync(DateTime startDate, DateTime endDate)
+        {
+            try
+            {
+                var api = _apiService ?? ServiceHelper.GetService<CycleApiService>();
+                var history = await api.GetHistoryAsync();
+                var match = history.FirstOrDefault(h =>
+                    h.StartDate.ToDateTime(TimeOnly.MinValue).Date == startDate.Date &&
+                    h.EndDate.ToDateTime(TimeOnly.MinValue).Date == endDate.Date);
+                return match?.Id;
+            }
+            catch { return null; }
         }
 
         // Cancel selection if user wants to abort
