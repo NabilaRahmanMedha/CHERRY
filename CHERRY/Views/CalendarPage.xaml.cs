@@ -12,6 +12,7 @@ namespace CHERRY.Views
         private DateTime _currentDate;
         private DateTime? _selectedStartDate = null;
         private readonly CycleService _cycleService = new CycleService();
+        private readonly CycleApiService _apiService;
         private List<DateTime> _periodDays = new List<DateTime>();
         private List<DateTime> _predictedPeriodDays = new List<DateTime>();
         private List<DateTime> _ovulationDays = new List<DateTime>();
@@ -25,9 +26,21 @@ namespace CHERRY.Views
             UpdateStats();
         }
 
+        public CalendarPage(CycleApiService apiService)
+        {
+            InitializeComponent();
+            _apiService = apiService;
+            _currentDate = DateTime.Today;
+            _ = SyncFromServer();
+            LoadCalendarData();
+            UpdateCalendar();
+            UpdateStats();
+        }
+
         protected override void OnAppearing()
         {
             base.OnAppearing();
+            _ = SyncFromServer();
             LoadCalendarData();
             UpdateCalendar();
             UpdateStats();
@@ -350,8 +363,9 @@ namespace CHERRY.Views
                         }
                     }
 
-                    // Add period using CycleService
+                    // Add period locally and send to backend
                     _cycleService.AddPeriodWithDates(startDate, endDate);
+                    _ = SaveToServer(startDate, endDate);
 
                     await DisplayAlert("Period Added",
                         $"Period marked for {duration} days.", "OK");
@@ -364,6 +378,40 @@ namespace CHERRY.Views
 
                 _selectedStartDate = null;
             }
+        }
+
+        private async Task SyncFromServer()
+        {
+            try
+            {
+                var api = _apiService ?? ServiceHelper.GetService<CycleApiService>();
+                var history = await api.GetHistoryAsync();
+                if (history.Count == 0) return;
+
+                // Merge server entries into local storage, avoid duplicates
+                var local = _cycleService.GetCycleHistory();
+                var serverAsLocal = history
+                    .Select(h => new Cycle { StartDate = h.StartDate.ToDateTime(TimeOnly.MinValue), Duration = (h.EndDate.ToDateTime(TimeOnly.MinValue) - h.StartDate.ToDateTime(TimeOnly.MinValue)).Days + 1 })
+                    .ToList();
+
+                foreach (var s in serverAsLocal)
+                {
+                    bool exists = local.Any(c => c.StartDate.Date == s.StartDate.Date && c.Duration == s.Duration);
+                    if (!exists) local.Add(s);
+                }
+                _cycleService.SaveCycleHistory(local);
+            }
+            catch { }
+        }
+
+        private async Task SaveToServer(DateTime startDate, DateTime endDate)
+        {
+            try
+            {
+                var api = _apiService ?? ServiceHelper.GetService<CycleApiService>();
+                await api.CreateAsync(startDate, endDate);
+            }
+            catch { }
         }
 
         private void OnPrevMonthClicked(object sender, EventArgs e)
