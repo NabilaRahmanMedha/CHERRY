@@ -9,14 +9,14 @@ namespace CHERRY.Views
 {
     public partial class ProfilePage : ContentPage
     {
-        private readonly DatabaseService _db;
-        private readonly UserService _userService;
+        private readonly ProfileApiService _profileApi;
+        private readonly AuthService _auth;
 
         public ProfilePage(DatabaseService db)
         {
             InitializeComponent();
-            _db = db;
-            _userService = new UserService();
+            _profileApi = ServiceHelper.GetService<ProfileApiService>();
+            _auth = ServiceHelper.GetService<AuthService>();
             LoadUserData();
         }
 
@@ -30,25 +30,16 @@ namespace CHERRY.Views
         {
             try
             {
-                // Get current user email from preferences
-                var userEmail = await SecureStorage.GetAsync("user_email");
-                if (!string.IsNullOrEmpty(userEmail))
+                EmailLabel.Text = await _auth.GetEmailAsync();
+                var profile = await _profileApi.GetProfileAsync();
+                if (profile != null)
                 {
-                    EmailLabel.Text = userEmail;
-
-                    // Load user profile data
-                    var user = await _userService.GetUserProfileAsync(userEmail);
-                    if (user != null)
+                    NicknameLabel.Text = string.IsNullOrEmpty(profile.Nickname) ? "Set Nickname" : profile.Nickname;
+                    PeriodLengthLabel.Text = profile.PeriodLength > 0 ? $"{profile.PeriodLength} days" : "Not set";
+                    CycleLengthLabel.Text = profile.CycleLength > 0 ? $"{profile.CycleLength} days" : "Not set";
+                    if (!string.IsNullOrWhiteSpace(profile.ProfileImageUrl))
                     {
-                        NicknameLabel.Text = string.IsNullOrEmpty(user.Nickname) ? "Set Nickname" : user.Nickname;
-                        PeriodLengthLabel.Text = user.PeriodLength > 0 ? $"{user.PeriodLength} days" : "Not set";
-                        CycleLengthLabel.Text = user.CycleLength > 0 ? $"{user.CycleLength} days" : "Not set";
-
-                        // Load profile image if exists
-                        if (!string.IsNullOrEmpty(user.ProfileImagePath) && File.Exists(user.ProfileImagePath))
-                        {
-                            ProfileImage.Source = ImageSource.FromFile(user.ProfileImagePath);
-                        }
+                        ProfileImage.Source = ImageSource.FromUri(new Uri(new Uri(ServiceHelper.GetService<HttpClient>().BaseAddress!, ".").ToString().TrimEnd('/') + profile.ProfileImageUrl));
                     }
                 }
             }
@@ -91,22 +82,12 @@ namespace CHERRY.Views
 
                 if (result != null)
                 {
-                    // Save the image to app data
-                    var userEmail = await SecureStorage.GetAsync("user_email");
-                    var fileName = $"{userEmail}_profile{Path.GetExtension(result.FileName)}";
-                    var filePath = Path.Combine(FileSystem.AppDataDirectory, fileName);
-
-                    using (var stream = await result.OpenReadAsync())
-                    using (var fileStream = File.OpenWrite(filePath))
+                    using var stream = await result.OpenReadAsync();
+                    var uploadedUrl = await _profileApi.UploadProfileImageAsync(stream, result.FileName, result.ContentType);
+                    if (!string.IsNullOrWhiteSpace(uploadedUrl))
                     {
-                        await stream.CopyToAsync(fileStream);
+                        ProfileImage.Source = ImageSource.FromUri(new Uri(uploadedUrl));
                     }
-
-                    // Update profile image
-                    ProfileImage.Source = ImageSource.FromFile(filePath);
-
-                    // Save path to database
-                    await _userService.UpdateProfileImageAsync(userEmail, filePath);
                 }
             }
             catch (Exception ex)
@@ -141,22 +122,15 @@ namespace CHERRY.Views
             bool answer = await DisplayAlert("Confirm", "Are you sure you want to delete your profile? This action cannot be undone.", "Yes", "No");
             if (answer)
             {
-                var userEmail = await SecureStorage.GetAsync("user_email");
-                if (!string.IsNullOrEmpty(userEmail))
+                var success = await _profileApi.DeleteProfileAsync();
+                if (success)
                 {
-                    bool success = await _userService.DeleteUserAsync(userEmail);
-                    if (success)
-                    {
-                        // Clear secure storage
-                        SecureStorage.Remove("user_email");
-
-                        // Navigate to login page
-                        Microsoft.Maui.Controls.Application.Current.MainPage = new LoginPage(ServiceHelper.GetService<AuthService>());
-                    }
-                    else
-                    {
-                        await DisplayAlert("Error", "Failed to delete profile.", "OK");
-                    }
+                    await _auth.LogoutAsync();
+                    Microsoft.Maui.Controls.Application.Current.MainPage = new LoginPage(ServiceHelper.GetService<AuthService>());
+                }
+                else
+                {
+                    await DisplayAlert("Error", "Failed to delete profile.", "OK");
                 }
             }
         }
@@ -166,8 +140,7 @@ namespace CHERRY.Views
             bool answer = await DisplayAlert("Log Out", "Are you sure you want to log out?", "Yes", "No");
             if (answer)
             {
-                // Clear secure storage
-                SecureStorage.Remove("user_email");
+                await _auth.LogoutAsync();
 
                 // Navigate to login page
                 Microsoft.Maui.Controls.Application.Current.MainPage = new LoginPage(ServiceHelper.GetService<AuthService>());
