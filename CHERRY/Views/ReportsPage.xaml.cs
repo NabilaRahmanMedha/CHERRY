@@ -194,7 +194,10 @@ namespace CHERRY.Views
 
             CycleChartEmptyLabel.IsVisible = false;
 
+            // Use only the last 12 intervals to keep the chart readable
             var cycleLengths = CalculateCycleLengths(cycles);
+            if (cycleLengths.Count > 12)
+                cycleLengths = cycleLengths.Skip(cycleLengths.Count - 12).ToList();
             var entries = new List<ChartEntry>();
 
             // Calculate statistics for the label
@@ -225,7 +228,8 @@ namespace CHERRY.Views
 
                 var entry = new ChartEntry(length)
                 {
-                    Label = $"C{cycleNumber}",
+                    // Show fewer x labels to reduce clutter
+                    Label = (cycleNumber % 2 == 1) ? $"C{cycleNumber}" : string.Empty,
                     ValueLabel = length.ToString(),
                     Color = pointColor,
                     TextColor = _textColor,
@@ -235,19 +239,27 @@ namespace CHERRY.Views
                 entries.Add(entry);
             }
 
+            // Adaptive y-axis with padding but within reasonable range
+            float minY = cycleLengths.Min();
+            float maxY = cycleLengths.Max();
+            minY = Math.Max(18, minY - 2);
+            maxY = Math.Min(45, maxY + 2);
+
             var chart = new LineChart
             {
                 Entries = entries,
                 LabelTextSize = 12,
                 Margin = 20,
                 BackgroundColor = SKColors.Transparent,
-                LineMode = LineMode.Straight,
+                LineMode = LineMode.Spline,
                 PointMode = PointMode.Circle,
-                PointSize = 14,
-                LineSize = 3,
+                PointSize = 6,
+                LineSize = 2,
                 LabelOrientation = Orientation.Horizontal,
                 ValueLabelOrientation = Orientation.Horizontal,
-                LineAreaAlpha = 10
+                LineAreaAlpha = 0,
+                MinValue = minY,
+                MaxValue = maxY
             };
 
             CycleLengthChart.Chart = chart;
@@ -265,8 +277,11 @@ namespace CHERRY.Views
 
             PeriodChartEmptyLabel.IsVisible = false;
 
+            // Use only the last 12 periods for readability
             var entries = new List<ChartEntry>();
             var sortedCycles = cycles.OrderBy(c => c.StartDate).ToList();
+            if (sortedCycles.Count > 12)
+                sortedCycles = sortedCycles.Skip(sortedCycles.Count - 12).ToList();
 
             // Calculate statistics for the label
             int normalCount = cycles.Count(c => c.Duration >= NormalDurationMin && c.Duration <= NormalDurationMax);
@@ -296,7 +311,7 @@ namespace CHERRY.Views
 
                 var entry = new ChartEntry(cycle.Duration)
                 {
-                    Label = $"P{cycleNumber}",
+                    Label = (cycleNumber % 2 == 1) ? $"P{cycleNumber}" : string.Empty,
                     ValueLabel = cycle.Duration.ToString(),
                     Color = barColor,
                     TextColor = _textColor,
@@ -309,6 +324,10 @@ namespace CHERRY.Views
             // Reverse to show chronological order
             entries.Reverse();
 
+            // Adaptive y-axis within 0–10 days (typical durations)
+            float minDur = Math.Max(0, sortedCycles.Min(c => c.Duration) - 1);
+            float maxDur = Math.Min(15, sortedCycles.Max(c => c.Duration) + 1);
+
             var chart = new BarChart
             {
                 Entries = entries,
@@ -317,7 +336,9 @@ namespace CHERRY.Views
                 BackgroundColor = SKColors.Transparent,
                 LabelOrientation = Orientation.Horizontal,
                 ValueLabelOrientation = Orientation.Horizontal,
-                BarAreaAlpha = 150
+                BarAreaAlpha = 120,
+                MinValue = minDur,
+                MaxValue = maxDur
             };
 
             PeriodDurationChart.Chart = chart;

@@ -9,62 +9,42 @@ namespace CHERRY.Views
 {
     public partial class EditProfilePage : ContentPage
     {
-        private readonly DatabaseService _db;
-        private readonly UserService _userService;
-        private string _userEmail;
-        private string _profileImagePath;
+        private readonly ProfileApiService _profileApi;
+        private readonly AuthService _auth;
+        private ProfileApiService.UserProfileDto _profile = new ProfileApiService.UserProfileDto();
+        private byte[] _pendingImageBytes;
+        private string _pendingImageName;
 
         public EditProfilePage()
         {
             InitializeComponent();
-            _db = new DatabaseService();
-            _userService = new UserService();
+            _profileApi = ServiceHelper.GetService<ProfileApiService>();
+            _auth = ServiceHelper.GetService<AuthService>();
         }
 
         protected override async void OnAppearing()
         {
             base.OnAppearing();
 
-            // Get the email parameter from query string
-            if (Shell.Current?.CurrentState?.Location != null)
-            {
-                var query = Shell.Current.CurrentState.Location;
-                if (query.Query != null)
-                {
-                    if (query.Query.Contains("email="))
-                    {
-                        _userEmail = query.Query.Replace("?email=", "").Trim();
-                        await LoadUserData(_userEmail);
-                    }
-                }
-            }
-
-            // Fallback: try to get email from SecureStorage
-            if (string.IsNullOrEmpty(_userEmail))
-            {
-                _userEmail = await SecureStorage.GetAsync("user_email");
-                if (!string.IsNullOrEmpty(_userEmail))
-                {
-                    await LoadUserData(_userEmail);
-                }
-            }
+            await LoadUserData();
         }
 
-        private async Task LoadUserData(string email)
+        private async Task LoadUserData()
         {
-            var user = await _userService.GetUserProfileAsync(email);
-            if (user != null)
+            var email = await _auth.GetEmailAsync();
+            EmailEntry.Text = email;
+            var profile = await _profileApi.GetProfileAsync();
+            if (profile == null) return;
+            _profile = profile;
+            NicknameEntry.Text = _profile.Nickname;
+            PeriodLengthEntry.Text = _profile.PeriodLength > 0 ? _profile.PeriodLength.ToString() : "";
+            CycleLengthEntry.Text = _profile.CycleLength > 0 ? _profile.CycleLength.ToString() : "";
+            if (!string.IsNullOrWhiteSpace(_profile.ProfileImageUrl))
             {
-                NicknameEntry.Text = user.Nickname;
-                EmailEntry.Text = user.Email;
-                PeriodLengthEntry.Text = user.PeriodLength > 0 ? user.PeriodLength.ToString() : "";
-                CycleLengthEntry.Text = user.CycleLength > 0 ? user.CycleLength.ToString() : "";
-
-                if (!string.IsNullOrEmpty(user.ProfileImagePath) && File.Exists(user.ProfileImagePath))
-                {
-                    ProfileImage.Source = ImageSource.FromFile(user.ProfileImagePath);
-                    _profileImagePath = user.ProfileImagePath;
-                }
+                var baseUri = ServiceHelper.GetService<HttpClient>().BaseAddress!;
+                var relative = _profile.ProfileImageUrl.StartsWith("/") ? _profile.ProfileImageUrl.Substring(1) : _profile.ProfileImageUrl;
+                var absolute = new Uri(baseUri, relative);
+                ProfileImage.Source = ImageSource.FromUri(absolute);
             }
         }
 
@@ -80,18 +60,12 @@ namespace CHERRY.Views
 
                 if (result != null)
                 {
-                    // Save the image to app data
-                    var fileName = $"{_userEmail}_profile{Path.GetExtension(result.FileName)}";
-                    _profileImagePath = Path.Combine(FileSystem.AppDataDirectory, fileName);
-
-                    using (var stream = await result.OpenReadAsync())
-                    using (var fileStream = File.OpenWrite(_profileImagePath))
-                    {
-                        await stream.CopyToAsync(fileStream);
-                    }
-
-                    // Update profile image
-                    ProfileImage.Source = ImageSource.FromFile(_profileImagePath);
+                    using var stream = await result.OpenReadAsync();
+                    using var ms = new MemoryStream();
+                    await stream.CopyToAsync(ms);
+                    _pendingImageBytes = ms.ToArray();
+                    _pendingImageName = result.FileName;
+                    ProfileImage.Source = ImageSource.FromStream(() => new MemoryStream(_pendingImageBytes));
                 }
             }
             catch (Exception ex)
@@ -107,12 +81,6 @@ namespace CHERRY.Views
 
         private async void OnSaveClicked(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(_userEmail))
-            {
-                await DisplayAlert("Error", "User not found", "OK");
-                return;
-            }
-
             // Validate inputs
             if (string.IsNullOrWhiteSpace(EmailEntry.Text))
             {
@@ -120,35 +88,18 @@ namespace CHERRY.Views
                 return;
             }
 
-            // Get user
-            var user = await _userService.GetUserProfileAsync(_userEmail);
-            if (user == null)
+            if (int.TryParse(PeriodLengthEntry.Text, out int periodLength)) _profile.PeriodLength = periodLength; else _profile.PeriodLength = 0;
+            if (int.TryParse(CycleLengthEntry.Text, out int cycleLength)) _profile.CycleLength = cycleLength; else _profile.CycleLength = 0;
+            _profile.Nickname = NicknameEntry.Text;
+
+            if (_pendingImageBytes != null && _pendingImageBytes.Length > 0)
             {
-                await DisplayAlert("Error", "User not found", "OK");
-                return;
+                using var s = new MemoryStream(_pendingImageBytes);
+                var url = await _profileApi.UploadProfileImageAsync(s, _pendingImageName, "image/*");
+                if (!string.IsNullOrWhiteSpace(url)) _profile.ProfileImageUrl = url;
             }
 
-            // Update user data
-            user.Nickname = NicknameEntry.Text;
-            user.Email = EmailEntry.Text;
-
-            if (int.TryParse(PeriodLengthEntry.Text, out int periodLength))
-            {
-                user.PeriodLength = periodLength;
-            }
-
-            if (int.TryParse(CycleLengthEntry.Text, out int cycleLength))
-            {
-                user.CycleLength = cycleLength;
-            }
-
-            if (!string.IsNullOrEmpty(_profileImagePath))
-            {
-                user.ProfileImagePath = _profileImagePath;
-            }
-
-            // Save changes
-            bool success = await _userService.UpdateUserProfileAsync(user);
+            bool success = await _profileApi.UpdateProfileAsync(_profile);
             if (success)
             {
                 await DisplayAlert("Success", "Profile updated successfully", "OK");

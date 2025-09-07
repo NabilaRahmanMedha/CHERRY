@@ -28,11 +28,11 @@
         <VerticalStackLayout Padding="20" Spacing="20">
 
             <!-- Cycle Length Trends Chart -->
-            <Frame BackgroundColor="White" CornerRadius="10" Padding="15" HasShadow="True">
+            <Frame BackgroundColor="White" CornerRadius="16" Padding="15" HasShadow="True">
                 <VerticalStackLayout Spacing="15">
                     <Label Text="Cycle Length Trends" 
                            TextColor="{StaticResource PrimaryColor}"
-                           FontSize="18" 
+                           FontSize="20" 
                            FontAttributes="Bold" 
                            HorizontalOptions="Center" />
 
@@ -41,7 +41,7 @@
                                      HorizontalOptions="FillAndExpand" />
 
                     <!-- Chart Legend -->
-                    <Grid ColumnDefinitions="*, *, *" ColumnSpacing="5" HorizontalOptions="Center">
+                    <Grid ColumnDefinitions="*, *, *" ColumnSpacing="12" HorizontalOptions="Center">
                         <!-- Normal -->
                         <Frame BackgroundColor="Transparent" Padding="5" HorizontalOptions="Center">
                             <HorizontalStackLayout Spacing="5">
@@ -99,11 +99,11 @@
             </Frame>
 
             <!-- Period Duration Chart -->
-            <Frame BackgroundColor="White" CornerRadius="10" Padding="15" HasShadow="True">
+            <Frame BackgroundColor="White" CornerRadius="16" Padding="15" HasShadow="True">
                 <VerticalStackLayout Spacing="15">
                     <Label Text="Period Duration Trends" 
                            TextColor="{StaticResource PrimaryColor}"
-                           FontSize="18" 
+                           FontSize="20" 
                            FontAttributes="Bold" 
                            HorizontalOptions="Center" />
 
@@ -112,7 +112,7 @@
                                      HorizontalOptions="FillAndExpand" />
 
                     <!-- Chart Legend -->
-                    <Grid ColumnDefinitions="*, *, *" ColumnSpacing="5" HorizontalOptions="Center">
+                    <Grid ColumnDefinitions="*, *, *" ColumnSpacing="12" HorizontalOptions="Center">
                         <!-- Normal -->
                         <Frame BackgroundColor="Transparent" Padding="5" HorizontalOptions="Center">
                             <HorizontalStackLayout Spacing="5">
@@ -169,11 +169,11 @@
             </Frame>
 
             <!-- Statistics Section -->
-            <Frame BackgroundColor="White" CornerRadius="10" Padding="15" HasShadow="True">
+            <Frame BackgroundColor="White" CornerRadius="16" Padding="15" HasShadow="True">
                 <VerticalStackLayout Spacing="15">
                     <Label Text="Cycle Statistics" 
                            TextColor="{StaticResource PrimaryColor}"
-                           FontSize="18" 
+                           FontSize="20" 
                            FontAttributes="Bold" 
                            HorizontalOptions="Center" />
 
@@ -238,11 +238,11 @@
             </Frame>
 
             <!-- Recent Cycles -->
-            <Frame BackgroundColor="White" CornerRadius="10" Padding="15" HasShadow="True">
+            <Frame BackgroundColor="White" CornerRadius="16" Padding="15" HasShadow="True">
                 <VerticalStackLayout Spacing="15">
                     <Label Text="Recent Cycles" 
                            TextColor="{StaticResource PrimaryColor}"
-                           FontSize="18" 
+                           FontSize="20" 
                            FontAttributes="Bold" 
                            HorizontalOptions="Center" />
 
@@ -268,7 +268,7 @@
                         </CollectionView.Header>
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
-                                <Frame Padding="12" CornerRadius="8" BackgroundColor="#F8F9FA" Margin="0,5">
+                                <Frame Padding="12" CornerRadius="12" BackgroundColor="#F8F9FA" Margin="0,6">
                                     <Grid ColumnDefinitions="*, *, *">
                                         <Label Text="{Binding StartDate, StringFormat='{0:MMM dd, yyyy}'}"
                                                TextColor="{StaticResource DarkTextColor}"
