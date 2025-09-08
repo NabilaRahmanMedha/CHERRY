@@ -3,19 +3,84 @@
              x:Class="CHERRY.Views.SexualHealthPage"
              Title="Sexual Health Information">
 
-    <VerticalStackLayout Padding="20" Spacing="15">
+	<ScrollView>
+		<VerticalStackLayout Padding="20" Spacing="18">
 
-        <!-- Back Button -->
-        <Button Text="← Back" Clicked="OnBackClicked"
-                BackgroundColor="Transparent" TextColor="#eb3f95" FontSize="18" HorizontalOptions="Start"/>
+		
 
-        <!-- Page Content in Frame -->
-        <Frame CornerRadius="12" Padding="15" HasShadow="True" BackgroundColor="#ffedf6">
-            <VerticalStackLayout Spacing="10">
-                <Label Text="Sexual Health Information" FontSize="24" FontAttributes="Bold" TextColor="#eb3f95" HorizontalOptions="Center"/>
-                <Label Text="Information about sexual health will be displayed here." FontSize="16" TextColor="#666666"/>
-            </VerticalStackLayout>
-        </Frame>
+			<!-- Main Title -->
+			<Label Text="Sexual Health Resources"
+                   FontSize="26"
+                   FontAttributes="Bold"
+                   TextColor="#eb3f95"
+                   HorizontalOptions="Center"
+                   Margin="0,10,0,20"/>
 
-    </VerticalStackLayout>
+			<!-- Frame 1: Safe Practices -->
+			<Frame CornerRadius="14" Padding="15" HasShadow="True" BackgroundColor="White">
+				<VerticalStackLayout Spacing="8">
+					<Label Text="🛡 Safe Practices"
+                           FontSize="20"
+                           FontAttributes="Bold"
+                           TextColor="#eb3f95"/>
+					<Label Text="• Practice safe sex with proper protection (condoms, dental dams)." TextColor="#444"/>
+					<Label Text="• Communicate openly with partners about boundaries and consent." TextColor="#444"/>
+					<Label Text="• Regular check-ups and screenings help prevent long-term issues." TextColor="#444"/>
+				</VerticalStackLayout>
+			</Frame>
+
+			<!-- Frame 2: Contraception -->
+			<Frame CornerRadius="14" Padding="15" HasShadow="True" BackgroundColor="#ffedf6">
+				<VerticalStackLayout Spacing="8">
+					<Label Text="💊 Contraception Options"
+                           FontSize="20"
+                           FontAttributes="Bold"
+                           TextColor="#eb3f95"/>
+					<Label Text="• Pills, patches, injections, or IUDs provide reliable options." TextColor="#444"/>
+					<Label Text="• Emergency contraception can be used within 72 hours after unprotected sex." TextColor="#444"/>
+					<Label Text="• Always consult a healthcare provider for the best choice for your body." TextColor="#444"/>
+				</VerticalStackLayout>
+			</Frame>
+
+			<!-- Frame 3: STD Awareness -->
+			<Frame CornerRadius="14" Padding="15" HasShadow="True" BackgroundColor="White">
+				<VerticalStackLayout Spacing="8">
+					<Label Text="&#x1F9EC; STD Awareness &amp; Protection"
+                           FontSize="20"
+                           FontAttributes="Bold"
+                           TextColor="#eb3f95"/>
+					<Label Text="• Use condoms to reduce the risk of STDs including HIV." TextColor="#444"/>
+					<Label Text="• Get tested regularly if you are sexually active." TextColor="#444"/>
+					<Label Text="• Be aware of common symptoms but remember some STDs show no signs." TextColor="#444"/>
+				</VerticalStackLayout>
+			</Frame>
+
+			<!-- Frame 4: Reproductive Health -->
+			<Frame CornerRadius="14" Padding="15" HasShadow="True" BackgroundColor="#ffedf6">
+				<VerticalStackLayout Spacing="8">
+					<Label Text="🌸 Reproductive Health"
+                           FontSize="20"
+                           FontAttributes="Bold"
+                           TextColor="#eb3f95"/>
+					<Label Text="• Track menstrual cycles to monitor reproductive health." TextColor="#444"/>
+					<Label Text="• Consult professionals for irregularities or discomfort." TextColor="#444"/>
+					<Label Text="• Pre-pregnancy counseling is essential if planning to conceive." TextColor="#444"/>
+				</VerticalStackLayout>
+			</Frame>
+
+			<!-- Frame 5: Support -->
+			<Frame CornerRadius="14" Padding="15" HasShadow="True" BackgroundColor="White">
+				<VerticalStackLayout Spacing="8">
+					<Label Text="📞 Support &amp; Emergency Help"
+                           FontSize="20"
+                           FontAttributes="Bold"
+                           TextColor="#eb3f95"/>
+					<Label Text="• Local health centers provide confidential advice and treatment." TextColor="#444"/>
+					<Label Text="• Seek immediate help if you face sexual violence or harassment." TextColor="#444"/>
+					<Label Text="• Crisis hotlines and support groups are available in most areas." TextColor="#444"/>
+				</VerticalStackLayout>
+			</Frame>
+
+		</VerticalStackLayout>
+	</ScrollView>
 </ContentPage>
