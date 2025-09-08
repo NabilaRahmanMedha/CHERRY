@@ -50,7 +50,7 @@
             <Button Text="Send"
                     Grid.Column="1"
                     Clicked="OnSendClicked"
-                    BackgroundColor="Purple"
+                    BackgroundColor="HotPink"
                     TextColor="White"
                     CornerRadius="20"
                     Padding="12,6"

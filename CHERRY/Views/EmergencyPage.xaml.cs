@@ -276,22 +276,22 @@ namespace CHERRY.Views
 
         private async void OnAiHealthAssistantClicked(object sender, EventArgs e)
         {
-            await DisplayAlert("ChatBot","Navigate to Ai Chatbot", "OK");
+            await Navigation.PushAsync(new ChatBotPage());
         }
 
         private async void OnResourcesClicked(object sender, EventArgs e)
         {
-            await DisplayAlert("Resources", "Women's health resources would be shown here.", "OK");
+            await Navigation.PushAsync(new WomensHealthPage());
         }
 
         private async void OnUrgentCareClicked(object sender, EventArgs e)
         {
-            await DisplayAlert("Urgent Care", "Urgent care centers would be shown here.", "OK");
+            await Navigation.PushAsync(new UrgentCarePage());
         }
 
         private async void OnHealthInfoClicked(object sender, EventArgs e)
         {
-            await DisplayAlert("Health Information", "Sexual health information would be shown here.", "OK");
+            await Navigation.PushAsync(new SexualHealthPage());
         }
 
         private void DisplayToast(string message)
