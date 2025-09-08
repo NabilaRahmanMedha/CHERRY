@@ -1,4 +1,10 @@
-﻿namespace CHERRY.Views;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui.Graphics;
+
+namespace CHERRY.Views;
 
 public partial class ChatBotPage : ContentPage
 {
@@ -7,46 +13,78 @@ public partial class ChatBotPage : ContentPage
         InitializeComponent();
     }
 
-    private void OnSendClicked(object sender, EventArgs e)
+    private async void OnSendClicked(object sender, EventArgs e)
     {
         string userMessage = UserInput.Text?.Trim();
-        if (string.IsNullOrEmpty(userMessage)) return;
+        if (string.IsNullOrEmpty(userMessage))
+            return;
 
-        // Add user bubble
-        AddMessage(userMessage, isUser: true);
-
+        await HandleUserMessage(userMessage);
         UserInput.Text = string.Empty;
-
-        // ---- TODO: Call your backend API here ----
-        string botReply = "This is a placeholder reply from the bot."; // TEMP
-        AddMessage(botReply, isUser: false);
     }
 
+    // When quick suggestion button is tapped
+    private async void OnSuggestionClicked(object sender, EventArgs e)
+    {
+        if (sender is Button btn && !string.IsNullOrEmpty(btn.Text))
+        {
+            await HandleUserMessage(btn.Text);
+        }
+    }
+
+    // Core message handler
+    private async Task HandleUserMessage(string userMessage)
+    {
+        AddMessage(userMessage, isUser: true);
+
+        await Task.Delay(50);
+        if (MessagesStack.Children.Any())
+        {
+            var last = MessagesStack.Children.Last() as Element;
+            if (last != null)
+                await MessagesScroll.ScrollToAsync(last, ScrollToPosition.End, true);
+        }
+
+        // ---- PLACEHOLDER: Call backend API ----
+        string botReply = await CallChatApi(userMessage);
+
+        AddMessage(botReply, isUser: false);
+
+        await Task.Delay(50);
+        if (MessagesStack.Children.Any())
+        {
+            var last = MessagesStack.Children.Last() as Element;
+            if (last != null)
+                await MessagesScroll.ScrollToAsync(last, ScrollToPosition.End, true);
+        }
+    }
+
+    // Create a chat bubble
     private void AddMessage(string text, bool isUser)
     {
         var bubble = new Frame
         {
             BackgroundColor = isUser ? Colors.Purple : Colors.LightGray,
-            CornerRadius = 20,
-            Padding = new Thickness(12, 8),
+            CornerRadius = 18,
+            Padding = new Thickness(12),
             Margin = new Thickness(5),
             HasShadow = false,
             HorizontalOptions = isUser ? LayoutOptions.End : LayoutOptions.Start,
             Content = new Label
             {
                 Text = text,
-                FontSize = 16,
-                TextColor = isUser ? Colors.White : Colors.Black
+                TextColor = isUser ? Colors.White : Colors.Black,
+                FontSize = 16
             }
         };
 
         MessagesStack.Children.Add(bubble);
     }
 
-    // Placeholder backend call (you can fill in later)
+    // Placeholder backend method
     private async Task<string> CallChatApi(string userMessage)
     {
-        await Task.Delay(500); // simulate network delay
-        return "Bot reply here...";
+        await Task.Delay(400); // simulate delay
+        return $"(Bot reply placeholder for: {userMessage})";
     }
 }

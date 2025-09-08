@@ -2,17 +2,38 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="CHERRY.Views.ChatBotPage"
-             Title="ChatBot">
+             Title="BloomBot">
 
-    <Grid RowDefinitions="*,Auto" Padding="10">
+    <Grid RowDefinitions="*,Auto,Auto" Padding="10">
 
         <!-- Messages area -->
         <ScrollView Grid.Row="0" x:Name="MessagesScroll">
             <VerticalStackLayout x:Name="MessagesStack" Spacing="10" Padding="0,5"/>
         </ScrollView>
 
+        <!-- Quick suggestion buttons -->
+        <HorizontalStackLayout Grid.Row="1" Spacing="10" Padding="5">
+            <Button Text="Tips" 
+                    Clicked="OnSuggestionClicked"
+                    BackgroundColor="#E0BBE4"
+                    CornerRadius="20"
+                    Padding="15,5"/>
+            <Button Text="Healthy Diet" 
+                    Clicked="OnSuggestionClicked"
+                    BackgroundColor="#957DAD"
+                    TextColor="White"
+                    CornerRadius="20"
+                    Padding="15,5"/>
+            <Button Text="Remedies" 
+                    Clicked="OnSuggestionClicked"
+                    BackgroundColor="#D291BC"
+                    TextColor="White"
+                    CornerRadius="20"
+                    Padding="15,5"/>
+        </HorizontalStackLayout>
+
         <!-- Input area -->
-        <Grid Grid.Row="1" ColumnDefinitions="*,Auto" Padding="8" BackgroundColor="#f2f2f2">
+        <Grid Grid.Row="2" ColumnDefinitions="*,Auto" Padding="8" BackgroundColor="#f2f2f2">
             <Entry x:Name="UserInput"
                    Placeholder="Ask me anything about periods..."
                    FontSize="16"
