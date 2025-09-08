@@ -5,7 +5,7 @@
     <ContentPage.Resources>
         <!-- Color Resources -->
         <Color x:Key="PrimaryColor">#eb3f95</Color>
-        <Color x:Key="PrimaryLightColor">#9389DB</Color>
+        <Color x:Key="PrimaryLightColor">#ffedf6</Color>
         <Color x:Key="SecondaryColor">#ea1567</Color>
         <Color x:Key="LightBackground">#FFFFFF</Color>
         <Color x:Key="CardBackground">#FFFFFF</Color>
@@ -84,6 +84,23 @@
             <Setter Property="BorderColor" Value="{StaticResource PrimaryColor}" />
             <Setter Property="BorderWidth" Value="1" />
             <Setter Property="CornerRadius" Value="5" />
+        </Style>
+
+        <Style x:Key="EmergencyTipsText" TargetType="Label">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="TextColor" Value="{StaticResource PrimaryColor}"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="HorizontalTextAlignment" Value="Center"/>
+            <Setter Property="VerticalTextAlignment" Value="Center"/>
+        </Style>
+
+        <Style x:Key="EmercencyTipsTextLayout" TargetType="Border">
+            <Setter Property="Stroke" Value="{StaticResource PrimaryColor}"/>
+            <Setter Property="StrokeThickness" Value="1"/>
+            <Setter Property="StrokeShape" Value="RoundRectangle 20"/>
+            <Setter Property="BackgroundColor" Value="{StaticResource PrimaryLightColor}"/>
+            <Setter Property="Padding" Value="12,8"/>
+            <Setter Property="Margin" Value="0,0,5,5"/>
         </Style>
     </ContentPage.Resources>
 
@@ -211,7 +228,6 @@
                     </VerticalStackLayout>
                 </Border>
 
-
             <!-- Gynecologist Section -->
             <Label Text="Gynecologist Contacts" Style="{StaticResource SectionTitle}" />
             <Border Style="{StaticResource CardBorder}" HeightRequest="250">
@@ -325,7 +341,8 @@
                         </VerticalStackLayout>
 
                         <VerticalStackLayout Grid.Column="1" Grid.Row="1">
-                            <Label Text="🏥 24/7 support for women's health issues" Style="{StaticResource InfoLabel}" />
+                            <Label Text="🏥 24/7 support for women's health issues" 
+                                   Style="{StaticResource InfoLabel}" />
                             <Button Text="Call 16263" 
                         Clicked="OnHealthHotlineClicked"
                         Margin="0,10,0,0"
@@ -341,37 +358,21 @@
             <Border Style="{StaticResource CardBorder}">
                 <VerticalStackLayout Spacing="10">
                     <FlexLayout Wrap="Wrap" JustifyContent="Start">
-                        <Border Stroke="{StaticResource PrimaryLightColor}" 
-                                StrokeThickness="1"
-                                StrokeShape="RoundRectangle 20"
-                                BackgroundColor="#206A5ACD"
-                                Padding="12,8"
-                                Margin="0,0,10,10">
-                            <Label Text="Stay Calm" TextColor="{StaticResource PrimaryColor}" FontSize="12" />
+                        <Border Style="{StaticResource EmercencyTipsTextLayout}">
+                            <Label Text="Stay Calm" 
+                                   Style="{StaticResource EmergencyTipsText}"/>
                         </Border>
-                        <Border Stroke="{StaticResource PrimaryLightColor}" 
-                                StrokeThickness="1"
-                                StrokeShape="RoundRectangle 20"
-                                BackgroundColor="#206A5ACD"
-                                Padding="12,8"
-                                Margin="0,0,10,10">
-                            <Label Text="Describe Symptoms" TextColor="{StaticResource PrimaryColor}" FontSize="12" />
+                        <Border Style="{StaticResource EmercencyTipsTextLayout}">
+                            <Label Text="Describe Symptoms"
+                                   Style="{StaticResource EmergencyTipsText}"/>
                         </Border>
-                        <Border Stroke="{StaticResource PrimaryLightColor}" 
-                                StrokeThickness="1"
-                                StrokeShape="RoundRectangle 20"
-                                BackgroundColor="#206A5ACD"
-                                Padding="12,8"
-                                Margin="0,0,10,10">
-                            <Label Text="Follow Instructions" TextColor="{StaticResource PrimaryColor}" FontSize="12" />
+                        <Border Style="{StaticResource EmercencyTipsTextLayout}">
+                            <Label Text="Follow Instructions" 
+                                   Style="{StaticResource EmergencyTipsText}"/>
                         </Border>
-                        <Border Stroke="{StaticResource PrimaryLightColor}" 
-                                StrokeThickness="1"
-                                StrokeShape="RoundRectangle 20"
-                                BackgroundColor="#206A5ACD"
-                                Padding="12,8"
-                                Margin="0,0,10,10">
-                            <Label Text="Have ID Ready" TextColor="{StaticResource PrimaryColor}" FontSize="12" />
+                        <Border Style="{StaticResource EmercencyTipsTextLayout}">
+                            <Label Text="Have ID Ready" 
+                                   Style="{StaticResource EmergencyTipsText}"/>
                         </Border>
                     </FlexLayout>
                 </VerticalStackLayout>
