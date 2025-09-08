@@ -140,13 +140,13 @@ namespace CHERRY.Views
         private async void OnEmergencyCallClicked(object sender, EventArgs e)
         {
             bool proceed = await DisplayAlert("Emergency Call",
-                "Are you sure you want to call emergency services (911)?", "Call", "Cancel");
+                "Are you sure you want to call emergency services (999)?", "Call", "Cancel");
 
             if (proceed)
             {
                 try
                 {
-                    PhoneDialer.Open("911");
+                    PhoneDialer.Open("999");
                 }
                 catch (Exception ex)
                 {
@@ -159,13 +159,13 @@ namespace CHERRY.Views
         private async void OnHealthHotlineClicked(object sender, EventArgs e)
         {
             bool proceed = await DisplayAlert("Health Hotline",
-                "Call Women's Health Hotline at 1-800-XXX-XXXX?", "Call", "Cancel");
+                "Call Women's Health Hotline at 16263?", "Call", "Cancel");
 
             if (proceed)
             {
                 try
                 {
-                    PhoneDialer.Open("1800XXXXXXX");
+                    PhoneDialer.Open("16263");
                 }
                 catch (Exception ex)
                 {
