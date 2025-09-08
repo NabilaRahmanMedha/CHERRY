@@ -25,7 +25,7 @@ namespace CHERRY.Views
         private void UpdateUI()
         {
             // Set current date
-            CurrentDateLabel.Text = DateTime.Now.ToString("dddd, MMMM dd, yyyy");
+            CurrentDateLabel.Text = DateTime.Now.ToString("dddd, MMM dd");
 
             var cycleData = _cycleService.GetCycleData();
 
@@ -56,20 +56,46 @@ namespace CHERRY.Views
             RecentDuration2Label.Text = "-";
             RecentCycle2Label.Text = "-";
 
-            AvgCycleLabel.Text = "28";
-            AvgPeriodLabel.Text = "5";
-            OvulationDayLabel.Text = "14";
-            CyclePatternLabel.Text = "Regular";
+            AvgCycleLabel.Text = "-";
+            AvgPeriodLabel.Text = "-";
+            OvulationDayLabel.Text = "-";
+            CyclePatternLabel.Text = "-";
 
             DailyTipLabel.Text = "Track your period to get personalized tips and predictions.";
         }
 
         private void UpdateCycleStatus(CycleData cycleData)
         {
-            CycleDayLabel.Text = $"Day {cycleData.CurrentCycleDay}";
-            NextPeriodLabel.Text = cycleData.DaysUntilNextPeriod > 0 ? $"in {cycleData.DaysUntilNextPeriod} days" : "Today";
-            OvulationLabel.Text = Math.Abs(cycleData.DaysUntilOvulation) <= 2 ? "Now" : $"in {Math.Abs(cycleData.DaysUntilOvulation)} days";
-            FertilityLabel.Text = cycleData.FertilityStatus;
+            CycleDayLabel.Text = cycleData.CurrentCycleDay > 0 ? $"Day {cycleData.CurrentCycleDay}" : "-";
+
+            if (cycleData.DaysUntilNextPeriod > 0)
+            {
+                NextPeriodLabel.Text = $"in {cycleData.DaysUntilNextPeriod} days";
+            }
+            else if (cycleData.DaysUntilNextPeriod == 0)
+            {
+                NextPeriodLabel.Text = "Today";
+            }
+            else
+            {
+                NextPeriodLabel.Text = "-";
+            }
+
+            if (Math.Abs(cycleData.DaysUntilOvulation) <= 2)
+            {
+                OvulationLabel.Text = "Now";
+            }
+            else if (cycleData.DaysUntilOvulation != 0)
+            {
+                OvulationLabel.Text = $"in {Math.Abs(cycleData.DaysUntilOvulation)} days";
+            }
+            else
+            {
+                OvulationLabel.Text = "-";
+            }
+
+            FertilityLabel.Text = !string.IsNullOrEmpty(cycleData.FertilityStatus) ?
+                cycleData.FertilityStatus : "-";
         }
 
         private void UpdateRecentHistory(CycleData cycleData)
@@ -86,6 +112,16 @@ namespace CHERRY.Views
                     TimeSpan cycleLength = sortedCycles[0].StartDate - sortedCycles[1].StartDate;
                     RecentCycle1Label.Text = $"{cycleLength.Days} days";
                 }
+                else
+                {
+                    RecentCycle1Label.Text = "-";
+                }
+            }
+            else
+            {
+                RecentPeriod1Label.Text = "-";
+                RecentDuration1Label.Text = "-";
+                RecentCycle1Label.Text = "-";
             }
 
             if (sortedCycles.Count > 1)
@@ -98,22 +134,36 @@ namespace CHERRY.Views
                     TimeSpan cycleLength = sortedCycles[1].StartDate - sortedCycles[2].StartDate;
                     RecentCycle2Label.Text = $"{cycleLength.Days} days";
                 }
+                else
+                {
+                    RecentCycle2Label.Text = "-";
+                }
+            }
+            else
+            {
+                RecentPeriod2Label.Text = "-";
+                RecentDuration2Label.Text = "-";
+                RecentCycle2Label.Text = "-";
             }
         }
 
         private void UpdateStatistics(CycleData cycleData)
         {
-            AvgCycleLabel.Text = cycleData.AverageCycleLength.ToString();
+            AvgCycleLabel.Text = cycleData.AverageCycleLength > 0 ?
+                cycleData.AverageCycleLength.ToString() : "-";
 
             // Calculate average period length
-            int avgPeriodLength = (int)cycleData.CycleHistory.Average(c => c.Duration);
-            AvgPeriodLabel.Text = avgPeriodLength.ToString();
+            int avgPeriodLength = cycleData.CycleHistory.Any() ?
+                (int)cycleData.CycleHistory.Average(c => c.Duration) : 0;
+            AvgPeriodLabel.Text = avgPeriodLength > 0 ? avgPeriodLength.ToString() : "-";
 
             // Set ovulation day
-            OvulationDayLabel.Text = (cycleData.AverageCycleLength - 14).ToString();
+            OvulationDayLabel.Text = cycleData.AverageCycleLength > 0 ?
+                (cycleData.AverageCycleLength - 14).ToString() : "-";
 
             // Determine cycle pattern
-            CyclePatternLabel.Text = GetCyclePattern(cycleData.AverageCycleLength);
+            CyclePatternLabel.Text = cycleData.AverageCycleLength > 0 ?
+                GetCyclePattern(cycleData.AverageCycleLength) : "-";
         }
 
         private string GetCyclePattern(int avgCycleLength)
@@ -136,8 +186,17 @@ namespace CHERRY.Views
             await Shell.Current.GoToAsync("//CalendarPage");
         }
 
+        private async void OnProfileClicked(object sender, EventArgs e)
+        {
+            await Shell.Current.GoToAsync("//ProfilePage");
+        }
 
         private async void OnSettingsClicked(object sender, EventArgs e)
+        {
+            await DisplayAlert("Settings", "Here you can change app settings.", "OK");
+        }
+
+        private async void OnMenuClicked(object sender, EventArgs e)
         {
             await DisplayAlert("Settings", "Here you can change app settings.", "OK");
         }

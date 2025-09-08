@@ -2,8 +2,8 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="CHERRY.Views.CyclePage"
-             Title="Cycle Tracking"
-             BackgroundColor="#F8F9FA">
+             Title=""
+             NavigationPage.HasNavigationBar="False">
 
     <ContentPage.Resources>
         <Style x:Key="CardTitle" TargetType="Label">
@@ -34,343 +34,385 @@
         </Style>
     </ContentPage.Resources>
 
-    <ScrollView>
-        <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,*" 
-              RowSpacing="20"
-              Padding="20">
+    <Grid>
+        <ScrollView>
 
-            <!-- Current Date Display -->
-            <Frame Grid.Row="0"
-                   CornerRadius="15"
-                   BackgroundColor="#6A5ACD"
-                   Padding="20"
-                   HasShadow="True">
-                <VerticalStackLayout Spacing="5">
-                    <Label x:Name="CurrentDateLabel"
-                           FontSize="24"
-                           TextColor="White"
-                           FontAttributes="Bold"
-                           HorizontalOptions="Center" />
-                    <Label Text="Today's Date"
-                           FontSize="14"
-                           TextColor="White"
-                           HorizontalOptions="Center" />
-                </VerticalStackLayout>
-            </Frame>
+            <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,*" 
+                  RowSpacing="10"
+                  Padding="20"
+                  Margin="0,0,0,0">
 
-            <!-- Current Status Card -->
-            <Frame Grid.Row="1"
-                   CornerRadius="15"
-                   BackgroundColor="White"
-                   Padding="20"
-                   HasShadow="True">
-                <VerticalStackLayout Spacing="15">
-                    <Label Text="CURRENT CYCLE STATUS"
-                           Style="{StaticResource CardTitle}" />
+                <Border Grid.Row="0"
+                        StrokeShape="RoundRectangle 0,0,100,100"
+                        HeightRequest="200"
+                        BackgroundColor="#ffc4de"
+                        Padding="10"
+                        Margin="-20,-20,-20,0">
 
-                    <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto,Auto" 
-                          RowSpacing="10" ColumnSpacing="15">
-                        <Label Text="Cycle Day:"
-                               Grid.Row="0" Grid.Column="0"
+                    <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,*,Auto"
+                          VerticalOptions="Start">
+
+                        <!-- Profile Icon (Left) -->
+                        <Border Grid.Column="0" Grid.Row="0"
+                                StrokeShape="RoundRectangle 20"
+                                HeightRequest="40"
+                                WidthRequest="40"
+                                StrokeThickness="0"
+                                Background="Transparent">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnProfileClicked" />
+                            </Border.GestureRecognizers>
+                            <Image Source="profile_icon.png"
+                                   Aspect="AspectFill"
+                                   HorizontalOptions="Fill"
+                                   VerticalOptions="Fill"/>
+                        </Border>
+
+                        <!-- Current Date (Center) -->
+                        <Label Grid.Column="1" Grid.Row="0"
+                               x:Name="CurrentDateLabel"
+                               FontSize="18"
+                               TextColor="White"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Start" />
+
+                        <!-- Menu Icon (Right) -->
+                        <ImageButton Grid.Column="2" Grid.Row="0"
+                                     Source="menu_icon.png"
+                                     WidthRequest="28"
+                                     HeightRequest="28"
+                                     BackgroundColor="Transparent"
+                                     HorizontalOptions="End"
+                                     VerticalOptions="Center"/>
+
+                        <Label  Grid.Column="1" Grid.Row="1"
+                                Text="Prediction"
+                                FontSize="16"
+                                TextColor="#4e4e4e"
+                                Padding="10"
+                                HorizontalOptions="Center"/>
+
+                        <Label Grid.Column="1" Grid.Row="2"
+                               x:Name="DailyTipLabel"
+                               FontSize="18"
                                FontAttributes="Bold"
-                               TextColor="#666666" />
-                        <Label x:Name="CycleDayLabel"
-                               Text="Day 12"
-                               Grid.Row="0" Grid.Column="1"
-                               TextColor="#333333" />
+                               HorizontalOptions="Center"
+                               HorizontalTextAlignment="Center"
+                               VerticalTextAlignment="Center"
+                               LineBreakMode="WordWrap"
+                               TextColor="#4e4e4e"
+                               WidthRequest="250" />
 
-                        <Label Text="Next Period:"
-                               Grid.Row="1" Grid.Column="0"
-                               FontAttributes="Bold"
-                               TextColor="#666666" />
-                        <Label x:Name="NextPeriodLabel"
-                               Text="in 16 days"
-                               Grid.Row="1" Grid.Column="1"
-                               TextColor="#333333" />
 
-                        <Label Text="Ovulation:"
-                               Grid.Row="2" Grid.Column="0"
-                               FontAttributes="Bold"
-                               TextColor="#666666" />
-                        <Label x:Name="OvulationLabel"
-                               Text="in 2 days"
-                               Grid.Row="2" Grid.Column="1"
-                               TextColor="#333333" />
-
-                        <Label Text="Fertility:"
-                               Grid.Row="3" Grid.Column="0"
-                               FontAttributes="Bold"
-                               TextColor="#666666" />
-                        <Label x:Name="FertilityLabel"
-                               Text="High"
-                               Grid.Row="3" Grid.Column="1"
-                               TextColor="#333333" />
                     </Grid>
-                </VerticalStackLayout>
-            </Frame>
+                </Border>
 
-            <!-- Quick Actions -->
 
-            <!-- Quick Actions -->
-            <Frame Grid.Row="2"
-       CornerRadius="15"
-       BackgroundColor="White"
-       Padding="20"
-       HasShadow="True">
-                <VerticalStackLayout Spacing="15">
-                    <Label Text="QUICK ACTIONS"
-               Style="{StaticResource CardTitle}" />
+                <!-- Current Status Card -->
+                <Frame Grid.Row="1"
+                       CornerRadius="15"
+                       BackgroundColor="White"
+                       Padding="20"
+                       HasShadow="True">
+                    <VerticalStackLayout Spacing="15">
+                        <Label Text="CURRENT CYCLE STATUS"
+                               Style="{StaticResource CardTitle}" />
 
-                    <Grid ColumnDefinitions="*,*,*" 
-              ColumnSpacing="20"
-              RowSpacing="0">
+                        <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto,Auto" 
+                              RowSpacing="10" ColumnSpacing="15">
+                            <Label Text="Cycle Day:"
+                                   Grid.Row="0" Grid.Column="0"
+                                   FontAttributes="Bold"
+                                   TextColor="#666666" />
+                            <Label x:Name="CycleDayLabel"
+                                   Text="Day 12"
+                                   Grid.Row="0" Grid.Column="1"
+                                   TextColor="#333333" />
 
-                        <!-- Log Period Button -->
-                        <Frame Grid.Column="0"
-                   CornerRadius="15"
-                   BackgroundColor="#FF6B8B"
-                   Padding="0"
-                   HasShadow="False"
-                   HeightRequest="80"
-                   WidthRequest="80"
-                   HorizontalOptions="Center">
-                            <VerticalStackLayout Spacing="8"
-                                     HorizontalOptions="Center"
-                                     VerticalOptions="Center">
-                                <Label Text="✓"
-                           FontSize="32"
-                           HorizontalOptions="Center"
-                           VerticalOptions="Center" />
-                                <Label Text="Log Period"
-                           FontSize="14"
-                           TextColor="White"
-                           HorizontalOptions="Center"
-                           VerticalOptions="Center" />
-                            </VerticalStackLayout>
-                            <Frame.GestureRecognizers>
-                                <TapGestureRecognizer Tapped="OnLogPeriodClicked" />
-                            </Frame.GestureRecognizers>
-                        </Frame>
+                            <Label Text="Next Period:"
+                                   Grid.Row="1" Grid.Column="0"
+                                   FontAttributes="Bold"
+                                   TextColor="#666666" />
+                            <Label x:Name="NextPeriodLabel"
+                                   Text="in 16 days"
+                                   Grid.Row="1" Grid.Column="1"
+                                   TextColor="#333333" />
 
-                        <!-- Calendar Button -->
-                        <Frame Grid.Column="1"
-                   CornerRadius="15"
-                   BackgroundColor="#6A5ACD"
-                   Padding="0"
-                   HasShadow="False"
-                   HeightRequest="80"
-                   WidthRequest="80"
-                   HorizontalOptions="Center">
-                            <VerticalStackLayout Spacing="8"
-                                     HorizontalOptions="Center"
-                                     VerticalOptions="Center">
-                                <Label Text="📆"
-                           FontSize="32"
-                           TextColor="White"
-                           HorizontalOptions="Center"
-                           VerticalOptions="Center" />
-                                <Label Text="Calendar"
-                           FontSize="14"
-                           TextColor="White"
-                           HorizontalOptions="Center"
-                           VerticalOptions="Center" />
-                            </VerticalStackLayout>
-                            <Frame.GestureRecognizers>
-                                <TapGestureRecognizer Tapped="OnCalendarClicked" />
-                            </Frame.GestureRecognizers>
-                        </Frame>
+                            <Label Text="Ovulation:"
+                                   Grid.Row="2" Grid.Column="0"
+                                   FontAttributes="Bold"
+                                   TextColor="#666666" />
+                            <Label x:Name="OvulationLabel"
+                                   Text="in 2 days"
+                                   Grid.Row="2" Grid.Column="1"
+                                   TextColor="#333333" />
 
-                        <!-- Settings Button -->
-                        <Frame Grid.Column="2"
-                   CornerRadius="15"
-                   BackgroundColor="#4ECDC4"
-                   Padding="0"
-                   HasShadow="False"
-                   HeightRequest="80"
-                   WidthRequest="80"
-                   HorizontalOptions="Center">
-                            <VerticalStackLayout Spacing="8"
-                                     HorizontalOptions="Center"
-                                     VerticalOptions="Center">
-                                <Label Text="⚙️"
-                           FontSize="32"
-                           TextColor="White"
-                           HorizontalOptions="Center"
-                           VerticalOptions="Center" />
-                                <Label Text="Settings"
-                           FontSize="14"
-                           TextColor="White"
-                           HorizontalOptions="Center"
-                           VerticalOptions="Center" />
-                            </VerticalStackLayout>
-                            <Frame.GestureRecognizers>
-                                <TapGestureRecognizer Tapped="OnSettingsClicked" />
-                            </Frame.GestureRecognizers>
-                        </Frame>
-                    </Grid>
-                </VerticalStackLayout>
-            </Frame>
+                            <Label Text="Fertility:"
+                                   Grid.Row="3" Grid.Column="0"
+                                   FontAttributes="Bold"
+                                   TextColor="#666666" />
+                            <Label x:Name="FertilityLabel"
+                                   Text="High"
+                                   Grid.Row="3" Grid.Column="1"
+                                   TextColor="#333333" />
+                        </Grid>
+                    </VerticalStackLayout>
+                </Frame>
 
-            <!-- Recent History -->
-            <Frame Grid.Row="3"
-                   CornerRadius="15"
-                   BackgroundColor="White"
-                   Padding="20"
-                   HasShadow="True">
-                <VerticalStackLayout Spacing="15">
-                    <Label Text="RECENT HISTORY"
-                           Style="{StaticResource CardTitle}" />
+                <!-- Quick Actions -->
+                <Border Grid.Row="2"
+                       StrokeShape="15"
+                       BackgroundColor="White"
+                       Padding="20">
+                    
+                    <VerticalStackLayout Spacing="15">
+                        <Label Text="QUICK ACTIONS"
+                                Style="{StaticResource CardTitle}" />
 
-                    <BoxView HeightRequest="1" 
-                             Color="#EEEEEE" 
-                             HorizontalOptions="Fill" />
+                        <Grid ColumnDefinitions="*,*,*" 
+                              ColumnSpacing="0"
+                              RowSpacing="0">
 
-                    <Grid ColumnDefinitions="*,*,*" 
-                          RowDefinitions="Auto,Auto,Auto"
-                          RowSpacing="10">
-                        <Label Text="Start Date"
-                               Grid.Row="0" Grid.Column="0"
-                               FontAttributes="Bold"
-                               TextColor="#666666" />
-                        <Label Text="Duration"
-                               Grid.Row="0" Grid.Column="1"
-                               FontAttributes="Bold"
-                               TextColor="#666666" />
-                        <Label Text="Cycle Length"
-                               Grid.Row="0" Grid.Column="2"
-                               FontAttributes="Bold"
-                               TextColor="#666666" />
+                            
+                            <Border Grid.Column="0"
+                                   StrokeShape="RoundRectangle 15,15,15,15"
+                                   BackgroundColor="#FF6B8B"  
+                                   Stroke="White"
+                                   StrokeThickness="2"
+                                   Padding="2"
+                                   HeightRequest="120"
+                                   WidthRequest="100"
+                                   HorizontalOptions="Center">
 
-                        <Label x:Name="RecentPeriod1Label"
-                               Text="Aug 9, 2024"
-                               Grid.Row="1" Grid.Column="0"
-                               TextColor="#333333" />
-                        <Label x:Name="RecentDuration1Label"
-                               Text="5 days"
-                               Grid.Row="1" Grid.Column="1"
-                               TextColor="#333333" />
-                        <Label x:Name="RecentCycle1Label"
-                               Text="32 days"
-                               Grid.Row="1" Grid.Column="2"
-                               TextColor="#333333" />
+                                <Border StrokeShape="RoundRectangle 13,13,13,13"
+                                        BackgroundColor="#FF6B8B"  
+                                        Stroke="White"
+                                        StrokeThickness="2"
+                                        Padding="0">
 
-                        <Label x:Name="RecentPeriod2Label"
-                               Text="Jul 8, 2024"
-                               Grid.Row="2" Grid.Column="0"
-                               TextColor="#333333" />
-                        <Label x:Name="RecentDuration2Label"
-                               Text="5 days"
-                               Grid.Row="2" Grid.Column="1"
-                               TextColor="#333333" />
-                        <Label x:Name="RecentCycle2Label"
-                               Text="29 days"
-                               Grid.Row="2" Grid.Column="2"
-                               TextColor="#333333" />
-                    </Grid>
-                </VerticalStackLayout>
-            </Frame>
+                                    <VerticalStackLayout Spacing="8"
+                                                         HorizontalOptions="Center"
+                                                         VerticalOptions="Center">      
+                                        <Label Text="✓"
+                                               FontSize="32"
+                                               FontAttributes="Bold"
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center" />
+                                        <Label Text="Log Period"
+                                               FontSize="14"
+                                               TextColor="White"
+                                               Padding="5"
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center" />
+                                    </VerticalStackLayout>
 
-            <!-- Statistics -->
-            <Frame Grid.Row="4"
-                   CornerRadius="15"
-                   BackgroundColor="White"
-                   Padding="20"
-                   HasShadow="True">
-                <VerticalStackLayout Spacing="15">
-                    <Label Text="STATISTICS"
-                           Style="{StaticResource CardTitle}" />
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="OnLogPeriodClicked" />
+                                    </Border.GestureRecognizers>
+                                </Border>
+                            </Border>
 
-                    <Grid ColumnDefinitions="*,*" 
-                          RowDefinitions="Auto,Auto"
-                          RowSpacing="15"
-                          ColumnSpacing="15">
+                            <!-- Calendar Button -->
+                            <Border Grid.Column="1"
+                                   StrokeShape="RoundRectangle 15,15,15,15"
+                                   BackgroundColor="#6A5ACD"
+                                   Stroke="White"
+                                   StrokeThickness="2"
+                                   Padding="2"
+                                   HeightRequest="120"
+                                   WidthRequest="100"
+                                   HorizontalOptions="Center">
+                                <Border StrokeShape="RoundRectangle 13,13,13,13"
+                                        BackgroundColor="#6A5ACD"  
+                                        Stroke="White"
+                                        StrokeThickness="2"
+                                        Padding="0">
+                                    <VerticalStackLayout Spacing="8"
+                                         HorizontalOptions="Center"
+                                         VerticalOptions="Center">
+                                    <Label Text="📆"
+                                               FontSize="32"
+                                               TextColor="White"
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center" />
+                                    <Label Text="Calendar"
+                                               FontSize="14"
+                                               TextColor="White"
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center" />
+                    </VerticalStackLayout>
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="OnCalendarClicked" />
+                                    </Border.GestureRecognizers>
+                                </Border>
+                            </Border>
 
-                        <Frame Grid.Row="0" Grid.Column="0"
-                               CornerRadius="12"
-                               BackgroundColor="#F8F9FA"
-                               Padding="15"
-                               HasShadow="False">
-                            <VerticalStackLayout Spacing="5"
-                                                 HorizontalOptions="Center">
-                                <Label x:Name="AvgCycleLabel"
-                                       Text="28"
-                                       Style="{StaticResource StatValue}" />
-                                <Label Text="Avg Cycle"
-                                       Style="{StaticResource StatLabel}" />
-                            </VerticalStackLayout>
-                        </Frame>
+                            <!-- Settings Button -->
+                            <Border Grid.Column="2"
+                                   StrokeShape="RoundRectangle 15,15,15,15"
+                                   BackgroundColor="#4ECDC4"
+                                   Stroke="White"
+                                    StrokeThickness="2"
+                                    Padding="2"
+                                    HeightRequest="120"
+                                    WidthRequest="100"
+                                    HorizontalOptions="Center">
+                                <Border StrokeShape="RoundRectangle 13,13,13,13"
+                                        BackgroundColor="#4ECDC4"  
+                                        Stroke="White"
+                                        StrokeThickness="2"
+                                        Padding="0">
+                                    <VerticalStackLayout Spacing="8"
+                                         HorizontalOptions="Center"
+                                         VerticalOptions="Center">
+                                        <Label Text="⚙️"
+                                               FontSize="32"
+                                               TextColor="White"
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center" />
+                                        <Label Text="Settings"
+                                               FontSize="14"
+                                               TextColor="White"
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center" />
+                                    </VerticalStackLayout>
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="OnSettingsClicked" />
+                                    </Border.GestureRecognizers>
+                                </Border>
+                            </Border>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
 
-                        <Frame Grid.Row="0" Grid.Column="1"
-                               CornerRadius="12"
-                               BackgroundColor="#F8F9FA"
-                               Padding="15"
-                               HasShadow="False">
-                            <VerticalStackLayout Spacing="5"
-                                                 HorizontalOptions="Center">
-                                <Label x:Name="AvgPeriodLabel"
-                                       Text="5"
-                                       Style="{StaticResource StatValue}" />
-                                <Label Text="Avg Period"
-                                       Style="{StaticResource StatLabel}" />
-                            </VerticalStackLayout>
-                        </Frame>
+                <!-- Recent History -->
+                <Frame Grid.Row="3"
+                       CornerRadius="15"
+                       BackgroundColor="White"
+                       Padding="20"
+                       HasShadow="True">
+                    <VerticalStackLayout Spacing="15">
+                        <Label Text="RECENT HISTORY"
+                               Style="{StaticResource CardTitle}" />
 
-                        <Frame Grid.Row="1" Grid.Column="0"
-                               CornerRadius="12"
-                               BackgroundColor="#F8F9FA"
-                               Padding="15"
-                               HasShadow="False">
-                            <VerticalStackLayout Spacing="5"
-                                                 HorizontalOptions="Center">
-                                <Label x:Name="OvulationDayLabel"
-                                       Text="14"
-                                       Style="{StaticResource StatValue}" />
-                                <Label Text="Ovulation Day"
-                                       Style="{StaticResource StatLabel}" />
-                            </VerticalStackLayout>
-                        </Frame>
+                        <BoxView HeightRequest="1" 
+                                 Color="#EEEEEE" 
+                                 HorizontalOptions="Fill" />
 
-                        <Frame Grid.Row="1" Grid.Column="1"
-                               CornerRadius="12"
-                               BackgroundColor="#F8F9FA"
-                               Padding="15"
-                               HasShadow="False">
-                            <VerticalStackLayout Spacing="5"
-                                                 HorizontalOptions="Center">
-                                <Label x:Name="CyclePatternLabel"
-                                       Text="Regular"
-                                       Style="{StaticResource StatValue}" />
-                                <Label Text="Cycle Pattern"
-                                       Style="{StaticResource StatLabel}" />
-                            </VerticalStackLayout>
-                        </Frame>
-                    </Grid>
-                </VerticalStackLayout>
-            </Frame>
+                        <Grid ColumnDefinitions="*,*,*" 
+                              RowDefinitions="Auto,Auto,Auto"
+                              RowSpacing="10">
+                            <Label Text="Start Date"
+                                   Grid.Row="0" Grid.Column="0"
+                                   FontAttributes="Bold"
+                                   TextColor="#666666" />
+                            <Label Text="Duration"
+                                   Grid.Row="0" Grid.Column="1"
+                                   FontAttributes="Bold"
+                                   TextColor="#666666" />
+                            <Label Text="Cycle Length"
+                                   Grid.Row="0" Grid.Column="2"
+                                   FontAttributes="Bold"
+                                   TextColor="#666666" />
 
-            <!-- Tips Section -->
-            <Frame Grid.Row="5"
-                   CornerRadius="15"
-                   BackgroundColor="White"
-                   Padding="20"
-                   HasShadow="True">
-                <VerticalStackLayout Spacing="15">
-                    <Label Text="TIPS FOR TODAY"
-                           Style="{StaticResource CardTitle}" />
+                            <Label x:Name="RecentPeriod1Label"
+                                   Grid.Row="1" Grid.Column="0"
+                                   TextColor="#333333" />
+                            <Label x:Name="RecentDuration1Label"
+                                   Grid.Row="1" Grid.Column="1"
+                                   TextColor="#333333" />
+                            <Label x:Name="RecentCycle1Label"
+                                   Grid.Row="1" Grid.Column="2"
+                                   TextColor="#333333" />
 
-                    <Frame CornerRadius="12"
-                           BackgroundColor="#FFF5E6"
-                           Padding="15"
-                           HasShadow="False">
-                        <Label x:Name="DailyTipLabel"
-                               Text="You're approaching your ovulation window. This is a good time to track your basal body temperature if you're trying to conceive."
-                               FontSize="14"
-                               TextColor="#E67E22" />
-                    </Frame>
-                </VerticalStackLayout>
-            </Frame>
+                            <Label x:Name="RecentPeriod2Label"
+                                   Grid.Row="2" Grid.Column="0"
+                                   TextColor="#333333" />
+                            <Label x:Name="RecentDuration2Label"
+                                   Grid.Row="2" Grid.Column="1"
+                                   TextColor="#333333" />
+                            <Label x:Name="RecentCycle2Label"
+                                   Grid.Row="2" Grid.Column="2"
+                                   TextColor="#333333" />
+                        </Grid>
+                    </VerticalStackLayout>
+                </Frame>
 
-        </Grid>
-    </ScrollView>
+                <!-- Statistics -->
+                <Frame Grid.Row="4"
+                       CornerRadius="15"
+                       BackgroundColor="White"
+                       Padding="20"
+                       HasShadow="True">
+                    <VerticalStackLayout Spacing="15">
+                        <Label Text="STATISTICS"
+                               Style="{StaticResource CardTitle}" />
+
+                        <Grid ColumnDefinitions="*,*" 
+                              RowDefinitions="Auto,Auto"
+                              RowSpacing="15"
+                              ColumnSpacing="15">
+
+                            <Frame Grid.Row="0" Grid.Column="0"
+                                   CornerRadius="12"
+                                   BackgroundColor="#F8F9FA"
+                                   Padding="15"
+                                   HasShadow="False">
+                                <VerticalStackLayout Spacing="5"
+                                                     HorizontalOptions="Center">
+                                    <Label x:Name="AvgCycleLabel"
+                                           Style="{StaticResource StatValue}" />
+                                    <Label Text="Avg Cycle"
+                                           Style="{StaticResource StatLabel}" />
+                                </VerticalStackLayout>
+                            </Frame>
+
+                            <Frame Grid.Row="0" Grid.Column="1"
+                                   CornerRadius="12"
+                                   BackgroundColor="#F8F9FA"
+                                   Padding="15"
+                                   HasShadow="False">
+                                <VerticalStackLayout Spacing="5"
+                                                     HorizontalOptions="Center">
+                                    <Label x:Name="AvgPeriodLabel"
+                                           Style="{StaticResource StatValue}" />
+                                    <Label Text="Avg Period"
+                                           Style="{StaticResource StatLabel}" />
+                                </VerticalStackLayout>
+                            </Frame>
+
+                            <Frame Grid.Row="1" Grid.Column="0"
+                                   CornerRadius="12"
+                                   BackgroundColor="#F8F9FA"
+                                   Padding="15"
+                                   HasShadow="False">
+                                <VerticalStackLayout Spacing="5"
+                                                     HorizontalOptions="Center">
+                                    <Label x:Name="OvulationDayLabel"
+                                           Style="{StaticResource StatValue}" />
+                                    <Label Text="Ovulation Day"
+                                           Style="{StaticResource StatLabel}" />
+                                </VerticalStackLayout>
+                            </Frame>
+
+                            <Frame Grid.Row="1" Grid.Column="1"
+                                   CornerRadius="12"
+                                   BackgroundColor="#F8F9FA"
+                                   Padding="15"
+                                   HasShadow="False">
+                                <VerticalStackLayout Spacing="5"
+                                                     HorizontalOptions="Center">
+                                    <Label x:Name="CyclePatternLabel"
+                                           Style="{StaticResource StatValue}" />
+                                    <Label Text="Cycle Pattern"
+                                           Style="{StaticResource StatLabel}" />
+                                </VerticalStackLayout>
+                            </Frame>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Frame>
+            </Grid>
+        </ScrollView>
+    </Grid>
 
 </ContentPage>

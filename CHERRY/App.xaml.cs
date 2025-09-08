@@ -4,18 +4,27 @@ using Microsoft.Maui.Controls;
 
 namespace CHERRY
 {
-    public partial class App : Application
+    public partial class App : Microsoft.Maui.Controls.Application
     {
-        private readonly DatabaseService _db;
+        private readonly AuthService _auth;
 
-        public App(DatabaseService db)
+        public App(AuthService auth)
         {
             InitializeComponent(); // Ensure this method is defined in App.xaml
-            _db = db;
+            _auth = auth;
 
             // Set the main page with navigation
-            MainPage = new NavigationPage(new LoginPage(_db));
+            Microsoft.Maui.Controls.Application.Current.MainPage = new NavigationPage(new LoginPage(_auth));
         }
+
+        /*public App()
+        {
+            InitializeComponent(); // Ensure this method is defined in App.xaml
+           // _auth = auth;
+
+            // Set the main page with navigation
+            Microsoft.Maui.Controls.Application.Current.MainPage = new AppShell();
+        }*/
 
         protected override Window CreateWindow(IActivationState? activationState)
         {

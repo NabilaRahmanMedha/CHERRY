@@ -2,8 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="CHERRY.Views.ProfilePage"
-             Title="Profile"
-             BackgroundColor="#F8F9FA">
+             Title="Profile">
 
 	<ScrollView>
 		<StackLayout Padding="20" Spacing="20">
@@ -96,14 +95,9 @@
 					<BoxView HeightRequest="1" Color="#EEEEEE" HorizontalOptions="Fill"/>
 
 					<Grid ColumnDefinitions="*,Auto">
-						<Label Text="Terms and Conditions" TextColor="#333333"/>
-						<ImageButton Grid.Column="1" Source="arrow_right.png" BackgroundColor="Transparent"
-                                    Clicked="OnTermsClicked"/>
-					</Grid>
-
-					<BoxView HeightRequest="1" Color="#EEEEEE" HorizontalOptions="Fill"/>
-
-					<Grid ColumnDefinitions="*,Auto">
+						<Grid.GestureRecognizers>
+							<TapGestureRecognizer Tapped="OnDeleteProfileClicked"/>
+						</Grid.GestureRecognizers>
 						<Label Text="Delete Profile" TextColor="#FF0000"/>
 						<ImageButton Grid.Column="1" Source="arrow_right.png" BackgroundColor="Transparent"
                                     Clicked="OnDeleteProfileClicked"/>

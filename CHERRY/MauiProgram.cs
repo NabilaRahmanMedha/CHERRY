@@ -1,6 +1,10 @@
 ﻿using CHERRY.Services;
 using CHERRY.Views;
 using Microsoft.Extensions.Logging;
+using Microsoft.Maui;
+using Microsoft.Maui.Controls.Hosting;
+using Microsoft.Maui.Hosting;
+using Microcharts.Maui;
 
 namespace CHERRY
 {
@@ -15,11 +19,16 @@ namespace CHERRY
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
-                });
+                })
+            .UseMicrocharts();
 
             // Register services
             builder.Services.AddSingleton<DatabaseService>();
             builder.Services.AddSingleton<UserService>();
+            builder.Services.AddSingleton(sp => new HttpClient { BaseAddress = new Uri("http://10.0.2.2:5000/") });
+            builder.Services.AddSingleton<AuthService>();
+            builder.Services.AddSingleton<ProfileApiService>();
+            builder.Services.AddSingleton<CycleApiService>();
 
             // Register pages
             builder.Services.AddTransient<LoginPage>();

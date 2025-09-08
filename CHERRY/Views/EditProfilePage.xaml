@@ -2,8 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="CHERRY.Views.EditProfilePage"
-             Title="Edit Profile"
-             BackgroundColor="#F8F9FA">
+             Title="Edit Profile">
 
 	<ScrollView>
 		<StackLayout Padding="20" Spacing="15">
@@ -11,13 +10,14 @@
 			<!-- Profile Image -->
 			<Frame HorizontalOptions="Center" CornerRadius="50" HeightRequest="100" WidthRequest="100"
                    BackgroundColor="#EEEEEE" Margin="0,0,0,20">
-				<Image x:Name="ProfileImage" Aspect="AspectFill" HeightRequest="100" WidthRequest="100"
+				<Grid>
+					<Image x:Name="ProfileImage" Aspect="AspectFill" HeightRequest="100" WidthRequest="100"
                        Source="default_profile.png"/>
-
-				<Button Text="✏️" CornerRadius="50" WidthRequest="30" HeightRequest="30"
-                        BackgroundColor="#6A5ACD" TextColor="White" FontSize="12"
+					<Button Text="✏️" CornerRadius="50" WidthRequest="30" HeightRequest="30"
+                        BackgroundColor="#6A5ACD" TextColor="White" FontSize="12" Padding="0"
                         HorizontalOptions="End" VerticalOptions="End"
                         Clicked="OnChangePhotoClicked"/>
+				</Grid>
 			</Frame>
 
 			<!-- Nickname -->
