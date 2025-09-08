@@ -27,6 +27,9 @@
         <Tab Title="Emergency" Route="EmergencyPage" >
             <ShellContent ContentTemplate="{DataTemplate views:EmergencyPage}" />
         </Tab>
+        <Tab Title="ChatBot" Route="ChatBotPage" >
+            <ShellContent ContentTemplate="{DataTemplate views:ChatBotPage}" />
+        </Tab>
     </TabBar>
 
 </Shell>
