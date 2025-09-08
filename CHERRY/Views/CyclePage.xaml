@@ -47,7 +47,7 @@
                         HeightRequest="200"
                         BackgroundColor="#ffc4de"
                         Padding="10"
-                        Margin="-20,-20,-20,0">
+                        Margin="-20,-30,-20,0">
 
                     <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,*,Auto"
                           VerticalOptions="Start">
