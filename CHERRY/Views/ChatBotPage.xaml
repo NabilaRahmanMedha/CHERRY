@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="CHERRY.Views.ChatBotPage"
+             Title="ChatBot">
+
+    <Grid RowDefinitions="*,Auto" Padding="10">
+
+        <!-- Messages area -->
+        <ScrollView Grid.Row="0" x:Name="MessagesScroll">
+            <VerticalStackLayout x:Name="MessagesStack" Spacing="10" Padding="0,5"/>
+        </ScrollView>
+
+        <!-- Input area -->
+        <Grid Grid.Row="1" ColumnDefinitions="*,Auto" Padding="8" BackgroundColor="#f2f2f2">
+            <Entry x:Name="UserInput"
+                   Placeholder="Ask me anything about periods..."
+                   FontSize="16"
+                   VerticalOptions="Center" />
+            <Button Text="Send"
+                    Grid.Column="1"
+                    Clicked="OnSendClicked"
+                    BackgroundColor="Purple"
+                    TextColor="White"
+                    CornerRadius="20"
+                    Padding="12,6"
+                    Margin="8,0,0,0"/>
+        </Grid>
+    </Grid>
+</ContentPage>
