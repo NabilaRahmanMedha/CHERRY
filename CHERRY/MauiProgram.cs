@@ -38,6 +38,7 @@ namespace CHERRY
             builder.Services.AddTransient<CyclePage>();
             builder.Services.AddTransient<CalendarPage>();
             builder.Services.AddTransient<ReportsPage>();
+            builder.Services.AddTransient<EmergencyPage>();
 
             // Register AppShell
             builder.Services.AddSingleton<AppShell>();

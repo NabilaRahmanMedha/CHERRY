@@ -200,5 +200,10 @@ namespace CHERRY.Views
         {
             await DisplayAlert("Settings", "Here you can change app settings.", "OK");
         }
+
+        private async void OnEmergencyClicked(object sender, EventArgs e)
+        {
+            await Shell.Current.GoToAsync("//EmergencyPage");
+        }
     }
 }
