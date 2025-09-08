@@ -80,4 +80,10 @@
 	  <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.14.0" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Compile Update="Views\EmergencyPage.xaml.cs">
+	    <DependentUpon>EmergencyPage.xaml</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+
 </Project>

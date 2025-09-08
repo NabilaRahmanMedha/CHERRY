@@ -19,8 +19,13 @@
         <Tab Title="Reports" Route="ReportsPage">
             <ShellContent ContentTemplate="{DataTemplate views:ReportsPage}" />
         </Tab>
+        <!--
         <Tab Title="Profile" Route="ProfilePage">
             <ShellContent ContentTemplate="{DataTemplate views:ProfilePage}" />
+        </Tab>
+            -->
+        <Tab Title="Emergency" Route="EmergencyPage" >
+            <ShellContent ContentTemplate="{DataTemplate views:EmergencyPage}" />
         </Tab>
     </TabBar>
 

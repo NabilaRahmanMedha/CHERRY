@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="CHERRY.Views.EmergencyPage"
+             Title="Emergency Help"
+             BackgroundColor="#F8F9FA">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="20">
+
+            <!-- Page Title -->
+            <Label Text="Emergency Assistance"
+                   FontSize="24"
+                   HorizontalOptions="Center"
+                   TextColor="Purple"
+                   FontAttributes="Bold"/>
+
+            <!-- Address Input -->
+            <Entry x:Name="AddressEntry"
+                   Placeholder="Enter your current address"
+                   BackgroundColor="White"
+                   TextColor="Black"
+                   Margin="0,10,0,0"/>
+
+            <!-- Button to find pharmacies -->
+            <Button Text="Find Nearby Pharmacies"
+                    Clicked="OnFindPharmaciesClicked"
+                    BackgroundColor="Purple"
+                    TextColor="White"
+                    CornerRadius="10"
+                    Padding="15,10"/>
+
+            <!-- Pharmacy Results -->
+            <Label Text="Nearby Pharmacies:"
+                   FontSize="18"
+                   FontAttributes="Bold"
+                   TextColor="#333"
+                   Margin="0,15,0,5"/>
+            <CollectionView x:Name="PharmacyList" 
+                            BackgroundColor="White"
+                            HeightRequest="150">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame Padding="10" Margin="5" CornerRadius="8" HasShadow="False" BackgroundColor="#EFEFEF">
+                            <Label Text="{Binding}" FontSize="14" TextColor="#444"/>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <!-- Gynecologist Contacts -->
+            <Label Text="Gynecologist Contacts:"
+                   FontSize="18"
+                   FontAttributes="Bold"
+                   TextColor="#333"
+                   Margin="0,15,0,5"/>
+            <CollectionView x:Name="DoctorList" 
+                            BackgroundColor="White"
+                            HeightRequest="250">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame Padding="10" Margin="5" CornerRadius="8" HasShadow="False" BackgroundColor="#EFEFEF">
+                            <Label Text="{Binding}" FontSize="14" TextColor="#444"/>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

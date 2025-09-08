@@ -169,119 +169,153 @@
                         <Label Text="QUICK ACTIONS"
                                 Style="{StaticResource CardTitle}" />
 
-                        <Grid ColumnDefinitions="*,*,*" 
-                              ColumnSpacing="0"
-                              RowSpacing="0">
 
-                            
-                            <Border Grid.Column="0"
-                                   StrokeShape="RoundRectangle 15,15,15,15"
-                                   BackgroundColor="#FF6B8B"  
-                                   Stroke="White"
-                                   StrokeThickness="2"
-                                   Padding="2"
-                                   HeightRequest="120"
-                                   WidthRequest="100"
-                                   HorizontalOptions="Center">
+                        <ScrollView Orientation="Horizontal"
+                                    HorizontalScrollBarVisibility="Never"
+                                    Padding="10">
 
-                                <Border StrokeShape="RoundRectangle 13,13,13,13"
-                                        BackgroundColor="#FF6B8B"  
+                            <HorizontalStackLayout Spacing="15">
+
+                                <!-- Log Period Button -->
+                                <Border StrokeShape="RoundRectangle 15,15,15,15"
+                                        BackgroundColor="#FF6B8B"
                                         Stroke="White"
                                         StrokeThickness="2"
-                                        Padding="0">
-
-                                    <VerticalStackLayout Spacing="8"
-                                                         HorizontalOptions="Center"
-                                                         VerticalOptions="Center">      
-                                        <Label Text="✓"
-                                               FontSize="32"
-                                               FontAttributes="Bold"
-                                               HorizontalOptions="Center"
-                                               VerticalOptions="Center" />
-                                        <Label Text="Log Period"
-                                               FontSize="14"
-                                               TextColor="White"
-                                               Padding="5"
-                                               HorizontalOptions="Center"
-                                               VerticalOptions="Center" />
-                                    </VerticalStackLayout>
-
-                                    <Border.GestureRecognizers>
-                                        <TapGestureRecognizer Tapped="OnLogPeriodClicked" />
-                                    </Border.GestureRecognizers>
+                                        Padding="2"
+                                        HeightRequest="120"
+                                        WidthRequest="100"
+                                        HorizontalOptions="Center">
+                                    <Border StrokeShape="RoundRectangle 13,13,13,13"
+                                            BackgroundColor="#FF6B8B"
+                                            Stroke="White"
+                                            StrokeThickness="2"
+                                            Padding="0">
+                                        <VerticalStackLayout Spacing="8"
+                                                             HorizontalOptions="Center"
+                                                             VerticalOptions="Center">
+                                            <Label Text="✓"
+                                                   FontSize="32"
+                                                   FontAttributes="Bold"
+                                                   HorizontalOptions="Center"
+                                                   VerticalOptions="Center" />
+                                            <Label Text="Log Period"
+                                                   FontSize="14"
+                                                   TextColor="White"
+                                                   HorizontalOptions="Center"
+                                                   VerticalOptions="Center" />
+                                        </VerticalStackLayout>
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer Tapped="OnLogPeriodClicked" />
+                                        </Border.GestureRecognizers>
+                                    </Border>
                                 </Border>
-                            </Border>
 
-                            <!-- Calendar Button -->
-                            <Border Grid.Column="1"
-                                   StrokeShape="RoundRectangle 15,15,15,15"
-                                   BackgroundColor="#6A5ACD"
-                                   Stroke="White"
-                                   StrokeThickness="2"
-                                   Padding="2"
-                                   HeightRequest="120"
-                                   WidthRequest="100"
-                                   HorizontalOptions="Center">
-                                <Border StrokeShape="RoundRectangle 13,13,13,13"
-                                        BackgroundColor="#6A5ACD"  
+                                <!-- Calendar Button -->
+                                <Border StrokeShape="RoundRectangle 15,15,15,15"
+                                        BackgroundColor="#6A5ACD"
                                         Stroke="White"
                                         StrokeThickness="2"
-                                        Padding="0">
-                                    <VerticalStackLayout Spacing="8"
-                                         HorizontalOptions="Center"
-                                         VerticalOptions="Center">
-                                    <Label Text="📆"
-                                               FontSize="32"
-                                               TextColor="White"
-                                               HorizontalOptions="Center"
-                                               VerticalOptions="Center" />
-                                    <Label Text="Calendar"
-                                               FontSize="14"
-                                               TextColor="White"
-                                               HorizontalOptions="Center"
-                                               VerticalOptions="Center" />
-                    </VerticalStackLayout>
-                                    <Border.GestureRecognizers>
-                                        <TapGestureRecognizer Tapped="OnCalendarClicked" />
-                                    </Border.GestureRecognizers>
+                                        Padding="2"
+                                        HeightRequest="120"
+                                        WidthRequest="100"
+                                        HorizontalOptions="Center">
+                                    <Border StrokeShape="RoundRectangle 13,13,13,13"
+                                            BackgroundColor="#6A5ACD"
+                                            Stroke="White"
+                                            StrokeThickness="2"
+                                            Padding="0">
+                                        <VerticalStackLayout Spacing="8"
+                                                             HorizontalOptions="Center"
+                                                             VerticalOptions="Center">
+                                            <Label Text="📆"
+                                                   FontSize="32"
+                                                   TextColor="White"
+                                                   HorizontalOptions="Center"
+                                                   VerticalOptions="Center" />
+                                            <Label Text="Calendar"
+                                                   FontSize="14"
+                                                   TextColor="White"
+                                                   HorizontalOptions="Center"
+                                                   VerticalOptions="Center" />
+                                        </VerticalStackLayout>
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer Tapped="OnCalendarClicked" />
+                                        </Border.GestureRecognizers>
+                                    </Border>
                                 </Border>
-                            </Border>
 
-                            <!-- Settings Button -->
-                            <Border Grid.Column="2"
-                                   StrokeShape="RoundRectangle 15,15,15,15"
-                                   BackgroundColor="#4ECDC4"
-                                   Stroke="White"
-                                    StrokeThickness="2"
-                                    Padding="2"
-                                    HeightRequest="120"
-                                    WidthRequest="100"
-                                    HorizontalOptions="Center">
-                                <Border StrokeShape="RoundRectangle 13,13,13,13"
-                                        BackgroundColor="#4ECDC4"  
+                                <!-- Settings Button -->
+                                <Border StrokeShape="RoundRectangle 15,15,15,15"
+                                        BackgroundColor="#4ECDC4"
                                         Stroke="White"
                                         StrokeThickness="2"
-                                        Padding="0">
-                                    <VerticalStackLayout Spacing="8"
-                                         HorizontalOptions="Center"
-                                         VerticalOptions="Center">
-                                        <Label Text="⚙️"
-                                               FontSize="32"
-                                               TextColor="White"
-                                               HorizontalOptions="Center"
-                                               VerticalOptions="Center" />
-                                        <Label Text="Settings"
-                                               FontSize="14"
-                                               TextColor="White"
-                                               HorizontalOptions="Center"
-                                               VerticalOptions="Center" />
-                                    </VerticalStackLayout>
-                                    <Border.GestureRecognizers>
-                                        <TapGestureRecognizer Tapped="OnSettingsClicked" />
-                                    </Border.GestureRecognizers>
+                                        Padding="2"
+                                        HeightRequest="120"
+                                        WidthRequest="100"
+                                        HorizontalOptions="Center">
+                                    <Border StrokeShape="RoundRectangle 13,13,13,13"
+                                            BackgroundColor="#4ECDC4"
+                                            Stroke="White"
+                                            StrokeThickness="2"
+                                            Padding="0">
+                                        <VerticalStackLayout Spacing="8"
+                                                             HorizontalOptions="Center"
+                                                             VerticalOptions="Center">
+                                            <Label Text="⚙️"
+                                                   FontSize="32"
+                                                   TextColor="White"
+                                                   HorizontalOptions="Center"
+                                                   VerticalOptions="Center" />
+                                            <Label Text="Settings"
+                                                   FontSize="14"
+                                                   TextColor="White"
+                                                   HorizontalOptions="Center"
+                                                   VerticalOptions="Center" />
+                                        </VerticalStackLayout>
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer Tapped="OnSettingsClicked" />
+                                        </Border.GestureRecognizers>
+                                    </Border>
                                 </Border>
-                            </Border>
-                        </Grid>
+
+                                <!-- Emergency Button -->
+                                <Border StrokeShape="RoundRectangle 15,15,15,15"
+                                        BackgroundColor="#FF4D4D"
+                                        Stroke="White"
+                                        StrokeThickness="2"
+                                        Padding="2"
+                                        HeightRequest="120"
+                                        WidthRequest="100"
+                                        HorizontalOptions="Center">
+                                    <Border StrokeShape="RoundRectangle 13,13,13,13"
+                                            BackgroundColor="#FF4D4D"
+                                            Stroke="White"
+                                            StrokeThickness="2"
+                                            Padding="0">
+                                        <VerticalStackLayout Spacing="8"
+                                                             HorizontalOptions="Center"
+                                                             VerticalOptions="Center">
+                                            <Label Text="🚨"
+                                                   FontSize="32"
+                                                   TextColor="White"
+                                                   HorizontalOptions="Center"
+                                                   VerticalOptions="Center" />
+                                            <Label Text="Emergency"
+                                                   FontSize="14"
+                                                   TextColor="White"
+                                                   HorizontalOptions="Center"
+                                                   VerticalOptions="Center" />
+                                        </VerticalStackLayout>
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer Tapped="OnEmergencyClicked" />
+                                        </Border.GestureRecognizers>
+                                    </Border>
+                                </Border>
+
+                            </HorizontalStackLayout>
+                        </ScrollView>
+
+
                     </VerticalStackLayout>
                 </Border>
 
