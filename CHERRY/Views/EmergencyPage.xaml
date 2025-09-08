@@ -5,8 +5,8 @@
     <ContentPage.Resources>
         <!-- Color Resources -->
         <Color x:Key="PrimaryColor">#eb3f95</Color>
-        <Color x:Key="PrimaryLightColor">#9389DB</Color>
-        <Color x:Key="SecondaryColor">#FF6B6B</Color>
+        <Color x:Key="PrimaryLightColor">#ffedf6</Color>
+        <Color x:Key="SecondaryColor">#ea1567</Color>
         <Color x:Key="LightBackground">#FFFFFF</Color>
         <Color x:Key="CardBackground">#FFFFFF</Color>
         <Color x:Key="DarkTextColor">#4E4E4E</Color>
@@ -85,6 +85,23 @@
             <Setter Property="BorderWidth" Value="1" />
             <Setter Property="CornerRadius" Value="5" />
         </Style>
+
+        <Style x:Key="EmergencyTipsText" TargetType="Label">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="TextColor" Value="{StaticResource PrimaryColor}"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="HorizontalTextAlignment" Value="Center"/>
+            <Setter Property="VerticalTextAlignment" Value="Center"/>
+        </Style>
+
+        <Style x:Key="EmercencyTipsTextLayout" TargetType="Border">
+            <Setter Property="Stroke" Value="{StaticResource PrimaryColor}"/>
+            <Setter Property="StrokeThickness" Value="1"/>
+            <Setter Property="StrokeShape" Value="RoundRectangle 20"/>
+            <Setter Property="BackgroundColor" Value="{StaticResource PrimaryLightColor}"/>
+            <Setter Property="Padding" Value="12,8"/>
+            <Setter Property="Margin" Value="0,0,5,5"/>
+        </Style>
     </ContentPage.Resources>
 
     <ScrollView>
@@ -95,7 +112,7 @@
                     StrokeShape="RoundRectangle 0,0,100,100"
                     HeightRequest="220"
                     BackgroundColor="#ffc4de"
-                    Padding="30"
+                    Padding="0,20,0,0"
                     Margin="-20,-30,-20,0">
                 <VerticalStackLayout Spacing="10">
                     <Label Text="Emergency Assistance"
@@ -105,7 +122,7 @@
                            TextColor="{StaticResource MediumTextColor}"
                            HorizontalOptions="Center"
                            HorizontalTextAlignment="Center"
-                           />
+                           Margin="0,0,0,20"/>
                     <Border StrokeThickness="2"
                             StrokeShape="RoundRectangle 40,40,40,40"
                             HorizontalOptions="Center">
@@ -119,6 +136,7 @@
                         </Border.Stroke>
                         <Button Text="Start with AI health Assistant->"
                                 Clicked="OnAiHealthAssistantClicked"
+                                BackgroundColor="#ffc4de"
                                 TextColor="#eb3f95" />
                     </Border>
                 </VerticalStackLayout>
@@ -149,102 +167,76 @@
                 </VerticalStackLayout>
             </Border>
 
-            <!-- Emergency Contacts -->
-            <Label Text="Emergency Contacts" Style="{StaticResource SectionTitle}" />
-            <Border Style="{StaticResource CardBorder}">
-                <VerticalStackLayout Spacing="15">
-                    <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto" RowSpacing="5" ColumnSpacing="15">
-                        <Label Text="📞" FontSize="20" VerticalOptions="Center" />
-                        <VerticalStackLayout Grid.Column="1">
-                            <Label Text="National Emergency" FontSize="16" FontAttributes="Bold" />
-                            <Label Text="Call for immediate medical assistance" Style="{StaticResource InfoLabel}" />
-                            <Button Text="Call 999" 
-                                    Clicked="OnEmergencyCallClicked"
-                                    BackgroundColor="{StaticResource SecondaryColor}"
-                                    TextColor="White"
-                                    CornerRadius="8"
-                                    Margin="0,10,0,0"
-                                    HeightRequest="40" />
-                        </VerticalStackLayout>
-
-                        <Label Text="🏥" FontSize="20" VerticalOptions="Center" Grid.Row="1" />
-                        <VerticalStackLayout Grid.Column="1" Grid.Row="1">
-                            <Label Text="Women's Health Hotline" FontSize="16" FontAttributes="Bold" />
-                            <Label Text="24/7 support for women's health issues" Style="{StaticResource InfoLabel}" />
-                            <Button Text="Call 16263" 
-                                    Clicked="OnHealthHotlineClicked"
-                                    Style="{StaticResource SecondaryButton}"
-                                    Margin="0,10,0,0"
-                                    HeightRequest="40" />
-                        </VerticalStackLayout>
-                    </Grid>
-                </VerticalStackLayout>
-            </Border>
-
             <!-- Pharmacy Section -->
             <Label Text="Nearby Pharmacies" Style="{StaticResource SectionTitle}" />
             <Border Style="{StaticResource CardBorder}" HeightRequest="200">
-                <VerticalStackLayout Spacing="10">
-                    <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
-                        <Label Text="Pharmacies near your location:" 
+                    <VerticalStackLayout Spacing="10">
+                        <Grid ColumnDefinitions="*,Auto" 
+                              VerticalOptions="Center">
+                            <Label Text="Pharmacies near your location:" 
                                FontSize="14"
-                               TextColor="{StaticResource MediumTextColor}" />
-                        <Button Text="Refresh" 
+                               TextColor="{StaticResource DarkTextColor}" />
+                            <Button Text="Refresh" 
                                 Clicked="OnRefreshPharmaciesClicked"
                                 Style="{StaticResource SmallActionButton}"
                                 Grid.Column="1"
                                 Margin="0,0,0,0" />
-                    </Grid>
+                        </Grid>
 
-                    <CollectionView x:Name="PharmacyList" 
+                        <CollectionView x:Name="PharmacyList" 
                                     EmptyView="No pharmacies found. Please check your location or try again."
                                     ItemsUpdatingScrollMode="KeepScrollOffset">
-                        <CollectionView.ItemTemplate>
-                            <DataTemplate>
-                                <Border Stroke="{StaticResource BorderColor}" 
-                                        StrokeThickness="1"
-                                        StrokeShape="RoundRectangle 8"
-                                        BackgroundColor="{StaticResource LightBackground}"
-                                        Padding="12"
-                                        Margin="0,0,0,5">
-                                    <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto" 
-                                          ColumnSpacing="15" RowSpacing="5">
-                                        <Label Text="🏥" FontSize="16" VerticalOptions="Center" />
-                                        <VerticalStackLayout Grid.Column="1">
-                                            <Label Text="{Binding Name}" 
-                                                   FontSize="16" 
-                                                   FontAttributes="Bold"
-                                                   TextColor="{StaticResource DarkTextColor}" />
-                                            <Label Text="{Binding Address}" 
-                                                   FontSize="13" 
-                                                   TextColor="{StaticResource MediumTextColor}" 
-                                                   LineBreakMode="TailTruncation" />
-                                            <Label Text="{Binding Distance}" 
-                                                   FontSize="12" 
-                                                   TextColor="{StaticResource PrimaryColor}" 
-                                                   Margin="0,5,0,0" />
-                                        </VerticalStackLayout>
-                                        <Button Text="Directions" 
-                                                Grid.Column="2"
-                                                Clicked="OnGetDirectionsClicked"
-                                                Style="{StaticResource SmallActionButton}"
-                                                VerticalOptions="Center" />
-                                    </Grid>
-                                </Border>
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                    </CollectionView>
-                </VerticalStackLayout>
-            </Border>
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
+                                    <VerticalStackLayout Spacing="0">
+                                        <Border Stroke="{StaticResource BorderColor}" 
+                                            StrokeThickness="2"
+                                            StrokeShape="RoundRectangle 8"
+                                            BackgroundColor="#ffedf6"
+                                            Padding="10">
+                                        <Grid ColumnDefinitions="Auto,*,Auto" 
+                                                  RowDefinitions="Auto,Auto" 
+                                                  ColumnSpacing="15" 
+                                                  RowSpacing="5">
+                                            <Label Text="🏥" FontSize="16" VerticalOptions="Center" />
+                                            <VerticalStackLayout Grid.Column="1">
+                                                <Label Text="{Binding Name}" 
+                                                       FontSize="16" 
+                                                       FontAttributes="Bold"
+                                                       TextColor="{StaticResource DarkTextColor}" />
+                                                <Label Text="{Binding Address}" 
+                                                       FontSize="13" 
+                                                       TextColor="{StaticResource MediumTextColor}" 
+                                                       LineBreakMode="TailTruncation" />
+                                                <Label Text="{Binding Distance}" 
+                                                       FontSize="12" 
+                                                       TextColor="{StaticResource PrimaryColor}" 
+                                                       Margin="0,5,0,0" />
+                                            </VerticalStackLayout>
+                                            <Button Grid.Column="2"
+                                                    Text="Directions"                                                 
+                                                    Clicked="OnGetDirectionsClicked"
+                                                    Style="{StaticResource SmallActionButton}"
+                                                    VerticalOptions="Center" />
+                                        </Grid>
+                                    </Border>
+                                        <BoxView HeightRequest="2" Color="Transparent"></BoxView>
+                                    </VerticalStackLayout>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </VerticalStackLayout>
+                </Border>
 
             <!-- Gynecologist Section -->
             <Label Text="Gynecologist Contacts" Style="{StaticResource SectionTitle}" />
             <Border Style="{StaticResource CardBorder}" HeightRequest="250">
                 <VerticalStackLayout Spacing="10">
-                    <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
+                    <Grid ColumnDefinitions="*,Auto" 
+                          VerticalOptions="Center">
                         <Label Text="Available gynecologists near you:" 
                                FontSize="14"
-                               TextColor="{StaticResource MediumTextColor}" />
+                               TextColor="{StaticResource DarkTextColor}" />
                         <Button Text="Refresh" 
                                 Clicked="OnRefreshDoctorsClicked"
                                 Style="{StaticResource SmallActionButton}"
@@ -257,15 +249,19 @@
                                     ItemsUpdatingScrollMode="KeepScrollOffset">
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
-                                <Border Stroke="{StaticResource BorderColor}" 
-                                        StrokeThickness="1"
+                                <VerticalStackLayout Spacing="0">
+                                    <Border Stroke="{StaticResource BorderColor}" 
+                                        StrokeThickness="2"
                                         StrokeShape="RoundRectangle 8"
-                                        BackgroundColor="{StaticResource LightBackground}"
-                                        Padding="12"
-                                        Margin="0,0,0,5">
+                                        BackgroundColor="#ffedf6"
+                                        Padding="10">
                                     <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto,Auto" 
                                           ColumnSpacing="15" RowSpacing="5">
-                                        <Label Text="👩‍⚕️" FontSize="16" VerticalOptions="Center" />
+                                            <Image Source="doctor_icon.png" 
+                                                   WidthRequest="20" 
+                                                   HeightRequest="20" 
+                                                   VerticalOptions="Center" />
+                                            <Label Text="" FontSize="16" VerticalOptions="Center" />
                                         <VerticalStackLayout Grid.Column="1">
                                             <Label Text="{Binding Name}" 
                                                    FontSize="16" 
@@ -299,6 +295,8 @@
                                         </Grid>
                                     </Grid>
                                 </Border>
+                                    <BoxView HeightRequest="2" Color="Transparent"></BoxView>
+                                </VerticalStackLayout>
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
                     </CollectionView>
@@ -321,42 +319,60 @@
                 </VerticalStackLayout>
             </Border>
 
+            <!-- Emergency Contacts -->
+            <Label Text="Emergency Contacts" Style="{StaticResource SectionTitle}" />
+            <Border Style="{StaticResource CardBorder}">
+                <VerticalStackLayout Spacing="15">
+                    <Grid ColumnDefinitions="Auto,*" 
+              RowDefinitions="Auto,Auto" 
+              RowSpacing="5" 
+              ColumnSpacing="0">
+
+                        <VerticalStackLayout Grid.Column="1" Grid.Row="0">
+                            <Label Text="📞 Call for immediate medical assistance"
+                       TextColor="{StaticResource DarkTextColor}"/>
+                            <Button Text="Call 999" 
+                        Clicked="OnEmergencyCallClicked"
+                        BackgroundColor="{StaticResource SecondaryColor}"
+                        TextColor="White"
+                        CornerRadius="8"
+                        Margin="0,10,0,0"
+                        HeightRequest="40" />
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Grid.Column="1" Grid.Row="1">
+                            <Label Text="🏥 24/7 support for women's health issues" 
+                                   Style="{StaticResource InfoLabel}" />
+                            <Button Text="Call 16263" 
+                        Clicked="OnHealthHotlineClicked"
+                        Margin="0,10,0,0"
+                        Style="{StaticResource SecondaryButton}"
+                        HeightRequest="40" />
+                        </VerticalStackLayout>
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
             <!-- Emergency Tips -->
             <Label Text="Emergency Tips" Style="{StaticResource SectionTitle}" />
             <Border Style="{StaticResource CardBorder}">
                 <VerticalStackLayout Spacing="10">
                     <FlexLayout Wrap="Wrap" JustifyContent="Start">
-                        <Border Stroke="{StaticResource PrimaryLightColor}" 
-                                StrokeThickness="1"
-                                StrokeShape="RoundRectangle 20"
-                                BackgroundColor="#206A5ACD"
-                                Padding="12,8"
-                                Margin="0,0,10,10">
-                            <Label Text="Stay Calm" TextColor="{StaticResource PrimaryColor}" FontSize="12" />
+                        <Border Style="{StaticResource EmercencyTipsTextLayout}">
+                            <Label Text="Stay Calm" 
+                                   Style="{StaticResource EmergencyTipsText}"/>
                         </Border>
-                        <Border Stroke="{StaticResource PrimaryLightColor}" 
-                                StrokeThickness="1"
-                                StrokeShape="RoundRectangle 20"
-                                BackgroundColor="#206A5ACD"
-                                Padding="12,8"
-                                Margin="0,0,10,10">
-                            <Label Text="Describe Symptoms" TextColor="{StaticResource PrimaryColor}" FontSize="12" />
+                        <Border Style="{StaticResource EmercencyTipsTextLayout}">
+                            <Label Text="Describe Symptoms"
+                                   Style="{StaticResource EmergencyTipsText}"/>
                         </Border>
-                        <Border Stroke="{StaticResource PrimaryLightColor}" 
-                                StrokeThickness="1"
-                                StrokeShape="RoundRectangle 20"
-                                BackgroundColor="#206A5ACD"
-                                Padding="12,8"
-                                Margin="0,0,10,10">
-                            <Label Text="Follow Instructions" TextColor="{StaticResource PrimaryColor}" FontSize="12" />
+                        <Border Style="{StaticResource EmercencyTipsTextLayout}">
+                            <Label Text="Follow Instructions" 
+                                   Style="{StaticResource EmergencyTipsText}"/>
                         </Border>
-                        <Border Stroke="{StaticResource PrimaryLightColor}" 
-                                StrokeThickness="1"
-                                StrokeShape="RoundRectangle 20"
-                                BackgroundColor="#206A5ACD"
-                                Padding="12,8"
-                                Margin="0,0,10,10">
-                            <Label Text="Have ID Ready" TextColor="{StaticResource PrimaryColor}" FontSize="12" />
+                        <Border Style="{StaticResource EmercencyTipsTextLayout}">
+                            <Label Text="Have ID Ready" 
+                                   Style="{StaticResource EmergencyTipsText}"/>
                         </Border>
                     </FlexLayout>
                 </VerticalStackLayout>
