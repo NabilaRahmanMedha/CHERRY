@@ -117,7 +117,7 @@ public partial class ChatBotPage : ContentPage
         // Message bubble
         var bubble = new Frame
         {
-            BackgroundColor = isUser ? Colors.Purple : Colors.LightPink,
+            BackgroundColor = isUser ? Colors.HotPink : Colors.LightPink,
             CornerRadius = 18,
             Padding = new Thickness(12),
             HasShadow = false,

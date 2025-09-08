@@ -1,0 +1,21 @@
+﻿<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="CHERRY.Views.UrgentCarePage"
+             Title="Find Urgent Care Centers">
+
+    <VerticalStackLayout Padding="20" Spacing="15">
+
+        <!-- Back Button -->
+        <Button Text="← Back" Clicked="OnBackClicked"
+                BackgroundColor="Transparent" TextColor="#eb3f95" FontSize="18" HorizontalOptions="Start"/>
+
+        <!-- Page Content in Frame -->
+        <Frame CornerRadius="12" Padding="15" HasShadow="True" BackgroundColor="#ffedf6">
+            <VerticalStackLayout Spacing="10">
+                <Label Text="Find Urgent Care Centers" FontSize="24" FontAttributes="Bold" TextColor="#eb3f95" HorizontalOptions="Center"/>
+                <Label Text="List of urgent care centers will be displayed here." FontSize="16" TextColor="#666666"/>
+            </VerticalStackLayout>
+        </Frame>
+
+    </VerticalStackLayout>
+</ContentPage>

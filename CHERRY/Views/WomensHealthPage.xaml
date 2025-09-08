@@ -1,0 +1,99 @@
+﻿<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="CHERRY.Views.WomensHealthPage"
+             Title="Women's Health Resources">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="18">
+
+            <!-- Frame 1 -->
+            <Frame CornerRadius="12"
+                   Padding="12"
+                   HasShadow="True"
+                   BackgroundColor="White"
+                   Margin="0,0,0,5">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Nutrition Tips"
+                           FontSize="20"
+                           FontAttributes="Bold"
+                           TextColor="Black"
+                           HorizontalOptions="Start"/>
+
+                    <!-- Horizontal scrolling photos -->
+                    <ScrollView Orientation="Horizontal">
+                        <HorizontalStackLayout Spacing="12">
+                            <Image Source="dyp1.jpg" Aspect="AspectFit" HeightRequest="200"/>
+                            <Image Source="dyp2.jpg" Aspect="AspectFit" HeightRequest="200"/>
+                            <Image Source="dyp3.jpg" Aspect="AspectFit" HeightRequest="200"/>
+                            <Image Source="dyp4.jpg" Aspect="AspectFit" HeightRequest="200"/>
+                            <Image Source="dyp5.jpg" Aspect="AspectFit" HeightRequest="200"/>
+                            <Image Source="dyp6.jpg" Aspect="AspectFit" HeightRequest="200"/>
+                            <Image Source="dyp7.jpg" Aspect="AspectFit" HeightRequest="200"/>
+                            <Image Source="dyp8.jpg" Aspect="AspectFit" HeightRequest="200"/>
+                            <Image Source="dyp9.jpg" Aspect="AspectFit" HeightRequest="200"/>
+                        </HorizontalStackLayout>
+                    </ScrollView>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Frame 2 -->
+            <Frame CornerRadius="12"
+                   Padding="12"
+                   HasShadow="True"
+                   BackgroundColor="White"
+                   Margin="0,0,0,5">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Exercise Guides"
+                           FontSize="20"
+                           FontAttributes="Bold"
+                           TextColor="Black"
+                           HorizontalOptions="Start"/>
+
+                    <ScrollView Orientation="Horizontal">
+                        <HorizontalStackLayout Spacing="12">
+                            <Image Source="dyp1.jpg" Aspect="AspectFit" HeightRequest="200"/>
+                            <Image Source="dyp2.jpg" Aspect="AspectFit" HeightRequest="200"/>
+                            <Image Source="dyp3.jpg" Aspect="AspectFit" HeightRequest="200"/>
+                            <Image Source="dyp4.jpg" Aspect="AspectFit" HeightRequest="200"/>
+                            <Image Source="dyp5.jpg" Aspect="AspectFit" HeightRequest="200"/>
+                            <Image Source="dyp6.jpg" Aspect="AspectFit" HeightRequest="200"/>
+                            <Image Source="dyp7.jpg" Aspect="AspectFit" HeightRequest="200"/>
+                            <Image Source="dyp8.jpg" Aspect="AspectFit" HeightRequest="200"/>
+                            <Image Source="dyp9.jpg" Aspect="AspectFit" HeightRequest="200"/>
+                        </HorizontalStackLayout>
+                    </ScrollView>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Frame 3 -->
+            <Frame CornerRadius="12"
+                   Padding="12"
+                   HasShadow="True"
+                   BackgroundColor="White"
+                   Margin="0,0,0,5">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Self-Care Resources"
+                           FontSize="20"
+                           FontAttributes="Bold"
+                           TextColor="Black"
+                           HorizontalOptions="Start"/>
+
+                    <ScrollView Orientation="Horizontal">
+                        <HorizontalStackLayout Spacing="12">
+                            <Image Source="dyp1.jpg" Aspect="AspectFit" HeightRequest="200"/>
+                            <Image Source="dyp2.jpg" Aspect="AspectFit" HeightRequest="200"/>
+                            <Image Source="dyp3.jpg" Aspect="AspectFit" HeightRequest="200"/>
+                            <Image Source="dyp4.jpg" Aspect="AspectFit" HeightRequest="200"/>
+                            <Image Source="dyp5.jpg" Aspect="AspectFit" HeightRequest="200"/>
+                            <Image Source="dyp6.jpg" Aspect="AspectFit" HeightRequest="200"/>
+                            <Image Source="dyp7.jpg" Aspect="AspectFit" HeightRequest="200"/>
+                            <Image Source="dyp8.jpg" Aspect="AspectFit" HeightRequest="200"/>
+                            <Image Source="dyp9.jpg" Aspect="AspectFit" HeightRequest="200"/>
+                        </HorizontalStackLayout>
+                    </ScrollView>
+                </VerticalStackLayout>
+            </Frame>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
