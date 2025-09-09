@@ -1,0 +1,157 @@
+﻿<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="CHERRY.Views.SexualHealthPage"
+             Title="Sexual Health Information">
+
+	<ScrollView>
+		<VerticalStackLayout Padding="20" Spacing="18">
+
+			<!-- Main Title -->
+			<Label Text="Sexual Health Resources"
+                   FontSize="28"
+                   FontAttributes="Bold"
+                   TextColor="#eb3f95"
+                   HorizontalOptions="Center"
+                   Margin="0,10,0,20"/>
+
+			<!-- Frame 1: Safe Practices -->
+			<Frame CornerRadius="14" Padding="15" HasShadow="True" BackgroundColor="White">
+				<VerticalStackLayout Spacing="8">
+					<Label Text="🛡 Safe Practices"
+                           FontSize="22"
+                           FontAttributes="Bold"
+                           TextColor="#eb3f95"/>
+					<Label Text="• Always use condoms or dental dams to prevent both pregnancies and STDs." TextColor="#444"/>
+					<Label Text="• Limit the number of sexual partners to lower risk exposure." TextColor="#444"/>
+					<Label Text="• Practice mutual monogamy (both partners only with each other)." TextColor="#444"/>
+					<Label Text="• Get vaccinated against HPV and Hepatitis B for added protection." TextColor="#444"/>
+					<Label Text="• Respect consent at all times — sexual activity should always be safe, consensual, and comfortable." TextColor="#444"/>
+
+					<!-- Horizontal Image Gallery -->
+					<ScrollView Orientation="Horizontal" Margin="0,10,0,0">
+						<HorizontalStackLayout Spacing="12">
+							<Image Source="dyp1.jpg" HeightRequest="150" Aspect="AspectFit"/>
+							<Image Source="dyp2.jpg" HeightRequest="150" Aspect="AspectFit"/>
+							<Image Source="dyp3.jpg" HeightRequest="150" Aspect="AspectFit"/>
+						</HorizontalStackLayout>
+					</ScrollView>
+				</VerticalStackLayout>
+			</Frame>
+
+			<!-- Frame 2: Contraception -->
+			<Frame CornerRadius="14" Padding="15" HasShadow="True" BackgroundColor="#ffedf6">
+				<VerticalStackLayout Spacing="8">
+					<Label Text="💊 Contraception Options"
+                           FontSize="22"
+                           FontAttributes="Bold"
+                           TextColor="#eb3f95"/>
+					<Label Text="• Hormonal methods: Pills, patches, vaginal rings, injections." TextColor="#444"/>
+					<Label Text="• Long-term methods: IUDs (copper or hormonal), implants." TextColor="#444"/>
+					<Label Text="• Barrier methods: Condoms (male and female), diaphragms." TextColor="#444"/>
+					<Label Text="• Natural methods: Fertility awareness, withdrawal (less reliable)." TextColor="#444"/>
+					<Label Text="• Emergency contraception: Morning-after pill, copper IUD (up to 5 days after)." TextColor="#444"/>
+					<Label Text="• Remember: Condoms are the ONLY method that also protect against STDs." TextColor="#444"/>
+
+					<ScrollView Orientation="Horizontal" Margin="0,10,0,0">
+						<HorizontalStackLayout Spacing="12">
+							<Image Source="dyp1.jpg" HeightRequest="150" Aspect="AspectFit"/>
+							<Image Source="dyp2.jpg" HeightRequest="150" Aspect="AspectFit"/>
+							<Image Source="dyp3.jpg" HeightRequest="150" Aspect="AspectFit"/>
+						</HorizontalStackLayout>
+					</ScrollView>
+				</VerticalStackLayout>
+			</Frame>
+
+			<!-- Frame 3: STD Awareness -->
+			<Frame CornerRadius="14" Padding="15" HasShadow="True" BackgroundColor="White">
+				<VerticalStackLayout Spacing="8">
+					<Label Text="&#x1F9EC; STD Awareness &amp; Protection"
+       FontSize="22"
+       FontAttributes="Bold"
+       TextColor="#eb3f95"/>
+					<Label Text="• Common STDs: Chlamydia, Gonorrhea, Syphilis, HIV, HPV, Herpes." TextColor="#444"/>
+					<Label Text="• Many STDs may not show symptoms — regular testing is important." TextColor="#444"/>
+					<Label Text="• Testing should be done at least once a year, or more if you have multiple partners." TextColor="#444"/>
+					<Label Text="• Early treatment prevents long-term complications like infertility." TextColor="#444"/>
+					<Label Text="• Openly discuss STD status with your partner before sexual activity." TextColor="#444"/>
+
+					<ScrollView Orientation="Horizontal" Margin="0,10,0,0">
+						<HorizontalStackLayout Spacing="12">
+							<Image Source="dyp1.jpg" HeightRequest="150" Aspect="AspectFit"/>
+							<Image Source="dyp2.jpg" HeightRequest="150" Aspect="AspectFit"/>
+							<Image Source="dyp3.jpg" HeightRequest="150" Aspect="AspectFit"/>
+						</HorizontalStackLayout>
+					</ScrollView>
+				</VerticalStackLayout>
+			</Frame>
+
+			<!-- Frame 4: Reproductive Health -->
+			<Frame CornerRadius="14" Padding="15" HasShadow="True" BackgroundColor="#ffedf6">
+				<VerticalStackLayout Spacing="8">
+					<Label Text="🌸 Reproductive Health"
+                           FontSize="22"
+                           FontAttributes="Bold"
+                           TextColor="#eb3f95"/>
+					<Label Text="• Menstrual cycle health is a key indicator of overall reproductive well-being." TextColor="#444"/>
+					<Label Text="• Watch for irregularities like missed periods, extreme pain, or unusual discharge." TextColor="#444"/>
+					<Label Text="• Pap smears and pelvic exams are important for early detection of cervical issues." TextColor="#444"/>
+					<Label Text="• Preconception counseling helps prepare the body for a healthy pregnancy." TextColor="#444"/>
+					<Label Text="• Postpartum care is equally important for long-term reproductive health." TextColor="#444"/>
+
+					<ScrollView Orientation="Horizontal" Margin="0,10,0,0">
+						<HorizontalStackLayout Spacing="12">
+							<Image Source="dyp1.jpg" HeightRequest="150" Aspect="AspectFit"/>
+							<Image Source="dyp2.jpg" HeightRequest="150" Aspect="AspectFit"/>
+							<Image Source="dyp3.jpg" HeightRequest="150" Aspect="AspectFit"/>
+						</HorizontalStackLayout>
+					</ScrollView>
+				</VerticalStackLayout>
+			</Frame>
+
+			<!-- Frame 5: Mental & Emotional Health -->
+			<Frame CornerRadius="14" Padding="15" HasShadow="True" BackgroundColor="White">
+				<VerticalStackLayout Spacing="8">
+					<Label Text="🧠 Mental &amp; Emotional Well-being"
+                           FontSize="22"
+                           FontAttributes="Bold"
+                           TextColor="#eb3f95"/>
+					<Label Text="• Healthy sexual relationships rely on emotional connection and respect." TextColor="#444"/>
+					<Label Text="• Anxiety, depression, and stress can affect sexual health and libido." TextColor="#444"/>
+					<Label Text="• Open conversations about expectations and comfort levels build trust." TextColor="#444"/>
+					<Label Text="• Therapy or counseling can help address trauma, body image, or self-esteem issues." TextColor="#444"/>
+
+					<ScrollView Orientation="Horizontal" Margin="0,10,0,0">
+						<HorizontalStackLayout Spacing="12">
+							<Image Source="dyp1.jpg" HeightRequest="150" Aspect="AspectFit"/>
+							<Image Source="dyp2.jpg" HeightRequest="150" Aspect="AspectFit"/>
+							<Image Source="dyp3.jpg" HeightRequest="150" Aspect="AspectFit"/>
+						</HorizontalStackLayout>
+					</ScrollView>
+				</VerticalStackLayout>
+			</Frame>
+
+			<!-- Frame 6: Support & Emergency Help -->
+			<Frame CornerRadius="14" Padding="15" HasShadow="True" BackgroundColor="#ffedf6">
+				<VerticalStackLayout Spacing="8">
+					<Label Text="&#x1F4DE; Support &amp; Emergency Help"
+       FontSize="22"
+       FontAttributes="Bold"
+       TextColor="#eb3f95"/>
+					<Label Text="• Local clinics and hospitals provide confidential sexual health services." TextColor="#444"/>
+					<Label Text="• If you experience sexual assault, seek medical and emotional support immediately." TextColor="#444"/>
+					<Label Text="• Crisis hotlines: Call national or local emergency hotlines for urgent help." TextColor="#444"/>
+					<Label Text="• Support groups and NGOs often provide free counseling and health checks." TextColor="#444"/>
+
+					<ScrollView Orientation="Horizontal" Margin="0,10,0,0">
+						<HorizontalStackLayout Spacing="12">
+							<Image Source="dyp1.jpg" HeightRequest="150" Aspect="AspectFit"/>
+							<Image Source="dyp2.jpg" HeightRequest="150" Aspect="AspectFit"/>
+							<Image Source="dyp3.jpg" HeightRequest="150" Aspect="AspectFit"/>
+						</HorizontalStackLayout>
+					</ScrollView>
+				</VerticalStackLayout>
+			</Frame>
+
+		</VerticalStackLayout>
+	</ScrollView>
+</ContentPage>

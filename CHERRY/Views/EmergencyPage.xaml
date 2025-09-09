@@ -307,13 +307,13 @@
             <Label Text="Additional Resources" Style="{StaticResource SectionTitle}" />
             <Border Style="{StaticResource CardBorder}">
                 <VerticalStackLayout Spacing="15">
-                    <Button Text="Women's Health Resources" 
+                    <Button Text="Women's Health Resources"
                             Clicked="OnResourcesClicked"
                             Style="{StaticResource SecondaryButton}" />
-                    <Button Text="Find Urgent Care Centers" 
+                    <Button Text="Find Urgent Care Centers"
                             Clicked="OnUrgentCareClicked"
                             Style="{StaticResource SecondaryButton}" />
-                    <Button Text="Sexual Health Information" 
+                    <Button Text="Sexual Health Information"
                             Clicked="OnHealthInfoClicked"
                             Style="{StaticResource SecondaryButton}" />
                 </VerticalStackLayout>
