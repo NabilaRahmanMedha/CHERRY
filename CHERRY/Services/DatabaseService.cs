@@ -32,6 +32,8 @@ namespace CHERRY.Services
         {
             // Create User table if it doesn't exist
             await _db.CreateTableAsync<User>();
+            // Create ChatMessage table
+            await _db.CreateTableAsync<ChatMessage>();
 
             // Check if we need to add new columns to existing table
             var tableInfo = await _db.GetTableInfoAsync("User");
@@ -43,6 +45,26 @@ namespace CHERRY.Services
                 await _db.ExecuteAsync("ALTER TABLE User ADD COLUMN PeriodLength INTEGER DEFAULT 0");
                 await _db.ExecuteAsync("ALTER TABLE User ADD COLUMN CycleLength INTEGER DEFAULT 0");
             }
+        }
+
+        // Chat history APIs
+        public Task<int> AddMessageAsync(ChatMessage message)
+        {
+            return _db.InsertAsync(message);
+        }
+
+        public Task<List<ChatMessage>> GetMessagesAsync(string userEmail, int limit = 200)
+        {
+            return _db.Table<ChatMessage>()
+                .Where(m => m.UserEmail == userEmail)
+                .OrderBy(m => m.CreatedUtcTicks)
+                .Take(limit)
+                .ToListAsync();
+        }
+
+        public Task<int> ClearMessagesAsync(string userEmail)
+        {
+            return _db.ExecuteAsync("DELETE FROM ChatMessage WHERE UserEmail = ?", userEmail);
         }
 
         // Local auth removed. API-based auth is used. This service now only manages local profile cache.
