@@ -27,6 +27,14 @@ namespace CHERRY
             builder.Services.AddSingleton<UserService>();
             builder.Services.AddSingleton(sp => new HttpClient { BaseAddress = new Uri("http://10.0.2.2:5000/") });
             builder.Services.AddSingleton<AuthService>();
+            builder.Services.AddSingleton<GeminiService>(sp =>
+            {
+                var http = new HttpClient();
+                var svc = new GeminiService(http);
+                // Configure with provided API key
+                svc.Configure("AIzaSyAXlrEtKZxWbr7hoCGmd-EYvoXh0D9u7vw");
+                return svc;
+            });
             builder.Services.AddSingleton<ProfileApiService>();
             builder.Services.AddSingleton<CycleApiService>();
 
