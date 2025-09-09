@@ -37,6 +37,7 @@ namespace CHERRY
             });
             builder.Services.AddSingleton<ProfileApiService>();
             builder.Services.AddSingleton<CycleApiService>();
+            builder.Services.AddHttpClient<NearbyPlacesService>();
 
             // Register pages
             builder.Services.AddTransient<LoginPage>();
