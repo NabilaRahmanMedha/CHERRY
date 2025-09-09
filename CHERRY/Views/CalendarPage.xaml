@@ -5,14 +5,15 @@
 
     <ContentPage.Resources>
         <!-- Color Resources -->
-        <Color x:Key="PrimaryColor">#6A5ACD</Color>
+        <Color x:Key="PrimaryColor">#eb3f95</Color>
+        <Color x:Key="PrimaryLightColor">#FFF4FA</Color>
         <Color x:Key="PeriodColor">#ff809b</Color>
         <Color x:Key="PredictedPeriodColor">#FFD6DC</Color>
         <Color x:Key="OvulationColor">#E0BBE4</Color>
-        <Color x:Key="TodayBorderColor">#1f1657</Color>
+        <Color x:Key="TodayBorderColor">#c20053</Color>
         <Color x:Key="LightCreamColor">#FFEDCE</Color>
         <Color x:Key="DarkGrayTextColor">#444444</Color>
-        <Color x:Key="DarkTextColor">#333333</Color>
+        <Color x:Key="DarkTextColor">#4E4E4E</Color>
         <Color x:Key="GrayTextColor">#666666</Color>
 
         <!-- Style Resources -->
@@ -20,7 +21,7 @@
             <Setter Property="WidthRequest" Value="40" />
             <Setter Property="HeightRequest" Value="40" />
             <Setter Property="CornerRadius" Value="20" />
-            <Setter Property="BackgroundColor" Value="White" />
+            <Setter Property="BackgroundColor" Value="Transparent" />
             <Setter Property="TextColor" Value="{StaticResource PrimaryColor}" />
             <Setter Property="FontSize" Value="16" />
             <Setter Property="FontAttributes" Value="Bold" />
@@ -35,6 +36,7 @@
         </Style>
 
         <Style x:Key="PredictionLabelStyle" TargetType="Label">
+            <Setter Property="BackgroundColor" Value="Transparent"/>
             <Setter Property="FontSize" Value="14" />
             <Setter Property="TextColor" Value="{StaticResource PrimaryColor}" />
             <Setter Property="HorizontalOptions" Value="Center" />
@@ -45,7 +47,7 @@
             <Setter Property="FontAttributes" Value="Bold" />
             <Setter Property="HorizontalOptions" Value="Center" />
             <Setter Property="VerticalOptions" Value="Center" />
-            <Setter Property="TextColor" Value="{StaticResource GrayTextColor}" />
+            <Setter Property="TextColor" Value="{StaticResource DarkTextColor}" />
             <Setter Property="FontSize" Value="14" />
         </Style>
 
@@ -61,43 +63,30 @@
             <Setter Property="HeightRequest" Value="40" />
             <Setter Property="Padding" Value="0" />
             <Setter Property="BackgroundColor" Value="{StaticResource LightCreamColor}" />
-            <Setter Property="Stroke" Value="{StaticResource LightCreamColor}" />
-            <Setter Property="StrokeThickness" Value="1" />
+
             <Setter Property="StrokeShape" Value="Ellipse" />
         </Style>
 
         <Style x:Key="EditButtonStyle" TargetType="Button">
-            <Setter Property="BackgroundColor" Value="Transparent" />
+            <Setter Property="BackgroundColor" Value="{StaticResource PrimaryLightColor}" />
             <Setter Property="TextColor" Value="{StaticResource PrimaryColor}"/>
             <Setter Property="BorderColor" Value="{StaticResource PrimaryColor}" />
             <Setter Property="BorderWidth" Value="2" />
             <Setter Property="CornerRadius" Value="10" />
             <Setter Property="Padding" Value="20,10" />
-            <Setter Property="FontAttributes" Value="Bold" />
             <Setter Property="HorizontalOptions" Value="Center" />
         </Style>
 
         <Style x:Key="StatValue" TargetType="Label">
             <Setter Property="FontSize" Value="20" />
             <Setter Property="FontAttributes" Value="Bold" />
-            <Setter Property="TextColor" Value="#6A5ACD" />
+            <Setter Property="TextColor" Value="{StaticResource PrimaryColor}" />
             <Setter Property="HorizontalOptions" Value="Center" />
         </Style>
 
         <Style x:Key="StatLabel" TargetType="Label">
             <Setter Property="FontSize" Value="12" />
-            <Setter Property="TextColor" Value="#666666" />
-            <Setter Property="HorizontalOptions" Value="Center" />
-        </Style>
-
-        <Style x:Key="CancelButtonStyle" TargetType="Button">
-            <Setter Property="BackgroundColor" Value="Transparent" />
-            <Setter Property="TextColor" Value="#FF0000"/>
-            <Setter Property="BorderColor" Value="#FF0000" />
-            <Setter Property="BorderWidth" Value="2" />
-            <Setter Property="CornerRadius" Value="10" />
-            <Setter Property="Padding" Value="20,10" />
-            <Setter Property="FontAttributes" Value="Bold" />
+            <Setter Property="TextColor" Value="{StaticResource DarkGrayTextColor}" />
             <Setter Property="HorizontalOptions" Value="Center" />
         </Style>
     </ContentPage.Resources>
@@ -106,7 +95,9 @@
         <Grid RowDefinitions="Auto,Auto,Auto,*,Auto,Auto,Auto" RowSpacing="0">
 
             <!-- Top Header Row with Month and Navigation -->
-            <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto" Margin="0,20,0,10">
+            <Grid Grid.Row="0" 
+                  ColumnDefinitions="Auto,*,Auto" 
+                  Margin="0,20,0,10">
                 <!-- Previous Month Button -->
                 <Button Text="◀"
                         Grid.Column="0"
@@ -130,40 +121,54 @@
             <!-- Prediction Label -->
             <Label x:Name="PredictionLabel"
                    Style="{StaticResource PredictionLabelStyle}"
+                   BackgroundColor="Transparent"
                    Margin="0,0,0,10"
+                   
                    Grid.Row="1"/>
 
             <!-- Quick Stats -->
             <Border Grid.Row="2"
                     Stroke="{StaticResource PrimaryColor}"
+                    BackgroundColor="{StaticResource PrimaryLightColor}"
                     StrokeThickness="2"
                     StrokeShape="RoundRectangle 40,40,40,40"
-                    BackgroundColor="#F8F9FA"
                     Padding="15"
-                    Margin="15,0,15,10">
-                <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="10">
+                    Margin="15,0,15,30">
+                <Grid ColumnDefinitions="*,*,*,*" 
+                      ColumnSpacing="10">
                     <!-- Cycle Day -->
-                    <VerticalStackLayout Grid.Column="0" Spacing="5">
-                        <Label Text="CYCLE DAY" Style="{StaticResource StatLabel}"/>
-                        <Label x:Name="CycleDayLabel"  Style="{StaticResource StatValue}"/>
+                    <VerticalStackLayout Grid.Column="0" 
+                                         Spacing="5">
+                        <Label Text="CYCLE DAY" 
+                               Style="{StaticResource StatLabel}"/>
+                        <Label x:Name="CycleDayLabel"  
+                               Style="{StaticResource StatValue}"/>
                     </VerticalStackLayout>
 
                     <!-- Next Period -->
-                    <VerticalStackLayout Grid.Column="1" Spacing="5">
-                        <Label Text="NEXT PERIOD" Style="{StaticResource StatLabel}"/>
-                        <Label x:Name="NextPeriodLabel"  Style="{StaticResource StatValue}"/>
+                    <VerticalStackLayout Grid.Column="1" 
+                                         Spacing="5">
+                        <Label Text="NEXT PERIOD" 
+                               Style="{StaticResource StatLabel}"/>
+                        <Label x:Name="NextPeriodLabel"  
+                               Style="{StaticResource StatValue}"/>
                     </VerticalStackLayout>
 
                     <!-- Ovulation -->
-                    <VerticalStackLayout Grid.Column="2" Spacing="5">
-                        <Label Text="OVULATION" Style="{StaticResource StatLabel}"/>
-                        <Label x:Name="OvulationLabel"  Style="{StaticResource StatValue}"/>
+                    <VerticalStackLayout Grid.Column="2" 
+                                         Spacing="5">
+                        <Label Text="OVULATION" 
+                               Style="{StaticResource StatLabel}"/>
+                        <Label x:Name="OvulationLabel"  
+                               Style="{StaticResource StatValue}"/>
                     </VerticalStackLayout>
 
                     <!-- Fertility -->
                     <VerticalStackLayout Grid.Column="3" Spacing="5">
-                        <Label Text="FERTILITY" Style="{StaticResource StatLabel}"/>
-                        <Label x:Name="FertilityLabel"  Style="{StaticResource StatValue}"/>
+                        <Label Text="FERTILITY" 
+                               Style="{StaticResource StatLabel}"/>
+                        <Label x:Name="FertilityLabel"  
+                               Style="{StaticResource StatValue}"/>
                     </VerticalStackLayout>
                 </Grid>
             </Border>
@@ -182,41 +187,48 @@
             <!-- Legend -->
             <Border Grid.Row="4"
                     Stroke="{StaticResource PrimaryColor}"
+                    BackgroundColor="{StaticResource PrimaryLightColor}"
                     StrokeThickness="2"
                     StrokeShape="RoundRectangle 40,40,40,40"
-                    BackgroundColor="#F8F9FA"
                     Padding="15"
-                    Margin="15,10,15,5">
-                <HorizontalStackLayout Spacing="15" HorizontalOptions="Center">
+                    Margin="15,0,15,0">
+                <HorizontalStackLayout Spacing="15" 
+                                       HorizontalOptions="Center">
                     <HorizontalStackLayout Spacing="5">
-                        <BoxView WidthRequest="15" HeightRequest="15" Color="{StaticResource PeriodColor}" CornerRadius="3"/>
-                        <Label Text="Period" FontSize="12" TextColor="#666666"/>
+                        <BoxView WidthRequest="15" 
+                                 HeightRequest="15" 
+                                 Color="{StaticResource PeriodColor}" 
+                                 CornerRadius="3"/>
+                        <Label Text="Period" 
+                               FontSize="12" 
+                               TextColor="{StaticResource DarkGrayTextColor}"/>
                     </HorizontalStackLayout>
                     <HorizontalStackLayout Spacing="5">
-                        <BoxView WidthRequest="15" HeightRequest="15" Color="{StaticResource PredictedPeriodColor}" CornerRadius="3"/>
-                        <Label Text="Predicted" FontSize="12" TextColor="#666666"/>
+                        <BoxView WidthRequest="15" 
+                                 HeightRequest="15" 
+                                 Color="{StaticResource PredictedPeriodColor}" 
+                                 CornerRadius="3"/>
+                        <Label Text="Predicted" 
+                               FontSize="12" 
+                               TextColor="{StaticResource DarkGrayTextColor}"/>
                     </HorizontalStackLayout>
                     <HorizontalStackLayout Spacing="5">
-                        <BoxView WidthRequest="15" HeightRequest="15" Color="{StaticResource OvulationColor}" CornerRadius="3"/>
-                        <Label Text="Ovulation" FontSize="12" TextColor="#666666"/>
+                        <BoxView WidthRequest="15" 
+                                 HeightRequest="15" 
+                                 Color="{StaticResource OvulationColor}" 
+                                 CornerRadius="3"/>
+                        <Label Text="Ovulation" 
+                               FontSize="12" 
+                               TextColor="{StaticResource DarkGrayTextColor}"/>
                     </HorizontalStackLayout>
                 </HorizontalStackLayout>
             </Border>
 
-            <!-- Cancel Selection Button (Visible when selection is active) -->
-            <Button x:Name="CancelSelectionButton"
-                    Text="Cancel Selection"
-                    Style="{StaticResource CancelButtonStyle}"
-                    Grid.Row="5"
-                    Margin="0,10,0,5"
-                    Clicked="OnCancelSelectionClicked"
-                    IsVisible="False"/>
-
             <!-- Edit Button -->
-            <Button Text="Edit Dates"
+            <Button Text="Edit Period Dates"
                     Style="{StaticResource EditButtonStyle}"
                     Grid.Row="6"
-                    Margin="0,5,0,20"
+                    Margin="15"
                     Clicked="OnEditClicked"/>
 
         </Grid>

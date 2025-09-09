@@ -219,33 +219,37 @@ namespace CHERRY.Services
             return "Low";
         }
 
-        public string GetDailyTip(CycleData cycleData)
+        public (string Tip, Color BackgroundColor) GetDailyTip(CycleData cycleData)
         {
             if (!cycleData.HasData)
-                return "Track your period to get personalized tips and predictions.";
+                return ("Track your period to get personalized tips and predictions.", Color.FromArgb("#ffc4de"));
 
             if (cycleData.IsCurrentlyOnPeriod)
             {
                 int dayOfPeriod = (DateTime.Today - cycleData.LastPeriod.StartDate).Days + 1;
-                return GetPeriodDayTip(dayOfPeriod, cycleData.LastPeriod.Duration);
+                return (GetPeriodDayTip(dayOfPeriod, cycleData.LastPeriod.Duration), Color.FromArgb("#ff9dbc")); // Darker pink for period
             }
             else if (cycleData.CurrentCycleDay >= (cycleData.AverageCycleLength - 14) &&
                      cycleData.CurrentCycleDay <= (cycleData.AverageCycleLength - 10))
             {
-                return "You're in your fertile window. This is the best time to conceive if you're trying to get pregnant.";
+                return ("You're in your fertile window. This is the best time to conceive if you're trying to get pregnant.",
+                        Color.FromArgb("#a2d2ff")); // Light blue for fertile window
             }
             else if (cycleData.CurrentCycleDay >= (cycleData.AverageCycleLength - 5))
             {
-                return "Your period is coming soon. You might experience PMS symptoms like bloating or mood changes.";
+                return ("Your period is coming soon. You might experience PMS symptoms like bloating or mood changes.",
+                        Color.FromArgb("#ffafcc")); // Medium pink for PMS
             }
             else if (cycleData.CurrentCycleDay >= (cycleData.AverageCycleLength - 14) &&
                      cycleData.CurrentCycleDay <= (cycleData.AverageCycleLength - 8))
             {
-                return "You're approaching ovulation. Consider tracking your basal body temperature for better predictions.";
+                return ("You're approaching ovulation. Consider tracking your basal body temperature for better predictions.",
+                        Color.FromArgb("#cdb4db")); // Lavender for ovulation
             }
             else
             {
-                return "You're in the follicular phase. This is a good time for exercise and productivity.";
+                return ("You're in the follicular phase. This is a good time for exercise and productivity.",
+                        Color.FromArgb("#bde0fe")); // Light blue for follicular phase
             }
         }
 
