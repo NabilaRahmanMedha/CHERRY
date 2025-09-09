@@ -8,7 +8,7 @@ namespace CHERRY.Services
 	public class GeminiService
 	{
 		private readonly HttpClient _httpClient;
-		private readonly string _apiKey;
+		private string _apiKey;
 
 		// Gemini REST endpoint for text generation (Gemini 1.5 Flash recommended for chat)
 		private const string Model = "gemini-1.5-flash";
@@ -16,7 +16,7 @@ namespace CHERRY.Services
 		public GeminiService(HttpClient httpClient)
 		{
 			_httpClient = httpClient;
-			_apiKey = ""; // injected later via Configure
+			_apiKey = "AIzaSyAXlrEtKZxWbr7hoCGmd-EYvoXh0D9u7vw"; // injected later via Configure
 		}
 
 		public void Configure(string apiKey)

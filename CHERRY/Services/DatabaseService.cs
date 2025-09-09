@@ -14,6 +14,7 @@ namespace CHERRY.Services
     public class DatabaseService
     {
         private readonly SQLiteAsyncConnection _db;
+        private readonly Task _initTask;
 
         public DatabaseService()
         {
@@ -21,14 +22,12 @@ namespace CHERRY.Services
             Debug.WriteLine("=== DB PATH: " + dbPath + " ===");
             _db = new SQLiteAsyncConnection(dbPath);
 
-            
-            InitializeDatabase();
-            
-           
+            _initTask = InitializeDatabaseAsync();
+
 
         }
 
-        private async void InitializeDatabase()
+        private async Task InitializeDatabaseAsync()
         {
             // Create User table if it doesn't exist
             await _db.CreateTableAsync<User>();
@@ -48,23 +47,26 @@ namespace CHERRY.Services
         }
 
         // Chat history APIs
-        public Task<int> AddMessageAsync(ChatMessage message)
+        public async Task<int> AddMessageAsync(ChatMessage message)
         {
-            return _db.InsertAsync(message);
+            await _initTask;
+            return await _db.InsertAsync(message);
         }
 
-        public Task<List<ChatMessage>> GetMessagesAsync(string userEmail, int limit = 200)
+        public async Task<List<ChatMessage>> GetMessagesAsync(string userEmail, int limit = 200)
         {
-            return _db.Table<ChatMessage>()
+            await _initTask;
+            return await _db.Table<ChatMessage>()
                 .Where(m => m.UserEmail == userEmail)
                 .OrderBy(m => m.CreatedUtcTicks)
                 .Take(limit)
                 .ToListAsync();
         }
 
-        public Task<int> ClearMessagesAsync(string userEmail)
+        public async Task<int> ClearMessagesAsync(string userEmail)
         {
-            return _db.ExecuteAsync("DELETE FROM ChatMessage WHERE UserEmail = ?", userEmail);
+            await _initTask;
+            return await _db.ExecuteAsync("DELETE FROM ChatMessage WHERE UserEmail = ?", userEmail);
         }
 
         // Local auth removed. API-based auth is used. This service now only manages local profile cache.
@@ -72,6 +74,7 @@ namespace CHERRY.Services
         // New method to get user by email
         public async Task<User?> GetUserByEmailAsync(string email)
         {
+            await _initTask;
             return await _db.Table<User>().FirstOrDefaultAsync(u => u.Email == email);
         }
 
@@ -80,6 +83,7 @@ namespace CHERRY.Services
         {
             try
             {
+                await _initTask;
                 await _db.UpdateAsync(user);
                 return true;
             }
@@ -94,6 +98,7 @@ namespace CHERRY.Services
         {
             try
             {
+                await _initTask;
                 var user = await GetUserByEmailAsync(email);
                 if (user != null)
                 {
