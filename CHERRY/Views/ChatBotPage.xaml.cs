@@ -94,9 +94,12 @@ public partial class ChatBotPage : ContentPage
         history.Add((true, userMessage));
 
         string botReply = string.Empty;
+        // Detect Bangla quickly from latest message
+        string? preferredLang = null;
+        if (IsBangla(userMessage)) preferredLang = "Bangla";
         try
         {
-            botReply = await _gemini.GetChatCompletionAsync(history);
+            botReply = await _gemini.GetChatCompletionAsync(history, preferredLang);
         }
         catch (Exception ex)
         {
@@ -118,6 +121,15 @@ public partial class ChatBotPage : ContentPage
             });
         }
         await ScrollToBottom();
+    }
+
+    private bool IsBangla(string text)
+    {
+        foreach (var ch in text)
+        {
+            if (ch >= '\u0980' && ch <= '\u09FF') return true; // Bengali block
+        }
+        return false;
     }
 
     // Show animated typing dots
@@ -181,21 +193,19 @@ public partial class ChatBotPage : ContentPage
         }
 
         // Message bubble
+        var bubbleContent = isUser ? BuildUserLabel(text) : BuildFormattedLabel(text);
+
         var bubble = new Frame
         {
-            BackgroundColor = isUser ? Colors.HotPink : Colors.LightPink,
+            BackgroundColor = isUser ? Color.FromArgb("#FF5C8A") : Color.FromArgb("#FFD1DC"),
+            BorderColor = isUser ? Color.FromArgb("#FF2E63") : Color.FromArgb("#F8BBD0"),
             CornerRadius = 18,
-            Padding = new Thickness(12),
-            HasShadow = false,
-            HorizontalOptions = LayoutOptions.Fill, // allow wrapping inside container
-            Content = new Label
-            {
-                Text = text,
-                TextColor = isUser ? Colors.White : Colors.Black,
-                FontSize = 16,
-                LineBreakMode = LineBreakMode.WordWrap,
-            },
-            MaximumWidthRequest = this.Width * 0.7 // limit bubble width to 70% of screen
+            Padding = new Thickness(14, 12),
+            HasShadow = true,
+            Shadow = new Shadow { Brush = new SolidColorBrush(Color.FromArgb("#33000000")), Radius = 8, Offset = new Point(0, 3) },
+            HorizontalOptions = LayoutOptions.Fill,
+            Content = bubbleContent,
+            MaximumWidthRequest = this.Width * 0.75
         };
 
         messageLayout.Children.Add(bubble);
@@ -218,4 +228,108 @@ public partial class ChatBotPage : ContentPage
     }
 
     // Placeholder removed; Gemini is used
+
+    private Label BuildUserLabel(string text)
+    {
+        return new Label
+        {
+            Text = text,
+            TextColor = Colors.White,
+            FontSize = 16,
+            LineBreakMode = LineBreakMode.WordWrap
+        };
+    }
+
+    // Minimal Markdown renderer for bold (**text**), bullets (- or *), and links [text](url)
+    private Label BuildFormattedLabel(string markdown)
+    {
+        var label = new Label
+        {
+            TextColor = Colors.Black,
+            FontSize = 16,
+            LineBreakMode = LineBreakMode.WordWrap
+        };
+
+        var fs = new FormattedString();
+        foreach (var line in markdown.Replace("\r\n", "\n").Split('\n'))
+        {
+            bool isBullet = line.StartsWith("- ") || line.StartsWith("* ");
+            string content = isBullet ? line.Substring(2) : line;
+
+            if (isBullet)
+            {
+                fs.Spans.Add(new Span { Text = "• ", FontAttributes = FontAttributes.Bold });
+            }
+
+            int idx = 0;
+            while (idx < content.Length)
+            {
+                // link [text](url)
+                int linkStart = content.IndexOf('[', idx);
+                int boldStart = content.IndexOf("**", idx, StringComparison.Ordinal);
+
+                int next = MinPositive(linkStart, boldStart);
+                if (next == -1)
+                {
+                    fs.Spans.Add(new Span { Text = content.Substring(idx) });
+                    break;
+                }
+
+                if (next > idx)
+                {
+                    fs.Spans.Add(new Span { Text = content.Substring(idx, next - idx) });
+                    idx = next;
+                }
+
+                if (next == linkStart)
+                {
+                    int closeBracket = content.IndexOf(']', linkStart + 1);
+                    int openParen = closeBracket >= 0 ? content.IndexOf('(', closeBracket + 1) : -1;
+                    int closeParen = openParen >= 0 ? content.IndexOf(')', openParen + 1) : -1;
+                    if (closeBracket > 0 && openParen == closeBracket + 1 && closeParen > openParen)
+                    {
+                        string linkText = content.Substring(linkStart + 1, closeBracket - linkStart - 1);
+                        string url = content.Substring(openParen + 1, closeParen - openParen - 1);
+                        var linkSpan = new Span { Text = linkText, TextDecorations = TextDecorations.Underline, TextColor = Color.FromArgb("#1565C0") };
+                        var tap = new TapGestureRecognizer();
+                        tap.Tapped += async (_, __) =>
+                        {
+                            try { await Browser.OpenAsync(url); } catch { }
+                        };
+                        linkSpan.GestureRecognizers.Add(tap);
+                        fs.Spans.Add(linkSpan);
+                        idx = closeParen + 1;
+                        continue;
+                    }
+                }
+
+                if (next == boldStart)
+                {
+                    int end = content.IndexOf("**", boldStart + 2, StringComparison.Ordinal);
+                    if (end > boldStart)
+                    {
+                        fs.Spans.Add(new Span { Text = content.Substring(boldStart + 2, end - boldStart - 2), FontAttributes = FontAttributes.Bold });
+                        idx = end + 2;
+                        continue;
+                    }
+                }
+
+                // Fallback: append the current char and move on
+                fs.Spans.Add(new Span { Text = content[idx].ToString() });
+                idx++;
+            }
+
+            fs.Spans.Add(new Span { Text = "\n" });
+        }
+
+        label.FormattedText = fs;
+        return label;
+    }
+
+    private int MinPositive(int a, int b)
+    {
+        if (a < 0) return b;
+        if (b < 0) return a;
+        return Math.Min(a, b);
+    }
 }

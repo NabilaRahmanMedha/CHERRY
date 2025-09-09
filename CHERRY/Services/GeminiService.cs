@@ -31,7 +31,7 @@ namespace CHERRY.Services
 			DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull
 		};
 
-		public async Task<string> GetChatCompletionAsync(IEnumerable<(bool isUser, string content)> history)
+		public async Task<string> GetChatCompletionAsync(IEnumerable<(bool isUser, string content)> history, string? preferredLanguage = null)
 		{
 			if (string.IsNullOrWhiteSpace(_apiKey))
 				throw new InvalidOperationException("Gemini API key not configured");
@@ -40,11 +40,13 @@ namespace CHERRY.Services
 			modelsToTry.Add(PrimaryModel);
 			modelsToTry.AddRange(FallbackModels);
 
-			var systemInstruction = "You are CherryMate, a friendly, empathetic assistant focused on menstruation, cycles, PMS, cramps, symptoms, hygiene, nutrition, mental health, and when to seek medical help. Avoid explicit sexual content. Offer supportive, culturally sensitive guidance. Avoid diagnosing; advise seeing a professional for urgent or severe symptoms. Keep answers concise for mobile.";
+			var systemInstruction = "You are CherryMate, a warm, empathetic menstrual health companion. Communicate in the user's language; if the user writes in Bangla (Bengali), respond in natural Bangla. Your goals: (1) validate feelings compassionately, (2) give practical, step-by-step self-care advice tailored to the user's situation (hydration, heat therapy, NSAIDs dosing ranges if appropriate, gentle stretches, rest, nutrition like iron/magnesium, tracking, products/hygiene, when to try different birth control options, lifestyle tweaks), (3) ask 1-3 short relevant follow-up questions if information is missing, (4) summarize key next steps in 2-4 concise bullets, (5) include a brief 'When to seek urgent care' note only if serious red flags are present (e.g., soaking >1 pad/hour, fainting, pregnancy concerns, fever, signs of infection, severe worsening pain). Avoid explicit sexual content. Never over-medicalize: offer practical solutions first, do not default to 'see a doctor'; only recommend professional care when red-flag criteria are met or after trying reasonable at-home steps. Keep answers concise for mobile but caring and encouraging.";
+			if (!string.IsNullOrWhiteSpace(preferredLanguage))
+			{
+				systemInstruction += $" Respond ONLY in {preferredLanguage}.";
+			}
 
 			var contents = new List<object>();
-			// Provide a soft system prompt by starting conversation with assistant persona
-			contents.Add(new { role = "model", parts = new[] { new { text = systemInstruction } } });
 
 			foreach (var (isUser, content) in history)
 			{
@@ -59,7 +61,15 @@ namespace CHERRY.Services
 			foreach (var model in modelsToTry)
 			{
 				var url = $"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={_apiKey}";
-				var payload = new { contents };
+				var payload = new
+				{
+					systemInstruction = new
+					{
+						role = "system",
+						parts = new[] { new { text = systemInstruction } }
+					},
+					contents = contents
+				};
 
 				var attempt = 0;
 				while (attempt < 3)
