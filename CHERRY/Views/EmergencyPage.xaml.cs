@@ -1,97 +1,68 @@
 ﻿using Microsoft.Maui.Controls;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Maui.Devices.Sensors;
+using CHERRY.Services;
 
 namespace CHERRY.Views
 {
     public partial class EmergencyPage : ContentPage
     {
+        private readonly NearbyPlacesService _nearbyPlacesService;
+        private Location _lastLocation;
+
         public EmergencyPage()
         {
             InitializeComponent();
-
-            // Static gynecologist contacts with more details
-            DoctorList.ItemsSource = new List<DoctorContact>
-            {
-                new DoctorContact
-                {
-                    Name = "Dr. Ayesha Rahman",
-                    Phone = "01234 567890",
-                    Specialty = "Gynecologist & Obstetrician",
-                    Address = "123 Medical Street, Dhaka",
-                    Availability = "Available Today"
-                },
-                new DoctorContact
-                {
-                    Name = "Dr. Nabila Chowdhury",
-                    Phone = "01711 223344",
-                    Specialty = "Reproductive Health Specialist",
-                    Address = "456 Health Avenue, Dhaka",
-                    Availability = "Available Tomorrow"
-                },
-                new DoctorContact
-                {
-                    Name = "Dr. Sharmeen Akter",
-                    Phone = "01922 334455",
-                    Specialty = "Women's Health Specialist",
-                    Address = "789 Care Road, Dhaka",
-                    Availability = "Available Now"
-                },
-                new DoctorContact
-                {
-                    Name = "Dr. Nusrat Jahan",
-                    Phone = "01555 667788",
-                    Specialty = "Gynecologic Surgeon",
-                    Address = "321 Wellness Lane, Dhaka",
-                    Availability = "Available in 2 hours"
-                },
-                new DoctorContact
-                {
-                    Name = "Dr. Tasnim Hossain",
-                    Phone = "01888 445566",
-                    Specialty = "Endocrinology & Fertility",
-                    Address = "654 Treatment Blvd, Dhaka",
-                    Availability = "Available Monday"
-                }
-            };
+            _nearbyPlacesService = ServiceHelper.GetService<NearbyPlacesService>();
         }
 
-        private void OnFindPharmaciesClicked(object sender, EventArgs e)
+        private bool _initialLoaded;
+
+        private async void OnFindPharmaciesClicked(object sender, EventArgs e)
         {
-            // Example mock results with more details (replace with API later)
-            PharmacyList.ItemsSource = new List<Pharmacy>
+            try
             {
-                new Pharmacy
+                PharmacySpinner.IsVisible = true;
+                PharmacySpinner.IsRunning = true;
+                var location = await EnsureLocationAsync();
+                if (location == null)
                 {
-                    Name = "City Pharmacy",
-                    Distance = "500m away",
-                    Address = "123 Main Street, Dhaka",
-                    Hours = "Open until 10 PM"
-                },
-                new Pharmacy
-                {
-                    Name = "HealthPlus Pharmacy",
-                    Distance = "700m away",
-                    Address = "456 Health Avenue, Dhaka",
-                    Hours = "Open 24/7"
-                },
-                new Pharmacy
-                {
-                    Name = "MediCare Pharmacy",
-                    Distance = "1.2km away",
-                    Address = "789 Care Road, Dhaka",
-                    Hours = "Open until 11 PM"
-                },
-                new Pharmacy
-                {
-                    Name = "LifeCare Pharmacy",
-                    Distance = "1.5km away",
-                    Address = "321 Wellness Lane, Dhaka",
-                    Hours = "Open until 9 PM"
+                    await DisplayAlert("Location Required", "Enable location or enter your address.", "OK");
+                    return;
                 }
-            };
+
+                var places = await _nearbyPlacesService.GetNearbyPharmaciesAsync(location.Latitude, location.Longitude, 3000);
+                var uiItems = places.Select(p => new Pharmacy
+                {
+                    Name = p.Name,
+                    Address = p.Address,
+                    Distance = CalculateDistanceLabel(location, p.Latitude, p.Longitude),
+                    Hours = string.Empty,
+                    Latitude = p.Latitude,
+                    Longitude = p.Longitude
+                }).ToList();
+                PharmacyList.ItemsSource = uiItems;
+                if (!_initialLoaded)
+                {
+                    // Also fetch doctors during initial load only
+                    OnRefreshDoctorsClicked(sender, e);
+                }
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Error", "Failed to fetch nearby pharmacies.", "OK");
+                System.Diagnostics.Debug.WriteLine(ex);
+            }
+            finally
+            {
+                PharmacySpinner.IsRunning = false;
+                PharmacySpinner.IsVisible = false;
+                _initialLoaded = true;
+            }
         }
 
         private async void OnUseCurrentLocationClicked(object sender, EventArgs e)
@@ -107,7 +78,7 @@ namespace CHERRY.Views
                     return;
                 }
 
-                var request = new GeolocationRequest(GeolocationAccuracy.Medium);
+                var request = new GeolocationRequest(GeolocationAccuracy.Medium, TimeSpan.FromSeconds(10));
                 var location = await Geolocation.GetLocationAsync(request);
 
                 if (location != null)
@@ -123,17 +94,67 @@ namespace CHERRY.Views
 
                         // Automatically search for nearby help
                         OnFindPharmaciesClicked(sender, e);
+                        OnRefreshDoctorsClicked(sender, e);
                     }
                     else
                     {
                         AddressEntry.Text = $"Lat: {location.Latitude}, Long: {location.Longitude}";
                     }
+                    _lastLocation = location;
                 }
             }
             catch (Exception ex)
             {
                 await DisplayAlert("Error", "Unable to get current location. Please enter your address manually.", "OK");
                 Console.WriteLine($"Location error: {ex.Message}");
+            }
+        }
+
+        private async Task<Location> EnsureLocationAsync()
+        {
+            if (_lastLocation != null)
+            {
+                return _lastLocation;
+            }
+
+            var status = await Permissions.RequestAsync<Permissions.LocationWhenInUse>();
+            if (status != PermissionStatus.Granted)
+            {
+                return null;
+            }
+
+            try
+            {
+                var cached = await Geolocation.GetLastKnownLocationAsync();
+                if (cached != null)
+                {
+                    _lastLocation = cached;
+                    return cached;
+                }
+
+                var request = new GeolocationRequest(GeolocationAccuracy.Medium, TimeSpan.FromSeconds(10));
+                var location = await Geolocation.GetLocationAsync(request);
+                _lastLocation = location;
+                return location;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        private string CalculateDistanceLabel(Location from, double lat, double lon)
+        {
+            try
+            {
+                var to = new Location(lat, lon);
+                var meters = Location.CalculateDistance(from, to, DistanceUnits.Kilometers) * 1000.0;
+                if (meters < 1000) return $"{Math.Round(meters)} m away";
+                return $"{(meters / 1000.0).ToString("0.0")} km away";
+            }
+            catch
+            {
+                return string.Empty;
             }
         }
 
@@ -184,7 +205,10 @@ namespace CHERRY.Views
             {
                 try
                 {
-                    var location = new Location(23.8103, 90.4125); // Default to Dhaka coordinates
+                    // If Pharmacy has coordinates, use them; otherwise fallback to last location
+                    var location = (pharmacy.Latitude != 0 || pharmacy.Longitude != 0)
+                        ? new Location(pharmacy.Latitude, pharmacy.Longitude)
+                        : (_lastLocation ?? new Location(23.8103, 90.4125));
                     var options = new MapLaunchOptions { Name = pharmacy.Name };
 
                     await Map.OpenAsync(location, options);
@@ -195,6 +219,15 @@ namespace CHERRY.Views
                     Console.WriteLine($"Maps error: {ex.Message}");
                 }
             }
+        }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            // Try to pre-warm location so first search is quick
+            _ = EnsureLocationAsync();
+            // Load doctors using live data
+            OnRefreshDoctorsClicked(this, EventArgs.Empty);
         }
 
         private async void OnCallDoctorClicked(object sender, EventArgs e)
@@ -240,38 +273,46 @@ namespace CHERRY.Views
             DisplayToast("Pharmacies list refreshed");
         }
 
-        private void OnRefreshDoctorsClicked(object sender, EventArgs e)
+        private async void OnRefreshDoctorsClicked(object sender, EventArgs e)
         {
-            // Simulate refresh by reinitializing
-            DoctorList.ItemsSource = new List<DoctorContact>
+            try
             {
-                new DoctorContact
+                DoctorSpinner.IsVisible = true;
+                DoctorSpinner.IsRunning = true;
+                var location = await EnsureLocationAsync();
+                if (location == null)
                 {
-                    Name = "Dr. Ayesha Rahman",
-                    Phone = "01234 567890",
-                    Specialty = "Gynecologist & Obstetrician",
-                    Address = "123 Medical Street, Dhaka",
-                    Availability = "Available Today"
-                },
-                new DoctorContact
-                {
-                    Name = "Dr. Fatima Khan (New)",
-                    Phone = "01666 999888",
-                    Specialty = "Emergency Gynecology",
-                    Address = "555 Urgent Care Plaza, Dhaka",
-                    Availability = "Available Now"
-                },
-                new DoctorContact
-                {
-                    Name = "Dr. Nabila Chowdhury",
-                    Phone = "01711 223344",
-                    Specialty = "Reproductive Health Specialist",
-                    Address = "456 Health Avenue, Dhaka",
-                    Availability = "Available Tomorrow"
+                    await DisplayAlert("Location Required", "Enable location or enter your address.", "OK");
+                    return;
                 }
-            };
 
-            DisplayToast("Doctors list refreshed");
+                // Fetch general doctors/clinics to maximize results
+                var places = await _nearbyPlacesService.GetNearbyDoctorsAsync(location.Latitude, location.Longitude, 5000);
+                var uiItems = places.Select(p => new DoctorContact
+                {
+                    Name = p.Name,
+                    Specialty = "Doctor/Clinic",
+                    Address = p.Address,
+                    Phone = string.Empty,
+                    Availability = string.Empty
+                }).ToList();
+                DoctorList.ItemsSource = uiItems;
+                if (_initialLoaded)
+                {
+                    // Show toast only for manual refreshes
+                    DisplayToast("Doctors list refreshed");
+                }
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Error", "Failed to fetch nearby doctors.", "OK");
+                System.Diagnostics.Debug.WriteLine(ex);
+            }
+            finally
+            {
+                DoctorSpinner.IsRunning = false;
+                DoctorSpinner.IsVisible = false;
+            }
         }
 
         private async void OnAiHealthAssistantClicked(object sender, EventArgs e)
@@ -322,6 +363,8 @@ namespace CHERRY.Views
         public string Distance { get; set; }
         public string Address { get; set; }
         public string Hours { get; set; }
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
 
         public override string ToString() => $"{Name} - {Distance}";
     }
