@@ -13,18 +13,35 @@ namespace CHERRY.Services
 	public class NearbyPlacesService
 	{
 		private readonly HttpClient _httpClient;
+		private readonly GooglePlacesService? _google;
 
-		public NearbyPlacesService(HttpClient httpClient)
+		public NearbyPlacesService(HttpClient httpClient, GooglePlacesService? google = null)
 		{
 			_httpClient = httpClient;
+			_google = google;
 			// Overpass can be slow; set a sensible timeout
 			_httpClient.Timeout = TimeSpan.FromSeconds(20);
 		}
 
 		public async Task<IReadOnlyList<PlaceResult>> GetNearbyPharmaciesAsync(double latitude, double longitude, int radiusMeters = 3000, CancellationToken cancellationToken = default)
 		{
-			string query = BuildOverpassQuery(latitude, longitude, radiusMeters, new[] { "amenity=pharmacy" });
-			return await ExecuteOverpassAsync(query, cancellationToken);
+			// Try pharmacies; if none, widen radius progressively
+			var results = new List<PlaceResult>();
+			int[] radii = new[] { radiusMeters, Math.Min(10000, radiusMeters * 2), 20000, 30000 };
+			foreach (var r in radii)
+			{
+				string q = BuildOverpassQuery(latitude, longitude, r, new[] { "amenity=pharmacy" });
+				results = new List<PlaceResult>(await ExecuteOverpassAsync(q, cancellationToken));
+				if (results.Count > 0) break;
+			}
+			if (results.Count == 0 && _google != null && _google.IsConfigured)
+			{
+				// Google fallback for pharmacies
+				var googleRes = await _google.SearchNearbyAsync(latitude, longitude, "pharmacy", radii[^1], cancellationToken);
+				return googleRes;
+			}
+
+			return results;
 		}
 
 		public async Task<IReadOnlyList<PlaceResult>> GetNearbyGynecologistsAsync(double latitude, double longitude, int radiusMeters = 5000, CancellationToken cancellationToken = default)
@@ -38,20 +55,71 @@ namespace CHERRY.Services
 				"amenity=hospital"
 			};
 
-			string specialityConstraint = "[\"healthcare:speciality\"~\"gynaecology|gynecology|obstetrics\",i]";
+			// Include department tag and other potential flags
+			string specialityConstraint = "[\"healthcare:speciality\"~\"gynaecology|gynecology|obstetrics|ob-gyn|obgyn|women'?s health\",i]";
+			string departmentConstraint = "[department~\"gynaecology|gynecology|obstetrics\",i]";
 
-			string query = BuildOverpassQuery(latitude, longitude, radiusMeters, filters, specialityConstraint);
-			var results = await ExecuteOverpassAsync(query, cancellationToken);
-
-			// If no results, fall back to general doctors/clinics and filter client-side by name
-			if (results.Count == 0)
+			// Progressive widening and multiple strategies
+			int[] radii = new[] { radiusMeters, Math.Min(15000, radiusMeters * 2), 30000, 50000 };
+			foreach (var r in radii)
 			{
-				string fallbackQuery = BuildOverpassQuery(latitude, longitude, radiusMeters, new[] { "healthcare=doctor", "amenity=doctors", "healthcare=clinic" });
+				// 1) Speciality-tagged
+				string q1 = BuildOverpassQuery(latitude, longitude, r, filters, specialityConstraint);
+				var res1 = await ExecuteOverpassAsync(q1, cancellationToken);
+				if (res1.Count > 0) return res1;
+
+				// 1b) Department-tagged at hospitals/clinics
+				string q1b = BuildOverpassQuery(latitude, longitude, r, filters, departmentConstraint);
+				var res1b = await ExecuteOverpassAsync(q1b, cancellationToken);
+				if (res1b.Count > 0) return res1b;
+
+				// 2) Name contains gyn/obstet
+				string nameConstraint = "[name~\"gyn|gyne|obstet|women's health|women health|OB\\/GYN|OBGYN|婦|妇|নারী|গাইন\",i]";
+				string q2 = BuildOverpassQuery(latitude, longitude, r, filters, nameConstraint);
+				var res2 = await ExecuteOverpassAsync(q2, cancellationToken);
+				if (res2.Count > 0) return res2;
+
+				// 3) General doctors/clinics filtered client-side
+				string fallbackQuery = BuildOverpassQuery(latitude, longitude, r, new[] { "healthcare=doctor", "amenity=doctors", "healthcare=clinic" });
 				var fallback = await ExecuteOverpassAsync(fallbackQuery, cancellationToken);
-				return FilterByGynecologyKeywords(fallback);
+				var filtered = FilterByGynecologyKeywords(fallback);
+				if (filtered.Count > 0) return filtered;
 			}
 
-			return results;
+			if (_google != null && _google.IsConfigured)
+			{
+				// Use common keywords for gynecology
+				var googleRes = await _google.SearchNearbyAsync(latitude, longitude, "gynecologist|obgyn|women health clinic", 20000, cancellationToken);
+				return googleRes;
+			}
+
+			return Array.Empty<PlaceResult>();
+		}
+
+		public async Task<IReadOnlyList<PlaceResult>> GetNearbyDoctorsAsync(double latitude, double longitude, int radiusMeters = 5000, CancellationToken cancellationToken = default)
+		{
+			var filters = new List<string>
+			{
+				"healthcare=doctor",
+				"amenity=doctors",
+				"healthcare=clinic",
+				"amenity=hospital"
+			};
+
+			int[] radii = new[] { radiusMeters, Math.Min(15000, radiusMeters * 2), 30000, 50000 };
+			var aggregated = new List<PlaceResult>();
+			foreach (var r in radii)
+			{
+				string q = BuildOverpassQuery(latitude, longitude, r, filters);
+				var res = await ExecuteOverpassAsync(q, cancellationToken);
+				if (res.Count > 0)
+				{
+					aggregated.AddRange(res);
+					break;
+				}
+			}
+
+			return aggregated;
 		}
 
 		private static string BuildOverpassQuery(double lat, double lon, int radius, IEnumerable<string> keyEqualsFilters, string extraConstraint = "")
@@ -72,37 +140,45 @@ namespace CHERRY.Services
 
 		private async Task<IReadOnlyList<PlaceResult>> ExecuteOverpassAsync(string query, CancellationToken cancellationToken)
 		{
-			var form = new FormUrlEncodedContent(new[] { new KeyValuePair<string, string>("data", query) });
-			// Use a public Overpass instance. Consider rotating if throttled.
-			var response = await _httpClient.PostAsync("https://overpass-api.de/api/interpreter", form, cancellationToken);
-			response.EnsureSuccessStatusCode();
-			var json = await response.Content.ReadAsStringAsync(cancellationToken);
-
-			var doc = JsonSerializer.Deserialize<OverpassResponse>(json, new JsonSerializerOptions
+			try
 			{
-				PropertyNameCaseInsensitive = true
-			});
+				var form = new FormUrlEncodedContent(new[] { new KeyValuePair<string, string>("data", query) });
+				// Use a public Overpass instance. Consider rotating if throttled.
+				var response = await _httpClient.PostAsync("https://overpass-api.de/api/interpreter", form, cancellationToken);
+				response.EnsureSuccessStatusCode();
+				var json = await response.Content.ReadAsStringAsync(cancellationToken);
 
-			var results = new List<PlaceResult>();
-			if (doc?.Elements == null) return results;
-
-			foreach (var el in doc.Elements)
-			{
-				string name = el.Tags?.GetValueOrDefault("name") ?? "Unnamed";
-				string address = BuildAddress(el.Tags);
-				double lat = el.Lat ?? el.Center?.Lat ?? 0;
-				double lon = el.Lon ?? el.Center?.Lon ?? 0;
-
-				results.Add(new PlaceResult
+				var doc = JsonSerializer.Deserialize<OverpassResponse>(json, new JsonSerializerOptions
 				{
-					Name = name,
-					Address = address,
-					Latitude = lat,
-					Longitude = lon
+					PropertyNameCaseInsensitive = true
 				});
-			}
 
-			return results;
+				var results = new List<PlaceResult>();
+				if (doc?.Elements == null) return results;
+
+				foreach (var el in doc.Elements)
+				{
+					string name = el.Tags?.GetValueOrDefault("name") ?? "Unnamed";
+					string address = BuildAddress(el.Tags);
+					double lat = el.Lat ?? el.Center?.Lat ?? 0;
+					double lon = el.Lon ?? el.Center?.Lon ?? 0;
+
+					results.Add(new PlaceResult
+					{
+						Name = name,
+						Address = address,
+						Latitude = lat,
+						Longitude = lon
+					});
+				}
+
+				return results;
+			}
+			catch
+			{
+				// On network or service error, return empty set to allow fallbacks without crashing UI
+				return Array.Empty<PlaceResult>();
+			}
 		}
 
 		private static string BuildAddress(Dictionary<string, string>? tags)

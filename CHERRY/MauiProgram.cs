@@ -5,6 +5,7 @@ using Microsoft.Maui;
 using Microsoft.Maui.Controls.Hosting;
 using Microsoft.Maui.Hosting;
 using Microcharts.Maui;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CHERRY
 {
@@ -38,6 +39,17 @@ namespace CHERRY
             builder.Services.AddSingleton<ProfileApiService>();
             builder.Services.AddSingleton<CycleApiService>();
             builder.Services.AddHttpClient<NearbyPlacesService>();
+            // Google Places fallback
+            var googleApiKey = Environment.GetEnvironmentVariable("GOOGLE_PLACES_API_KEY") ?? string.Empty;
+            builder.Services.AddSingleton(new GooglePlacesOptions { ApiKey = googleApiKey });
+            builder.Services.AddHttpClient<GooglePlacesService>();
+
+            // Notifications
+#if ANDROID
+            builder.Services.AddSingleton<INotificationService, CHERRY.Platforms.Android.Services.AndroidNotificationService>();
+#else
+            builder.Services.AddSingleton<INotificationService, NoopNotificationService>();
+#endif
 
             // Register pages
             builder.Services.AddTransient<LoginPage>();

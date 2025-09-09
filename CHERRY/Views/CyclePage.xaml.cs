@@ -176,6 +176,32 @@ namespace CHERRY.Views
             var (tip, backgroundColor) = _cycleService.GetDailyTip(cycleData);
             DailyTipLabel.Text = tip;
             HeaderBorder.BackgroundColor = backgroundColor;
+
+            // Dynamically update Shell/Nav colors to match content theme
+            try
+            {
+                var shell = Shell.Current;
+                if (shell != null)
+                {
+                    shell.BackgroundColor = backgroundColor;
+                    shell.ForegroundColor = Colors.White;
+                    shell.TitleColor = Colors.White;
+                    shell.UnselectedColor = new Color(backgroundColor.Red * 0.6f, backgroundColor.Green * 0.6f, backgroundColor.Blue * 0.6f);
+                    shell.TabBarBackgroundColor = backgroundColor;
+                    shell.TabBarForegroundColor = Colors.White;
+                    shell.TabBarTitleColor = Colors.White;
+                    shell.TabBarUnselectedColor = new Color(1,1,1,0.7f);
+                }
+            }
+            catch { }
+
+            // Send/update persistent notification of prediction
+            try
+            {
+                var notifier = ServiceHelper.GetService<INotificationService>();
+                notifier?.ShowOrUpdatePersistent("daily_prediction", "Prediction", tip);
+            }
+            catch { }
         }
 
         private async void OnLogPeriodClicked(object sender, EventArgs e)

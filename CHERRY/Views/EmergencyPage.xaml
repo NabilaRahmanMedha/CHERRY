@@ -169,7 +169,7 @@
 
             <!-- Pharmacy Section -->
             <Label Text="Nearby Pharmacies" Style="{StaticResource SectionTitle}" />
-            <Border Style="{StaticResource CardBorder}" HeightRequest="200">
+            <Border Style="{StaticResource CardBorder}">
                     <VerticalStackLayout Spacing="10">
                         <Grid ColumnDefinitions="*,Auto" 
                               VerticalOptions="Center">
@@ -183,9 +183,15 @@
                                 Margin="0,0,0,0" />
                         </Grid>
 
+                        <ActivityIndicator x:Name="PharmacySpinner"
+                                           IsVisible="False"
+                                           IsRunning="False"
+                                           HorizontalOptions="Center" />
+
                         <CollectionView x:Name="PharmacyList" 
                                     EmptyView="No pharmacies found. Please check your location or try again."
-                                    ItemsUpdatingScrollMode="KeepScrollOffset">
+                                    ItemsUpdatingScrollMode="KeepScrollOffset"
+                                    HeightRequest="250">
                             <CollectionView.ItemTemplate>
                                 <DataTemplate>
                                     <VerticalStackLayout Spacing="0">
@@ -230,7 +236,7 @@
 
             <!-- Gynecologist Section -->
             <Label Text="Gynecologist Contacts" Style="{StaticResource SectionTitle}" />
-            <Border Style="{StaticResource CardBorder}" HeightRequest="250">
+            <Border Style="{StaticResource CardBorder}">
                 <VerticalStackLayout Spacing="10">
                     <Grid ColumnDefinitions="*,Auto" 
                           VerticalOptions="Center">
@@ -246,7 +252,14 @@
 
                     <CollectionView x:Name="DoctorList" 
                                     EmptyView="No gynecologists found. Please check your location or try again."
-                                    ItemsUpdatingScrollMode="KeepScrollOffset">
+                                    ItemsUpdatingScrollMode="KeepScrollOffset"
+                                    HeightRequest="250">
+                        <CollectionView.Header>
+                            <ActivityIndicator x:Name="DoctorSpinner"
+                                               IsVisible="False"
+                                               IsRunning="False"
+                                               HorizontalOptions="Center" />
+                        </CollectionView.Header>
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
                                 <VerticalStackLayout Spacing="0">
