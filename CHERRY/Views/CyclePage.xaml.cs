@@ -1,5 +1,11 @@
 ﻿using CHERRY.Services;
 using Microsoft.Maui.Controls;
+using Microsoft.Maui.ApplicationModel;
+using MauiColor = Microsoft.Maui.Graphics.Color;
+#if ANDROID
+using Microsoft.Maui.Platform;
+using AndroidColor = Android.Graphics.Color;
+#endif
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +26,37 @@ namespace CHERRY.Views
         {
             base.OnAppearing();
             UpdateUI();
+        }
+
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            // Restore the app's default pink for other pages
+            var shell = Shell.Current;
+            var defaultPink = Microsoft.Maui.Graphics.Color.FromArgb("#eb3f95");
+            try
+            {
+                if (shell != null)
+                {
+                    Shell.SetBackgroundColor(shell, defaultPink);
+                    Shell.SetForegroundColor(shell, Microsoft.Maui.Graphics.Colors.White);
+                    Shell.SetTitleColor(shell, Microsoft.Maui.Graphics.Colors.White);
+                }
+
+#if ANDROID
+                var window = (Platform.CurrentActivity?.Window);
+                if (window != null)
+                {
+                    var native = AndroidColor.Argb(
+                        (int)(defaultPink.Alpha * 255),
+                        (int)(defaultPink.Red * 255),
+                        (int)(defaultPink.Green * 255),
+                        (int)(defaultPink.Blue * 255));
+                    window.SetStatusBarColor(native);
+                }
+#endif
+            }
+            catch { }
         }
 
         private void UpdateUI()
@@ -180,18 +217,29 @@ namespace CHERRY.Views
             // Dynamically update Shell/Nav colors to match content theme
             try
             {
+                // Only change the top navigation/status bar tint; leave TabBar colors as defined in XAML/styles
                 var shell = Shell.Current;
                 if (shell != null)
                 {
-                    shell.BackgroundColor = backgroundColor;
-                    shell.ForegroundColor = Colors.White;
-                    shell.TitleColor = Colors.White;
-                    shell.UnselectedColor = new Color(backgroundColor.Red * 0.6f, backgroundColor.Green * 0.6f, backgroundColor.Blue * 0.6f);
-                    shell.TabBarBackgroundColor = backgroundColor;
-                    shell.TabBarForegroundColor = Colors.White;
-                    shell.TabBarTitleColor = Colors.White;
-                    shell.TabBarUnselectedColor = new Color(1,1,1,0.7f);
+                    Shell.SetBackgroundColor(shell, backgroundColor);
+                    Shell.SetForegroundColor(shell, Microsoft.Maui.Graphics.Colors.White);
+                    Shell.SetTitleColor(shell, Microsoft.Maui.Graphics.Colors.White);
                 }
+
+#if ANDROID
+                // Also update Android status bar color to match prediction
+                var window = (Platform.CurrentActivity?.Window);
+                if (window != null)
+                {
+                    // Convert MAUI Color to Android Color manually to avoid missing extension method issues
+                    var native = AndroidColor.Argb(
+                        (int)(backgroundColor.Alpha * 255),
+                        (int)(backgroundColor.Red * 255),
+                        (int)(backgroundColor.Green * 255),
+                        (int)(backgroundColor.Blue * 255));
+                    window.SetStatusBarColor(native);
+                }
+#endif
             }
             catch { }
 
