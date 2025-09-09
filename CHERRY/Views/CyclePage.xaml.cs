@@ -173,7 +173,9 @@ namespace CHERRY.Views
 
         private void UpdateDailyTip(CycleData cycleData)
         {
-            DailyTipLabel.Text = _cycleService.GetDailyTip(cycleData);
+            var (tip, backgroundColor) = _cycleService.GetDailyTip(cycleData);
+            DailyTipLabel.Text = tip;
+            HeaderBorder.BackgroundColor = backgroundColor;
         }
 
         private async void OnLogPeriodClicked(object sender, EventArgs e)
