@@ -4,16 +4,45 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Graphics;
+using CHERRY.Services;
+using CHERRY.Models;
+using System.Collections.Generic;
 
 namespace CHERRY.Views;
 
 public partial class ChatBotPage : ContentPage
 {
     private CancellationTokenSource typingCts;
+    private readonly DatabaseService _db;
+    private readonly GeminiService _gemini;
+    private readonly AuthService _auth;
+    private string _email = string.Empty;
 
     public ChatBotPage()
     {
         InitializeComponent();
+        _db = ServiceHelper.GetService<DatabaseService>();
+        _gemini = ServiceHelper.GetService<GeminiService>();
+        _auth = ServiceHelper.GetService<AuthService>();
+    }
+
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+        _email = await _auth.GetEmailAsync() ?? string.Empty;
+        await LoadHistoryAsync();
+    }
+
+    private async Task LoadHistoryAsync()
+    {
+        MessagesStack.Children.Clear();
+        if (string.IsNullOrEmpty(_email)) return;
+        var messages = await _db.GetMessagesAsync(_email, 200);
+        foreach (var m in messages)
+        {
+            AddMessage(m.Content, m.IsUser);
+        }
+        await ScrollToBottom();
     }
 
     private async void OnSendClicked(object sender, EventArgs e)
@@ -39,18 +68,55 @@ public partial class ChatBotPage : ContentPage
     private async Task HandleUserMessage(string userMessage)
     {
         AddMessage(userMessage, isUser: true);
+        if (!string.IsNullOrEmpty(_email))
+        {
+            await _db.AddMessageAsync(new ChatMessage
+            {
+                UserEmail = _email,
+                IsUser = true,
+                Content = userMessage,
+                CreatedUtcTicks = DateTime.UtcNow.Ticks
+            });
+        }
         await ScrollToBottom();
 
         // Start typing animation
         var typingTask = ShowTypingIndicator();
 
-        // Simulate backend API call (replace with real one later)
-        string botReply = await CallChatApi(userMessage);
+        // Build chat history for Gemini
+        var history = new List<(bool isUser, string content)>();
+        if (!string.IsNullOrEmpty(_email))
+        {
+            var prior = await _db.GetMessagesAsync(_email, 50);
+            foreach (var msg in prior)
+                history.Add((msg.IsUser, msg.Content));
+        }
+        history.Add((true, userMessage));
+
+        string botReply = string.Empty;
+        try
+        {
+            botReply = await _gemini.GetChatCompletionAsync(history);
+        }
+        catch (Exception ex)
+        {
+            botReply = "Sorry, I couldn't reach the AI service right now.";
+        }
 
         // Stop typing indicator
         HideTypingIndicator();
 
         AddMessage(botReply, isUser: false);
+        if (!string.IsNullOrEmpty(_email))
+        {
+            await _db.AddMessageAsync(new ChatMessage
+            {
+                UserEmail = _email,
+                IsUser = false,
+                Content = botReply,
+                CreatedUtcTicks = DateTime.UtcNow.Ticks
+            });
+        }
         await ScrollToBottom();
     }
 
@@ -151,10 +217,5 @@ public partial class ChatBotPage : ContentPage
         }
     }
 
-    // Placeholder backend method
-    private async Task<string> CallChatApi(string userMessage)
-    {
-        await Task.Delay(1200); // simulate API delay
-        return $"Here’s my friendly reply to \"{userMessage}\" 💕";
-    }
+    // Placeholder removed; Gemini is used
 }
