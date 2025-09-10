@@ -138,7 +138,7 @@ namespace CHERRY.Views
             // Set background color based on day type
             if (isSelectedStart)
             {
-                dayBorder.BackgroundColor = (Color)Resources["PrimaryColor"];
+                dayBorder.BackgroundColor = (Color)Resources["PeriodColor"];
             }
             else if (isPeriodDay)
             {
