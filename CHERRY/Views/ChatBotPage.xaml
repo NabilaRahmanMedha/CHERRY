@@ -22,38 +22,44 @@
 
         <!-- Quick suggestion buttons -->
         <HorizontalStackLayout Grid.Row="2" Spacing="10" Padding="5">
-            <Button Text="Tips" 
+            <Button Text="Tips"
                     Clicked="OnSuggestionClicked"
                     BackgroundColor="#E0BBE4"
-                    CornerRadius="20"
-                    Padding="15,5"/>
-            <Button Text="Healthy Diet" 
+                    TextColor="Black"
+                    CornerRadius="22"
+                    Padding="16,6"/>
+            <Button Text="Healthy Diet"
                     Clicked="OnSuggestionClicked"
                     BackgroundColor="#957DAD"
                     TextColor="White"
-                    CornerRadius="20"
-                    Padding="15,5"/>
-            <Button Text="Remedies" 
+                    CornerRadius="22"
+                    Padding="16,6"/>
+            <Button Text="Remedies"
                     Clicked="OnSuggestionClicked"
                     BackgroundColor="#D291BC"
                     TextColor="White"
-                    CornerRadius="20"
-                    Padding="15,5"/>
+                    CornerRadius="22"
+                    Padding="16,6"/>
         </HorizontalStackLayout>
 
         <!-- Input area -->
-        <Grid Grid.Row="3" ColumnDefinitions="*,Auto" Padding="8" BackgroundColor="#f2f2f2">
+        <Grid Grid.Row="3" ColumnDefinitions="*,Auto" Padding="8" BackgroundColor="#f8f5f8">
             <Entry x:Name="UserInput"
                    Placeholder="Ask me anything about periods..."
                    FontSize="16"
-                   VerticalOptions="Center" />
+                   VerticalOptions="Center"
+                   BackgroundColor="White"
+                   TextColor="#333333"
+                   PlaceholderColor="#9e9e9e"
+                   HeightRequest="44"
+                   Margin="0,0,8,0" />
             <Button Text="Send"
                     Grid.Column="1"
                     Clicked="OnSendClicked"
-                    BackgroundColor="HotPink"
+                    BackgroundColor="#FF5C8A"
                     TextColor="White"
-                    CornerRadius="20"
-                    Padding="12,6"
+                    CornerRadius="22"
+                    Padding="16,8"
                     Margin="8,0,0,0"/>
         </Grid>
     </Grid>
