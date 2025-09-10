@@ -6,29 +6,30 @@
 
     <ContentPage.Resources>
         <!-- Color Resources -->
-        <Color x:Key="PrimaryColor">#6A5ACD</Color>
-        <Color x:Key="PeriodColor">#ff809b</Color>
+        <Color x:Key="PrimaryColor">#eb3f95</Color>
+        <Color x:Key="PrimaryLightColor">#FFF4FA</Color>
+        <Color x:Key="InputBackgroundColor">#ffb4da</Color>
         <Color x:Key="PredictedPeriodColor">#FFD6DC</Color>
         <Color x:Key="OvulationColor">#E0BBE4</Color>
-        <Color x:Key="FutureDateColor">#DBD4CC</Color>
-        <Color x:Key="FutureTextColor">#CCCCCC</Color>
-        <Color x:Key="TodayBorderColor">#1f1657</Color>
-        <Color x:Key="PredictedBorderColor">#ff809b</Color>
-        <Color x:Key="GrayTextColor">#666666</Color>
-        <Color x:Key="DarkTextColor">#333333</Color>
+        <Color x:Key="TodayBorderColor">#c20053</Color>
         <Color x:Key="LightCreamColor">#FFEDCE</Color>
         <Color x:Key="DarkGrayTextColor">#444444</Color>
+        <Color x:Key="DarkTextColor">#4E4E4E</Color>
+        <Color x:Key="GrayTextColor">#666666</Color>
 
-        <!-- Additional colors for styling -->
+            <!-- Additional colors for styling -->
         <Color x:Key="CardBackground">#FFFFFF</Color>
         <Color x:Key="BorderColor">#E8E6E4</Color>
         <Color x:Key="PlaceholderColor">#9CA3AF</Color>
     </ContentPage.Resources>
 
     <ScrollView>
-        <VerticalStackLayout Spacing="0" Padding="20">
+        <VerticalStackLayout Spacing="0" 
+                             Padding="20">
             <!-- Header Section -->
-            <VerticalStackLayout Spacing="10" HorizontalOptions="Center" Padding="0,40,0,30">
+            <VerticalStackLayout Spacing="10" 
+                                 HorizontalOptions="Center" 
+                                 Padding="0,40,0,30">
                 <Label Text="CHERRY" 
                        FontSize="32" 
                        FontAttributes="Bold"
@@ -48,9 +49,8 @@
             </VerticalStackLayout>
 
             <!-- Login Form Card -->
-            <Frame BackgroundColor="{StaticResource CardBackground}" 
-                   CornerRadius="16" 
-                   HasShadow="True"
+            <Border BackgroundColor="{StaticResource InputBackgroundColor}" 
+                   StrokeShape="RoundRectangle 16"
                    Padding="20"
                    Margin="0,0,0,20">
                 <VerticalStackLayout Spacing="20">
@@ -60,17 +60,16 @@
                                FontSize="14"
                                TextColor="{StaticResource DarkTextColor}" />
 
-                        <Frame BackgroundColor="{StaticResource BorderColor}" 
-                               CornerRadius="12" 
-                               Padding="15,0" 
-                               HasShadow="False">
+                        <Border BackgroundColor="{StaticResource PrimaryLightColor}" 
+                               StrokeShape="RoundRectangle 12" 
+                               Padding="15,0">
                             <Entry x:Name="EmailEntry" 
                                    Placeholder="Enter your email"
                                    PlaceholderColor="{StaticResource PlaceholderColor}"
                                    TextColor="{StaticResource DarkTextColor}"
                                    Keyboard="Email"
                                    ClearButtonVisibility="WhileEditing" />
-                        </Frame>
+                        </Border>
                     </VerticalStackLayout>
 
                     <!-- Password Input -->
@@ -79,17 +78,16 @@
                                FontSize="14"
                                TextColor="{StaticResource DarkTextColor}" />
 
-                        <Frame BackgroundColor="{StaticResource BorderColor}" 
-                               CornerRadius="12" 
-                               Padding="15,0" 
-                               HasShadow="False">
+                        <Border BackgroundColor="{StaticResource BorderColor}" 
+                               StrokeShape="RoundRectangle 12" 
+                               Padding="15,0">
                             <Entry x:Name="PasswordEntry" 
                                    Placeholder="Enter your password"
                                    PlaceholderColor="{StaticResource PlaceholderColor}"
                                    TextColor="{StaticResource DarkTextColor}"
                                    IsPassword="True"
                                    ClearButtonVisibility="WhileEditing" />
-                        </Frame>
+                        </Border>
                     </VerticalStackLayout>
 
                     <!-- Login Button -->
@@ -109,11 +107,10 @@
                            HorizontalOptions="Center"
                            Margin="0,10,0,0" />
                 </VerticalStackLayout>
-            </Frame>
+            </Border>
 
             <!-- Create Account Section -->
-            <Frame BackgroundColor="Transparent" 
-                   HasShadow="False"
+            <Border BackgroundColor="Transparent"
                    Padding="20">
                 <VerticalStackLayout Spacing="15">
                     <Label Text="Don't have an account?" 
@@ -131,7 +128,7 @@
                             HeightRequest="50"
                             CornerRadius="12" />
                 </VerticalStackLayout>
-            </Frame>
+            </Border>
 
             <!-- App Info Footer -->
             <Label Text="Your Cycle Companion" 
