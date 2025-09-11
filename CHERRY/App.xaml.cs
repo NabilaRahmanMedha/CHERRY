@@ -8,14 +8,14 @@ namespace CHERRY
     {
         private readonly AuthService _auth;
 
-        public App(AuthService auth)
+        /*public App(AuthService auth)
         {
             InitializeComponent(); // Ensure this method is defined in App.xaml
             _auth = auth;
 
             // Set the main page with navigation
             Microsoft.Maui.Controls.Application.Current.MainPage = new NavigationPage(new LoginPage(_auth));
-        }
+        }*/
 
         /*public App()
         {
@@ -25,6 +25,14 @@ namespace CHERRY
             // Set the main page with navigation
             Microsoft.Maui.Controls.Application.Current.MainPage = new AppShell();
         }*/
+
+        public App(AuthService auth)
+        {
+            _auth = auth;
+            InitializeComponent(); // Ensure this method is defined in App.xaml
+
+            Microsoft.Maui.Controls.Application.Current.MainPage = new NavigationPage(new IntroPage(_auth));
+        }
 
         protected override Window CreateWindow(IActivationState? activationState)
         {

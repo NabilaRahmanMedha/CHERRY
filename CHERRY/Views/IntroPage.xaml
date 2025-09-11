@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="CHERRY.Views.IntroPage"
+             BackgroundColor="Transparent">
+
+    <ContentPage.Resources>
+        <Color x:Key="PrimaryColor">#eb3f95</Color>
+        <Color x:Key="PrimaryLightColor">#ffedf6</Color>
+        <Color x:Key="SecondaryColor">#ea1567</Color>
+        <Color x:Key="LightBackground">#FFFFFF</Color>
+        <Color x:Key="CardBackground">#FFFFFF</Color>
+        <Color x:Key="DarkTextColor">#4E4E4E</Color>
+        <Color x:Key="MediumTextColor">#666666</Color>
+        <Color x:Key="LightTextColor">#888888</Color>
+        <Color x:Key="BorderColor">#EEEEEE</Color>
+        <Color x:Key="SuccessColor">#4CAF50</Color>
+        <Color x:Key="WarningColor">#FF9800</Color>
+
+    </ContentPage.Resources>
+    
+    <Grid Padding="30">
+            <!-- Gradient Background -->
+            <Grid.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Color="#eb3f95" Offset="0.1"/>
+                    <GradientStop Color="#ea1567" Offset="0.9"/>
+                </LinearGradientBrush>
+            </Grid.Background>
+
+            <!-- Bubbles Container -->
+            <AbsoluteLayout x:Name="bubbleContainer" 
+                   HorizontalOptions="Fill" 
+                   VerticalOptions="Fill" />
+
+            <!-- Content -->
+            <Border BackgroundColor="Transparent"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center">
+                <VerticalStackLayout VerticalOptions="Center" Spacing="20">
+                   <Label Text="Welcome To"
+                   FontSize="26"
+                   FontAttributes="Italic"
+                   HorizontalTextAlignment="Center"
+                   TextColor="{StaticResource PrimaryLightColor}"/>
+
+                    <Image Source="logo_icon.png"
+                   WidthRequest="190"
+                   HeightRequest="95"
+                   Aspect="Fill"
+                   HorizontalOptions="Center" />
+
+                    <Label Text="Your Personal Cycle Companion"
+                   FontSize="20"
+                   FontAttributes="Italic"
+                   TextColor="{StaticResource PrimaryLightColor}"
+                   HorizontalOptions="Center"
+                   Margin="0,0,0,20"/>
+
+                    <Label Text="To Start ->"
+                       HorizontalOptions="Center"
+                       TextColor="{StaticResource PrimaryLightColor}"/>
+
+                    <Button Text="Log in"
+                    BackgroundColor="{StaticResource PrimaryLightColor}"
+                    TextColor="#ea1567"
+                    FontAttributes="Bold"
+                    FontSize="18"
+                    CornerRadius="12"
+                    HeightRequest="50"
+                    Clicked="OnLoginClicked"
+                    Margin="0,0,0,-10"/>
+
+                    <Label Text="Or"
+                       TextColor="{StaticResource PrimaryLightColor}"
+                       HorizontalOptions="Center"
+                       Margin="0,0,0,-10"/>
+
+                    <Button Text="Sign up"
+                    BackgroundColor="Transparent"
+                    BorderColor="{StaticResource PrimaryLightColor}"
+                    BorderWidth="2"
+                    TextColor="{StaticResource PrimaryLightColor}"
+                    FontAttributes="Bold"
+                    FontSize="18"
+                    CornerRadius="12"
+                    HeightRequest="50"
+                    Clicked="OnSignUpClicked"/>
+                </VerticalStackLayout>
+            </Border>
+        </Grid>
+    
+</ContentPage>
