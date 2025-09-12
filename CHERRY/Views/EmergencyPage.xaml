@@ -323,8 +323,8 @@
                     <Button Text="Women's Health Resources"
                             Clicked="OnResourcesClicked"
                             Style="{StaticResource SecondaryButton}" />
-                    <Button Text="Find Urgent Care Centers"
-                            Clicked="OnUrgentCareClicked"
+                    <Button Text="Mental Health Support"
+                            Clicked="OnMentalHealthClicked"
                             Style="{StaticResource SecondaryButton}" />
                     <Button Text="Sexual Health Information"
                             Clicked="OnHealthInfoClicked"
