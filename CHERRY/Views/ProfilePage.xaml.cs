@@ -92,22 +92,22 @@ namespace CHERRY.Views
         }
 
         // Add other missing event handlers that might be in your XAML
-        private async void OnMyGoalsClicked(object sender, EventArgs e)
+        private async void OnGraphReportClicked(object sender, EventArgs e)
         {
             await DisplayAlert("My Goals", "Feature coming soon!", "OK");
         }
 
-        private async void OnSubscriptionClicked(object sender, EventArgs e)
+        private async void OnReferAFriendClicked(object sender, EventArgs e)
         {
             await DisplayAlert("Subscription", "Feature coming soon!", "OK");
         }
 
-        private async void OnHealthReportClicked(object sender, EventArgs e)
+        private async void OnAboutCherryClicked(object sender, EventArgs e)
         {
             await DisplayAlert("Health Report", "Feature coming soon!", "OK");
         }
 
-        private async void OnTermsClicked(object sender, EventArgs e)
+        private async void OnCycleOvulationClicked(object sender, EventArgs e)
         {
             await DisplayAlert("Terms and Conditions", "Feature coming soon!", "OK");
         }

@@ -1,114 +1,359 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="CHERRY.Views.ProfilePage"
-             Title="Profile">
+             x:Class="CHERRY.Views.ProfilePage">
 
-	<ScrollView>
-		<StackLayout Padding="20" Spacing="20">
+    <ContentPage.Resources>
+        <!-- Color Resources -->
+        <Color x:Key="PrimaryColor">#ffc4de</Color>
+        <Color x:Key="PrimaryLightColor">#FFF4FA</Color>
+        <Color x:Key="PrimaryDarkColor">#eb3f95</Color>
+        <Color x:Key="SecondaryColor">#7E57C2</Color>
+        <Color x:Key="LightBackground">#FFFFFF</Color>
+        <Color x:Key="CardBackground">#FFFFFF</Color>
+        <Color x:Key="DarkTextColor">#4E4E4E</Color>
+        <Color x:Key="MediumTextColor">#666666</Color>
+        <Color x:Key="LightTextColor">#888888</Color>
+        <Color x:Key="BorderColor">#eb3f95</Color>
+        <Color x:Key="SuccessColor">#4CAF50</Color>
+        <Color x:Key="WarningColor">#FF9800</Color>
+        <Color x:Key="ErrorColor">#e81f40</Color>
+        <Color x:Key="LightGrayColor">#F5F5F5</Color>
 
-			<!-- Profile Header -->
-			<Frame CornerRadius="15" BackgroundColor="White" Padding="20" HasShadow="True">
-				<Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto" ColumnSpacing="20">
+        <!-- Style Resources -->
+        <Style x:Key="CardFrame" TargetType="Border">
+            <Setter Property="StrokeShape" Value="RoundRectangle 20" />
+            <Setter Property="BackgroundColor" Value="{StaticResource LightBackground}" />
+            <Setter Property="Padding" Value="20" />
+        </Style>
 
-					<!-- Profile Image -->
-					<Frame Grid.Row="0" Grid.Column="0" Grid.RowSpan="2"
-                           CornerRadius="50" HeightRequest="100" WidthRequest="100"
-                           BackgroundColor="#EEEEEE" HorizontalOptions="Center" VerticalOptions="Center">
-						<Image x:Name="ProfileImage" Aspect="AspectFill"
-                               HeightRequest="100" WidthRequest="100" Source="default_profile.png" />
-					</Frame>
+        <Style x:Key="SectionTitle" TargetType="Label">
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="FontAttributes" Value="Bold" />
+            <Setter Property="TextColor" Value="{StaticResource DarkTextColor}" />
+            <Setter Property="Margin" Value="0,20,0,10" />
+        </Style>
 
-					<!-- Edit Photo Button -->
-					<Button Grid.Row="0" Grid.Column="0" Grid.RowSpan="2"
-                            Text="✏️" CornerRadius="50" WidthRequest="30" HeightRequest="30"
-                            BackgroundColor="#6A5ACD" TextColor="White" FontSize="12"
-                            HorizontalOptions="End" VerticalOptions="End"
-                            Clicked="OnEditPhotoClicked"/>
+        <Style x:Key="MenuButton" TargetType="Button">
+            <Setter Property="BackgroundColor" Value="Transparent" />
+            <Setter Property="TextColor" Value="{StaticResource DarkTextColor}" />
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="HorizontalOptions" Value="Fill" />
+            <Setter Property="Padding" Value="0,15" />
+            <Setter Property="CornerRadius" Value="0" />
+        </Style>
 
-					<!-- User Info -->
-					<Label x:Name="NicknameLabel" Grid.Row="0" Grid.Column="1"
-                           Text="Set Nickname" FontSize="20" FontAttributes="Bold"
-                           TextColor="#333333" VerticalOptions="End"/>
+        <Style x:Key="StatValue" TargetType="Label">
+            <Setter Property="FontSize" Value="24" />
+            <Setter Property="FontAttributes" Value="Bold" />
+            <Setter Property="TextColor" Value="{StaticResource PrimaryDarkColor}" />
+            <Setter Property="HorizontalOptions" Value="Center" />
+        </Style>
 
-					<Label x:Name="EmailLabel" Grid.Row="1" Grid.Column="1"
-                           Text="user@example.com" FontSize="14" TextColor="#666666"
-                           VerticalOptions="Start"/>
+        <Style x:Key="StatLabel" TargetType="Label">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="TextColor" Value="{StaticResource DarkTextColor}" />
+            <Setter Property="HorizontalOptions" Value="Center" />
+        </Style>
+    </ContentPage.Resources>
 
-					<!-- Edit Profile Button -->
-					<Button Grid.Row="1" Grid.Column="1" Text="Edit Profile"
-                            BackgroundColor="Transparent" TextColor="#6A5ACD" FontSize="12"
-                            HorizontalOptions="End" VerticalOptions="End"
-                            Clicked="OnEditProfileClicked"/>
-				</Grid>
-			</Frame>
+    <ScrollView>
+        <StackLayout Padding="20" Spacing="0">
 
-			<!-- Period and Cycle Stats -->
-			<Grid ColumnDefinitions="*,*" ColumnSpacing="15">
-				<!-- Period Length -->
-				<Frame CornerRadius="10" BackgroundColor="White" Padding="15" HasShadow="True">
-					<VerticalStackLayout Spacing="5">
-						<Label Text="PERIOD LENGTH" FontSize="12" TextColor="#666666" HorizontalOptions="Center"/>
-						<Label x:Name="PeriodLengthLabel" Text="5 days" FontSize="20" FontAttributes="Bold"
-                               TextColor="#6A5ACD" HorizontalOptions="Center"/>
-					</VerticalStackLayout>
-				</Frame>
+            <!-- Profile Header -->
+            <Border StrokeShape="RoundRectangle 0,0,100,100"
+                    BackgroundColor="{StaticResource PrimaryColor}"
+                    HeightRequest="280"
+                    StrokeThickness="8"
+                    Margin="-30,-30,-30,20">
+                <Border.Stroke>
+                    <LinearGradientBrush StartPoint="0,0" 
+                                         EndPoint="0,1">
+                        <GradientStop Color="#ffebf7" 
+                                      Offset="1.0" />
+                        <GradientStop Color="{StaticResource PrimaryDarkColor}"
+                                      Offset="0.8" />
+                    </LinearGradientBrush>
+                </Border.Stroke>
+                <Grid RowDefinitions="Auto,Auto" 
+                      RowSpacing="15"
+                      Padding="0,30,0,0">
 
-				<!-- Cycle Length -->
-				<Frame CornerRadius="10" BackgroundColor="White" Padding="15" HasShadow="True">
-					<VerticalStackLayout Spacing="5">
-						<Label Text="CYCLE LENGTH" FontSize="12" TextColor="#666666" HorizontalOptions="Center"/>
-						<Label x:Name="CycleLengthLabel" Text="28 days" FontSize="20" FontAttributes="Bold"
-                               TextColor="#6A5ACD" HorizontalOptions="Center"/>
-					</VerticalStackLayout>
-				</Frame>
-			</Grid>
+                    <!-- Profile Image with Edit Button -->
+                    <Grid RowDefinitions="Auto" 
+                          ColumnDefinitions="Auto,*" 
+                          HorizontalOptions="Center" 
+                          VerticalOptions="Center">
 
-			<!-- Settings Options -->
-			<Label Text="SETTINGS" FontSize="16" FontAttributes="Bold" TextColor="#333333" Margin="0,10,0,5"/>
+                        <!-- Profile Image Container -->
+                        <Border Grid.Row="0" Grid.Column="0"
+                                StrokeShape="Ellipse"
+                                HeightRequest="100"
+                                WidthRequest="100"
+                                BackgroundColor="White"
+                                Padding="3"
+                                Stroke="{StaticResource PrimaryDarkColor}"
+                                StrokeThickness="2">
 
-			<Frame CornerRadius="10" BackgroundColor="White" Padding="15" HasShadow="True">
-				<VerticalStackLayout Spacing="15">
+                            <!-- Profile Image -->
+                            <Image x:Name="ProfileImage" 
+                                   Source="profile_icon.png"
+                                   Aspect="AspectFill"
+                                   HorizontalOptions="Fill"
+                                   VerticalOptions="Fill"/>
+                        </Border>
 
-					<Grid ColumnDefinitions="*,Auto">
-						<Label Text="My Goals" TextColor="#333333"/>
-						<ImageButton Grid.Column="1" Source="arrow_right.png" BackgroundColor="Transparent"
-                                    Clicked="OnMyGoalsClicked"/>
-					</Grid>
+                        <!-- Edit Photo Button -->
+                        <Border Grid.Row="0" Grid.Column="0"
+                                StrokeShape="Ellipse"
+                                WidthRequest="30"
+                                HeightRequest="30"
+                                BackgroundColor="{StaticResource PrimaryColor}"
+                                HorizontalOptions="End"
+                                VerticalOptions="End">
+                            <ImageButton Source="camera_icon.png"
+                                       BackgroundColor="Transparent"
+                                       WidthRequest="25"
+                                       HeightRequest="25"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center"
+                                       Clicked="OnEditPhotoClicked"/>
+                        </Border>
+                    </Grid>
 
-					<BoxView HeightRequest="1" Color="#EEEEEE" HorizontalOptions="Fill"/>
+                    <!-- User Info -->
+                    <VerticalStackLayout Grid.Row="1" 
+                                         Grid.Column="0"
+                                         Spacing="5" 
+                                         HorizontalOptions="Center">
 
-					<Grid ColumnDefinitions="*,Auto">
-						<Label Text="Subscription" TextColor="#333333"/>
-						<ImageButton Grid.Column="1" Source="arrow_right.png" BackgroundColor="Transparent"
-                                    Clicked="OnSubscriptionClicked"/>
-					</Grid>
+                        <Label x:Name="NicknameLabel"
+                               Text="Set Nickname " 
+                               FontSize="20" 
+                               FontAttributes="Bold"
+                               TextColor="{StaticResource PrimaryDarkColor}"
+                               HorizontalOptions="Center"/>
 
-					<BoxView HeightRequest="1" Color="#EEEEEE" HorizontalOptions="Fill"/>
+                        <Label x:Name="EmailLabel"
+                               Text="No Email"
+                               FontSize="14" 
+                               TextColor="{StaticResource PrimaryDarkColor}"
+                               HorizontalOptions="Center"/>
 
-					<Grid ColumnDefinitions="*,Auto">
-						<Label Text="Health Report" TextColor="#333333"/>
-						<ImageButton Grid.Column="1" Source="arrow_right.png" BackgroundColor="Transparent"
-                                    Clicked="OnHealthReportClicked"/>
-					</Grid>
+                        <Button Text="Edit Profile"
+                                BackgroundColor="{StaticResource PrimaryDarkColor}"
+                                TextColor="{StaticResource PrimaryLightColor}"
+                                FontSize="14"
+                                FontAttributes="Bold"
+                                HorizontalOptions="Center"
+                                Clicked="OnEditProfileClicked"
+                                Margin="0,10,0,0"/>
+                    </VerticalStackLayout>
+                </Grid>
+            </Border>
 
-					<BoxView HeightRequest="1" Color="#EEEEEE" HorizontalOptions="Fill"/>
+            <!-- Period and Cycle Stats -->
+            <Grid ColumnDefinitions="*,*" 
+                  ColumnSpacing="15"
+                  Margin="0,0,0,20">
 
-					<Grid ColumnDefinitions="*,Auto">
-						<Grid.GestureRecognizers>
-							<TapGestureRecognizer Tapped="OnDeleteProfileClicked"/>
-						</Grid.GestureRecognizers>
-						<Label Text="Delete Profile" TextColor="#FF0000"/>
-						<ImageButton Grid.Column="1" Source="arrow_right.png" BackgroundColor="Transparent"
-                                    Clicked="OnDeleteProfileClicked"/>
-					</Grid>
-				</VerticalStackLayout>
-			</Frame>
+                <!-- Period Length -->
+                <Border Grid.Column="0"
+                        StrokeShape="RoundRectangle 12"
+                        BackgroundColor="White"
+                        Stroke="{StaticResource BorderColor}"
+                        StrokeThickness="1"
+                        Padding="20,15">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="🩸" 
+                               FontSize="20"
+                               HorizontalOptions="Center"/>
+                        <Label Text="PERIOD LENGTH" 
+                               Style="{StaticResource StatLabel}"/>
+                        <Label x:Name="PeriodLengthLabel" 
+                               Style="{StaticResource StatValue}"/>
+                    </VerticalStackLayout>
+                </Border>
 
-			<!-- Logout Button -->
-			<Button Text="Log Out" BackgroundColor="#6A5ACD" TextColor="White"
-                    CornerRadius="10" Padding="20,10" FontAttributes="Bold"
-                    Margin="0,30,0,20" Clicked="OnLogoutClicked"/>
-		</StackLayout>
-	</ScrollView>
+                <!-- Cycle Length -->
+                <Border Grid.Column="1"
+                        StrokeShape="RoundRectangle 12"
+                        BackgroundColor="White"
+                        Stroke="{StaticResource BorderColor}"
+                        StrokeThickness="1"
+                        Padding="20,15">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="📅" 
+                               FontSize="20"
+                               HorizontalOptions="Center"/>
+                        <Label Text="CYCLE LENGTH" 
+                               Style="{StaticResource StatLabel}"/>
+                        <Label x:Name="CycleLengthLabel"
+                               Style="{StaticResource StatValue}"/>
+                    </VerticalStackLayout>
+                </Border>
+            </Grid>
+
+            <!-- Other Options -->
+            <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto" 
+                  RowSpacing="12"
+                  Margin="0,20,0,0">
+
+                <!-- Graphs and Reports -->
+                <Border Grid.Row="0"
+                        StrokeShape="RoundRectangle 12"
+                        BackgroundColor="White"
+                        Stroke="{StaticResource BorderColor}"
+                        StrokeThickness="1"
+                        Padding="15">
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                        <Image Source="goals_icon.png"
+                               WidthRequest="24"
+                               HeightRequest="24"
+                               VerticalOptions="Center"/>
+                        <Label Text="Graphs and Reports" 
+                               Grid.Column="1"
+                               TextColor="{StaticResource PrimaryDarkColor}"
+                               FontSize="16"
+                               VerticalOptions="Center"/>
+                        <Label Grid.Column="2"
+                               Text="&gt;"
+                               TextColor="{StaticResource PrimaryDarkColor}"
+                               FontSize="16"
+                               VerticalOptions="Center"/>
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnGraphReportClicked"/>
+                        </Grid.GestureRecognizers>
+                    </Grid>
+                </Border>
+
+                <!-- Cycle and Ovulation -->
+                <Border Grid.Row="1"
+                        StrokeShape="RoundRectangle 12"
+                        BackgroundColor="White"
+                        Stroke="{StaticResource BorderColor}"
+                        StrokeThickness="1"
+                        Padding="15">
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                        <Image Source="premium_icon.png"
+                               WidthRequest="24"
+                               HeightRequest="24"
+                               VerticalOptions="Center"/>
+                        <Label Text="Cycle and Ovulation" 
+                               Grid.Column="1"
+                               TextColor="{StaticResource PrimaryDarkColor}"
+                               FontSize="16"
+                               VerticalOptions="Center"/>       
+                        <Label Grid.Column="2"
+                               Text="&gt;"
+                               TextColor="{StaticResource PrimaryDarkColor}"
+                               FontSize="16"
+                               VerticalOptions="Center"/>
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnCycleOvulationClicked"/>
+                        </Grid.GestureRecognizers>
+                    </Grid>
+                </Border>
+
+                <!-- Refer a Friend -->
+                <Border Grid.Row="2"
+                        StrokeShape="RoundRectangle 12"
+                        BackgroundColor="White"
+                        Stroke="{StaticResource BorderColor}"
+                        StrokeThickness="1"
+                        Padding="15">
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                        <Image Source="health_icon.png"
+                               WidthRequest="24"
+                               HeightRequest="24"
+                               VerticalOptions="Center"/>
+                        <Label Text="Refer a Friend" 
+                               Grid.Column="1"
+                               TextColor="{StaticResource PrimaryDarkColor}"
+                               FontSize="16"
+                               VerticalOptions="Center"/>
+                        <Label Grid.Column="2"
+                               Text="&gt;"
+                               TextColor="{StaticResource PrimaryDarkColor}"
+                               FontSize="16"
+                               VerticalOptions="Center"/>
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnReferAFriendClicked"/>
+                        </Grid.GestureRecognizers>
+                    </Grid>
+                </Border>
+
+                <!-- About Cherry -->
+                <Border Grid.Row="3"
+                        StrokeShape="RoundRectangle 12"
+                        BackgroundColor="White"
+                        Stroke="{StaticResource BorderColor}"
+                        StrokeThickness="1"
+                        Padding="15">
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                        <Image Source="health_icon.png"
+                               WidthRequest="24"
+                               HeightRequest="24"
+                               VerticalOptions="Center"/>
+                        <Label Text="About Cherry" 
+                               Grid.Column="1"
+                               TextColor="{StaticResource PrimaryDarkColor}"
+                               FontSize="16"
+                               VerticalOptions="Center"/>
+                        <Label Grid.Column="2"
+                               Text="&gt;"
+                               TextColor="{StaticResource PrimaryDarkColor}"
+                               FontSize="16"
+                               VerticalOptions="Center"/>
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnAboutCherryClicked"/>
+                        </Grid.GestureRecognizers>
+                    </Grid>
+                </Border>
+
+                <!-- Delete Profile -->
+                <Border Grid.Row="4"
+                        StrokeShape="RoundRectangle 12"
+                        BackgroundColor="White"
+                        Stroke="{StaticResource ErrorColor}"
+                        StrokeThickness="1"
+                        Padding="15">
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                        <Image Source="delete_icon.png"
+                               WidthRequest="24"
+                               HeightRequest="24"
+                               VerticalOptions="Center"/>
+                        <Label Text="Delete Profile" 
+                               Grid.Column="1"
+                               TextColor="{StaticResource ErrorColor}"
+                               FontSize="16"
+                               VerticalOptions="Center"/>
+                        <Label Grid.Column="2"
+                               Text="&gt;"
+                               TextColor="{StaticResource ErrorColor}"
+                               FontSize="16"
+                               VerticalOptions="Center"/>
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnDeleteProfileClicked"/>
+                        </Grid.GestureRecognizers>
+                    </Grid>
+                </Border>
+            </Grid>
+
+
+            <!-- Logout Button -->
+            <Button Text="Log Out" 
+                    BackgroundColor="{StaticResource PrimaryLightColor}"
+                    TextColor="{StaticResource ErrorColor}"
+                    BorderColor="{StaticResource ErrorColor}"
+                    BorderWidth="2"
+                    CornerRadius="12" 
+                    Padding="20,15" 
+                    FontAttributes="Bold"
+                    FontSize="16"
+                    Margin="0,30,0,20" 
+                    Clicked="OnLogoutClicked"/>
+
+        </StackLayout>
+    </ScrollView>
 </ContentPage>

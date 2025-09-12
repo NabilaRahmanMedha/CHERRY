@@ -117,8 +117,7 @@ namespace CHERRY.Views
                 int avgCycleLength = _cycleService.GetAverageCycleLength();
 
                 PredictionLabel.Text = $"Next period: {nextPeriodStart:MMM d}-{nextPeriodStart.AddDays(averagePeriodLength - 1):MMM d}\n" +
-                                      $"Ovulation window: {ovulationDate.AddDays(-4):MMM d}-{ovulationDate.AddDays(4):MMM d}\n" +
-                                      $"Avg period: {averagePeriodLength} days, Cycle: {avgCycleLength} days";
+                                      $"Ovulation window: {ovulationDate.AddDays(-4):MMM d}-{ovulationDate.AddDays(4):MMM d}\n";
             }
         }
 
@@ -139,7 +138,7 @@ namespace CHERRY.Views
             // Set background color based on day type
             if (isSelectedStart)
             {
-                dayBorder.BackgroundColor = (Color)Resources["PrimaryColor"];
+                dayBorder.BackgroundColor = (Color)Resources["PeriodColor"];
             }
             else if (isPeriodDay)
             {

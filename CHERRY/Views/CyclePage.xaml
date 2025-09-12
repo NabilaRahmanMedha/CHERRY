@@ -2,7 +2,6 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="CHERRY.Views.CyclePage"
-             Title=""
              NavigationPage.HasNavigationBar="False">
 
     <ContentPage.Resources>
@@ -44,10 +43,11 @@
 
                 <Border Grid.Row="0"
                         StrokeShape="RoundRectangle 0,0,100,100"
-                        HeightRequest="200"
-                        BackgroundColor="#ffc4de"
-                        Padding="10"
-                        Margin="-20,-30,-20,0">
+                        HeightRequest="230"
+                        BackgroundColor="{Binding HeaderBackgroundColor}"
+                        Padding="10,20,10,10"
+                        Margin="-20,-30,-20,0"
+                        x:Name="HeaderBorder">
 
                     <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,*,Auto"
                           VerticalOptions="Start">
