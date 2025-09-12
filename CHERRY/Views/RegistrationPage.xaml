@@ -2,144 +2,193 @@
 <ContentPage
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    x:Class="CHERRY.Views.RegistrationPage">
+    x:Class="CHERRY.Views.RegistrationPage"
+    NavigationPage.HasNavigationBar="False">
 
     <ContentPage.Resources>
         <!-- Color Resources -->
-        <Color x:Key="PrimaryColor">#6A5ACD</Color>
-        <Color x:Key="PeriodColor">#ff809b</Color>
-        <Color x:Key="PredictedPeriodColor">#FFD6DC</Color>
-        <Color x:Key="OvulationColor">#E0BBE4</Color>
-        <Color x:Key="FutureDateColor">#DBD4CC</Color>
-        <Color x:Key="FutureTextColor">#CCCCCC</Color>
-        <Color x:Key="TodayBorderColor">#1f1657</Color>
-        <Color x:Key="PredictedBorderColor">#ff809b</Color>
-        <Color x:Key="GrayTextColor">#666666</Color>
-        <Color x:Key="DarkTextColor">#333333</Color>
-        <Color x:Key="LightCreamColor">#FFEDCE</Color>
-        <Color x:Key="DarkGrayTextColor">#444444</Color>
-
-        <!-- Additional colors for styling -->
-        <Color x:Key="CardBackground">#FFFFFF</Color>
+        <Color x:Key="PrimaryColor">#eb3f95</Color>
+        <Color x:Key="PrimaryDarkColor">#ea1567</Color>
+        <Color x:Key="PrimaryLightColor">#ffedf6</Color>
+        <Color x:Key="InputBackgroundColor">#ffb4da</Color>
+        <Color x:Key="CardBackground">#ffeef6</Color>
         <Color x:Key="BorderColor">#E8E6E4</Color>
         <Color x:Key="PlaceholderColor">#9CA3AF</Color>
+        <Color x:Key="DarkTextColor">#4E4E4E</Color>
+        <Color x:Key="GrayTextColor">#666666</Color>
+        <Color x:Key="WhiteColor">#FFFFFF</Color>
+        <Color x:Key="LightCreamColor">#FFEDCE</Color>
+        <Color x:Key="DarkGrayTextColor">#444444</Color>
 
     </ContentPage.Resources>
 
     <ScrollView>
-        <VerticalStackLayout Spacing="0" Padding="20">
-            <!-- Header Section -->
-            <VerticalStackLayout Spacing="10" HorizontalOptions="Center" Padding="0,40,0,30">
-                <Label Text="CHERRY" 
-                       FontSize="32" 
-                       FontAttributes="Bold"
-                       TextColor="{StaticResource PrimaryColor}"
-                       HorizontalOptions="Center" />
+        <Grid>
+            <BoxView>
+                <BoxView.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Color="{StaticResource PrimaryColor}" Offset="0.1"/>
+                        <GradientStop Color="{StaticResource PrimaryDarkColor}" Offset="0.3"/>
+                    </LinearGradientBrush>
+                </BoxView.Background>
+            </BoxView>
 
-                <Label Text="Create Account" 
-                       FontSize="24" 
-                       FontAttributes="Bold"
-                       TextColor="{StaticResource DarkTextColor}"
-                       HorizontalOptions="Center" />
+            <Grid RowDefinitions="Auto,*">
+                <!-- Header Section -->
+                <VerticalStackLayout Grid.Row="0"
+                    Spacing="10"
+                    Padding="40">
 
-                <Label Text="Join your cycle journey" 
-                       FontSize="16"
-                       TextColor="{StaticResource GrayTextColor}"
-                       HorizontalOptions="Center" />
-            </VerticalStackLayout>
-
-            <!-- Registration Form Card -->
-            <Frame BackgroundColor="{StaticResource CardBackground}" 
-                   CornerRadius="16" 
-                   HasShadow="True"
-                   Padding="20"
-                   Margin="0,0,0,20">
-                <VerticalStackLayout Spacing="20">
-                    <!-- Email Input -->
-                    <VerticalStackLayout Spacing="5">
-                        <Label Text="Email" 
-                               FontSize="14"
-                               TextColor="{StaticResource DarkTextColor}" />
-
-                        <Frame BackgroundColor="{StaticResource BorderColor}" 
-                               CornerRadius="12" 
-                               Padding="15,0" 
-                               HasShadow="False">
-                            <Entry x:Name="EmailEntry" 
-                                   Placeholder="Enter your email"
-                                   PlaceholderColor="{StaticResource PlaceholderColor}"
-                                   TextColor="{StaticResource DarkTextColor}"
-                                   Keyboard="Email"
-                                   ClearButtonVisibility="WhileEditing" />
-                        </Frame>
-                    </VerticalStackLayout>
-
-                    <!-- Password Input -->
-                    <VerticalStackLayout Spacing="5">
-                        <Label Text="Password" 
-                               FontSize="14"
-                               TextColor="{StaticResource DarkTextColor}" />
-
-                        <Frame BackgroundColor="{StaticResource BorderColor}" 
-                               CornerRadius="12" 
-                               Padding="15,0" 
-                               HasShadow="False">
-                            <Entry x:Name="PasswordEntry" 
-                                   Placeholder="Create a password"
-                                   PlaceholderColor="{StaticResource PlaceholderColor}"
-                                   TextColor="{StaticResource DarkTextColor}"
-                                   IsPassword="True"
-                                   ClearButtonVisibility="WhileEditing"/>
-                        </Frame>
-                    </VerticalStackLayout>
-
-                    <!-- Register Button -->
-                    <Button Text="Create Account" 
-                            Clicked="OnRegisterClicked" 
-                            BackgroundColor="{StaticResource PrimaryColor}" 
-                            TextColor="White"
-                            FontSize="16"
-                            HeightRequest="50"
-                            CornerRadius="12"
-                            Margin="0,10,0,0" />
-
-                    <!-- Message Label -->
-                    <Label x:Name="MessageLabel" 
-                           TextColor="Red" 
-                           FontSize="14"
-                           HorizontalOptions="Center"
-                           Margin="0,10,0,0" />
-                </VerticalStackLayout>
-            </Frame>
-
-            <!-- Login Prompt Section -->
-            <Frame BackgroundColor="Transparent" 
-                   HasShadow="False"
-                   Padding="20">
-                <VerticalStackLayout Spacing="15">
-                    <Label Text="Already have an account?" 
-                           FontSize="16"
-                           TextColor="{StaticResource DarkTextColor}"
+                    <Image Source="logo_icon.png"
+                           WidthRequest="190"
+                           HeightRequest="95"
+                           Aspect="Fill"
                            HorizontalOptions="Center" />
-
-                    <Button Text="Sign In"
-                            Clicked="OnLoginNavigateClicked"
-                            BackgroundColor="Transparent"
-                            TextColor="{StaticResource PrimaryColor}"
-                            FontSize="16"
-                            BorderColor="{StaticResource PrimaryColor}"
-                            BorderWidth="1"
-                            HeightRequest="50"
-                            CornerRadius="12" />
                 </VerticalStackLayout>
-            </Frame>
 
-            <!-- App Info Footer -->
-            <Label Text="Your Cycle Companion" 
-                   FontSize="12"
-                   TextColor="{StaticResource GrayTextColor}"
-                   HorizontalOptions="Center"
-                   Margin="0,30,0,20" />
-        </VerticalStackLayout>
+                <!-- Registration Form Card -->
+                <Border Grid.Row="1"
+                        StrokeShape="RoundRectangle 60,0,0,0"
+                        BackgroundColor="{StaticResource InputBackgroundColor}"
+                        Padding="30,40,30,30"
+                        VerticalOptions="Fill"
+                        HorizontalOptions="Fill"
+                        Margin="-2">
+
+                    <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
+                          RowSpacing="20"
+                          VerticalOptions="Start">
+                        <VerticalStackLayout Grid.Row="0" Spacing="8">
+
+                            <Label Text="Create Account" 
+                                   FontSize="28" 
+                                   FontAttributes="Bold"
+                                   TextColor="{StaticResource PrimaryColor}"
+                                   HorizontalOptions="Center"
+                                   Margin="0,0,0,10"/>
+
+                            <Label Text="Join your cycle journey" 
+                                   FontSize="16"
+                                   TextColor="{StaticResource PrimaryColor}"
+                                   Opacity="0.9"
+                                   HorizontalOptions="Center"
+                                   Margin="0,0,0,20"/>
+                        </VerticalStackLayout>
+
+                        <!-- Email Input -->
+                        <VerticalStackLayout Grid.Row="1" Spacing="3"
+                                             Margin="10">
+
+                            <Label Text="Email" 
+                                   FontSize="14"
+                                   TextColor="{StaticResource DarkTextColor}" 
+                                   Padding="10,0,0,0"/>
+
+                            <Border BackgroundColor="{StaticResource PrimaryLightColor}" 
+                                   StrokeShape="RoundRectangle 12">
+
+                                <Entry x:Name="EmailEntry" 
+                                       Placeholder="Enter your email"
+                                       PlaceholderColor="{StaticResource PlaceholderColor}"
+                                       TextColor="{StaticResource DarkTextColor}"
+                                       Keyboard="Email"
+                                       ClearButtonVisibility="WhileEditing" />
+                            </Border>
+                        </VerticalStackLayout>
+
+                        <!-- Password Input -->
+                        <VerticalStackLayout Grid.Row="2" Spacing="3"
+                                             Margin="10,-20,10,0">
+
+                            <Label Text="Password" 
+                                   FontSize="14"
+                                   TextColor="{StaticResource DarkTextColor}" 
+                                   Padding="10,0,0,0"/>
+
+                            <Border BackgroundColor="{StaticResource PrimaryLightColor}" 
+                                   StrokeShape="RoundRectangle 12">
+
+                                <Entry x:Name="PasswordEntry" 
+                                       Placeholder="Create a password"
+                                       PlaceholderColor="{StaticResource PlaceholderColor}"
+                                       TextColor="{StaticResource DarkTextColor}"
+                                       IsPassword="True"
+                                       ClearButtonVisibility="WhileEditing"/>
+                            </Border>
+                        </VerticalStackLayout>
+
+                        <!-- Register Button -->
+                        <Button Grid.Row="3"
+                                Text="Create Account" 
+                                Clicked="OnRegisterClicked" 
+                                BackgroundColor="{StaticResource PrimaryColor}" 
+                                TextColor="{StaticResource PrimaryLightColor}"
+                                FontSize="16"
+                                FontAttributes="Bold"
+                                HeightRequest="50"
+                                CornerRadius="12"
+                                Margin="10" />
+
+                        <!-- Message Label -->
+                        <Label Grid.Row="4" 
+                               x:Name="MessageLabel" 
+                               TextColor="{StaticResource PrimaryDarkColor}" 
+                               FontSize="14"
+                               HorizontalOptions="Center"
+                               Margin="10" />
+
+                        <Grid Grid.Row="5" 
+                              ColumnDefinitions="*,Auto,*"
+                              Padding="0,10">
+                            <BoxView Grid.Column="0"
+                                     BackgroundColor="{StaticResource GrayTextColor}"
+                                     HeightRequest="1"
+                                     VerticalOptions="Center"
+                                     Opacity="0.5"/>
+
+                            <Label Grid.Column="1"
+                                   Text="or"
+                                   TextColor="{StaticResource GrayTextColor}"
+                                   FontSize="14"
+                                   Margin="10,0"/>
+
+                            <BoxView Grid.Column="2"
+                                     BackgroundColor="{StaticResource GrayTextColor}"
+                                     HeightRequest="1"
+                                     VerticalOptions="Center"
+                                     Opacity="0.5"/>
+                        </Grid>
+
+                        <!-- Login Prompt Section -->
+                        <Label Grid.Row="6"
+                               Text="Already have an account?" 
+                               FontSize="16"
+                               TextColor="{StaticResource DarkTextColor}"
+                               HorizontalOptions="Center" />
+
+                        <Button Grid.Row="7"
+                                Text="Sign In"
+                                Clicked="OnLoginNavigateClicked"
+                                BackgroundColor="Transparent"
+                                TextColor="{StaticResource PrimaryColor}"
+                                FontSize="16"
+                                FontAttributes="Bold"
+                                BorderColor="{StaticResource PrimaryColor}"
+                                BorderWidth="2"
+                                HeightRequest="50"
+                                CornerRadius="12" />
+
+                        <!-- App Info Footer -->
+                        <Label Grid.Row="8"
+                               Text="Your Cycle Companion" 
+                               FontSize="12"
+                               TextColor="{StaticResource GrayTextColor}"
+                               HorizontalOptions="Center"
+                               Margin="0,30,0,20" />
+
+                    </Grid>
+                </Border>
+            </Grid>
+        </Grid>
     </ScrollView>
 </ContentPage>
