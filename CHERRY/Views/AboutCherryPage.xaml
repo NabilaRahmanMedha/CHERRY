@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="CHERRY.Views.AboutCherryPage"
+             Title="About Cherry"
+             BackgroundColor="#fdf6f9">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="22">
+
+            <!-- Header -->
+            <Frame CornerRadius="25" Padding="25" BackgroundColor="#ffc4de" HasShadow="True">
+                <VerticalStackLayout Spacing="10" HorizontalOptions="Center">
+                    <Label Text="🍒" FontSize="64" HorizontalOptions="Center"/>
+                    <Label Text="About Cherry"
+                           FontSize="28"
+                           FontAttributes="Bold"
+                           TextColor="#2c3e50"
+                           HorizontalOptions="Center"/>
+                    <Label Text="Your smart period tracking companion"
+                           FontSize="16"
+                           TextColor="#555"
+                           HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- What is Cherry -->
+            <Frame CornerRadius="20" Padding="20" BackgroundColor="White" HasShadow="True">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="🌸 What is Cherry?" FontSize="20" FontAttributes="Bold" TextColor="#34495e"/>
+                    <Label Text="Cherry is a modern period tracking app designed to help you stay in control of your cycle. It predicts upcoming period dates, offers personalized health tips, and keeps track of important wellness information so you never miss a beat." 
+                           FontSize="15" TextColor="#666"/>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Features -->
+            <Frame CornerRadius="20" Padding="20" BackgroundColor="White" HasShadow="True">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="✨ Key Features" FontSize="20" FontAttributes="Bold" TextColor="#34495e"/>
+                    <Label Text="📅 Smart predictions for future periods" FontSize="15" TextColor="#555"/>
+                    <Label Text="💡 Daily health tips and self-care suggestions" FontSize="15" TextColor="#555"/>
+                    <Label Text="📊 Easy-to-read reports and cycle history" FontSize="15" TextColor="#555"/>
+                    <Label Text="🤖 Built-in chatbot for instant answers" FontSize="15" TextColor="#555"/>
+                    <Label Text="🚨 Emergency information and guidance" FontSize="15" TextColor="#555"/>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Mission -->
+            <Frame CornerRadius="20" Padding="20" BackgroundColor="White" HasShadow="True">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="🎯 Our Mission" FontSize="20" FontAttributes="Bold" TextColor="#34495e"/>
+                    <Label Text="Cherry’s mission is to make period tracking simple, accurate, and empowering. We believe that every user deserves reliable predictions, timely reminders, and easy access to essential health resources." 
+                           FontSize="15" TextColor="#666"/>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Contact -->
+            <Frame CornerRadius="20" Padding="20" BackgroundColor="White" HasShadow="True">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="📞 Get in Touch" FontSize="20" FontAttributes="Bold" TextColor="#34495e"/>
+                    <Label Text="• Email: support@cherryapp.com" FontSize="15" TextColor="#555"/>
+                    <Label Text="• Website: www.cherryapp.com" FontSize="15" TextColor="#555"/>
+                    <Label Text="• Instagram: @cherry_wellness" FontSize="15" TextColor="#555"/>
+                    <Label Text="• Twitter: @CherryApp" FontSize="15" TextColor="#555"/>
+                </VerticalStackLayout>
+            </Frame>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

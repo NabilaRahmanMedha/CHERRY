@@ -46,8 +46,8 @@
                    TextColor="{StaticResource PrimaryLightColor}"/>
 
                     <Image Source="logo_icon.png"
-                   WidthRequest="190"
-                   HeightRequest="95"
+                   WidthRequest="200"
+                   HeightRequest="250"
                    Aspect="Fill"
                    HorizontalOptions="Center" />
 
