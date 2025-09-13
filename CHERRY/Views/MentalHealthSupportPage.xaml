@@ -5,100 +5,101 @@
              Title="Mental Health Support"
              BackgroundColor="#ffedf6">
 
-    <ScrollView>
-        <VerticalStackLayout Padding="20" Spacing="25">
+	<ScrollView>
+		<VerticalStackLayout Padding="20" Spacing="25">
 
-            <!-- Header with calming background -->
-            <Frame CornerRadius="20" HeightRequest="200" BackgroundColor="#ffc4de" Padding="20" HasShadow="True" Margin="0,0,0,10">
-                <VerticalStackLayout Spacing="12" HorizontalOptions="Center">
-                    <Label Text="🧘" FontSize="50" HorizontalOptions="Center"/>
-                    <Label Text="Mental Health Support"
+			<!-- Header -->
+			<Frame CornerRadius="20" HeightRequest="200" BackgroundColor="#ffc4de" Padding="20" HasShadow="True">
+				<VerticalStackLayout Spacing="12" HorizontalOptions="Center">
+					<Label Text="🧘" FontSize="50" HorizontalOptions="Center"/>
+					<Label Text="Mental Health Support"
                            FontSize="26"
                            FontAttributes="Bold"
                            TextColor="#333"
                            HorizontalOptions="Center"/>
-                    <Label Text="Guidance, calmness, and resources for your well-being."
+					<Label Text="Practical guidance and resources to care for your mind."
                            FontSize="15"
                            TextColor="#666"
-                           HorizontalTextAlignment="Center"
-                           HorizontalOptions="Center"/>
-                </VerticalStackLayout>
-            </Frame>
+                           HorizontalTextAlignment="Center"/>
+				</VerticalStackLayout>
+			</Frame>
 
-            <!-- Stress & Anxiety Management -->
-            <Frame CornerRadius="20" Padding="15" HasShadow="True" BackgroundColor="White">
-                <VerticalStackLayout Spacing="8">
-                    <Label Text="&#x1F4AC; Stress &amp; Anxiety Management" FontAttributes="Bold" FontSize="18" TextColor="#444"/>
-                    <Label Text="• Breathing exercises (4-7-8)" FontSize="14" TextColor="#666"/>
-                    <Label Text="• Journaling your thoughts" FontSize="14" TextColor="#666"/>
-                    <Label Text="• Listening to calming music" FontSize="14" TextColor="#666"/>
-                </VerticalStackLayout>
-            </Frame>
+			<!-- Stress & Anxiety Management -->
+			<Frame CornerRadius="20" Padding="15" HasShadow="True" BackgroundColor="White">
+				<VerticalStackLayout Spacing="8">
+					<Label Text="💬 Stress &amp; Anxiety Management" FontAttributes="Bold" FontSize="18" TextColor="#444"/>
+					<Label Text="• Deep breathing (4-7-8 technique)" FontSize="14" TextColor="#666"/>
+					<Label Text="• Journaling to release thoughts" FontSize="14" TextColor="#666"/>
+					<Label Text="• Relaxing music or nature sounds" FontSize="14" TextColor="#666"/>
+					<Label Text="• Short breaks during work/study" FontSize="14" TextColor="#666"/>
+				</VerticalStackLayout>
+			</Frame>
 
-            <!-- Self-Care Practices -->
-            <Frame CornerRadius="20" Padding="15" HasShadow="True" BackgroundColor="White">
-                <VerticalStackLayout Spacing="8">
-                    <Label Text="💤 Self-Care Practices" FontAttributes="Bold" FontSize="18" TextColor="#444"/>
-                    <Label Text="• Healthy sleep routine" FontSize="14" TextColor="#666"/>
-                    <Label Text="• Balanced diet &amp; hydration" FontSize="14" TextColor="#666"/>
-                    <Label Text="• Mindfulness &amp; meditation" FontSize="14" TextColor="#666"/>
-                </VerticalStackLayout>
-            </Frame>
+			<!-- Self-Care Practices -->
+			<Frame CornerRadius="20" Padding="15" HasShadow="True" BackgroundColor="White">
+				<VerticalStackLayout Spacing="8">
+					<Label Text="💤 Self-Care Practices" FontAttributes="Bold" FontSize="18" TextColor="#444"/>
+					<Label Text="• Healthy sleep routine (7–9 hrs)" FontSize="14" TextColor="#666"/>
+					<Label Text="• Balanced diet &amp; hydration" FontSize="14" TextColor="#666"/>
+					<Label Text="• Mindfulness &amp; meditation" FontSize="14" TextColor="#666"/>
+					<Label Text="• Engage in light physical activity" FontSize="14" TextColor="#666"/>
+				</VerticalStackLayout>
+			</Frame>
 
-            <!-- Professional Help -->
-            <Frame CornerRadius="20" Padding="15" HasShadow="True" BackgroundColor="White">
-                <VerticalStackLayout Spacing="8">
-                    <Label Text="💡 Professional Help" FontAttributes="Bold" FontSize="18" TextColor="#444"/>
-                    <Label Text="• Therapy &amp; counseling can guide you." FontSize="14" TextColor="#666"/>
-                    <Label Text="• Psychologists &amp; psychiatrists" FontSize="14" TextColor="#666"/>
-                    <Label Text="• Online therapy platforms" FontSize="14" TextColor="#666"/>
-                    <Button Text="Find Professionals"
+			<!-- Professional Help -->
+			<Frame CornerRadius="20" Padding="15" HasShadow="True" BackgroundColor="White">
+				<VerticalStackLayout Spacing="8">
+					<Label Text="💡 Professional Help" FontAttributes="Bold" FontSize="18" TextColor="#444"/>
+					<Label Text="• Counseling &amp; therapy for guidance" FontSize="14" TextColor="#666"/>
+					<Label Text="• Psychologists &amp; psychiatrists support" FontSize="14" TextColor="#666"/>
+					<Label Text="• Online therapy platforms available" FontSize="14" TextColor="#666"/>
+					<Button Text="Find Professionals"
                             CornerRadius="25"
                             HeightRequest="45"
                             BackgroundColor="#eb3f95"
                             TextColor="White"
                             Clicked="OnFindProfessionalsClicked"/>
-                </VerticalStackLayout>
-            </Frame>
+				</VerticalStackLayout>
+			</Frame>
 
-            <!-- Support Networks -->
-            <Frame CornerRadius="20" Padding="15" HasShadow="True" BackgroundColor="White">
-                <VerticalStackLayout Spacing="8">
-                    <Label Text="🤝 Support Networks" FontAttributes="Bold" FontSize="18" TextColor="#444"/>
-                    <Label Text="• Talk to family &amp; friends" FontSize="14" TextColor="#666"/>
-                    <Label Text="• Join community groups" FontSize="14" TextColor="#666"/>
-                    <Label Text="• Local resources available" FontSize="14" TextColor="#666"/>
-                    <Button Text="View Community Resources"
+			<!-- Support Networks -->
+			<Frame CornerRadius="20" Padding="15" HasShadow="True" BackgroundColor="White">
+				<VerticalStackLayout Spacing="8">
+					<Label Text="🤝 Support Networks" FontAttributes="Bold" FontSize="18" TextColor="#444"/>
+					<Label Text="• Talk with family &amp; friends" FontSize="14" TextColor="#666"/>
+					<Label Text="• Join local or online groups" FontSize="14" TextColor="#666"/>
+					<Label Text="• Explore community resources" FontSize="14" TextColor="#666"/>
+					<Button Text="View Community Resources"
                             CornerRadius="25"
                             HeightRequest="45"
                             BackgroundColor="#ffc4de"
                             TextColor="Black"
                             Clicked="OnSupportNetworksClicked"/>
-                </VerticalStackLayout>
-            </Frame>
+				</VerticalStackLayout>
+			</Frame>
 
-            <!-- Emergency Help -->
-            <Frame CornerRadius="20" Padding="15" HasShadow="True" BackgroundColor="White">
-                <VerticalStackLayout Spacing="12">
-                    <Label Text="📞 Emergency Help" FontAttributes="Bold" FontSize="18" TextColor="#b00020"/>
-                    <Label Text="• Immediate Medical or Mental Health Assistance" FontSize="14" TextColor="#333"/>
-                    <Button Text="Call 999"
+			<!-- Emergency Help (unchanged) -->
+			<Frame CornerRadius="20" Padding="15" HasShadow="True" BackgroundColor="White">
+				<VerticalStackLayout Spacing="12">
+					<Label Text="📞 Emergency Help" FontAttributes="Bold" FontSize="18" TextColor="#b00020"/>
+					<Label Text="• Immediate Medical or Mental Health Assistance" FontSize="14" TextColor="#333"/>
+					<Button Text="Call 999"
                             CornerRadius="25"
                             HeightRequest="45"
                             BackgroundColor="#eb3f95"
                             TextColor="White"
                             Clicked="OnEmergencyCallClicked"/>
-                    <Label Text="🧠 24/7 Mental Health Crisis Hotline" FontSize="14" TextColor="#333"/>
-                    <Button Text="Call 16263"
+					<Label Text="🧠 24/7 Mental Health Crisis Hotline" FontSize="14" TextColor="#333"/>
+					<Button Text="Call 16263"
                             CornerRadius="25"
                             HeightRequest="45"
                             BackgroundColor="White"
                             BorderColor="#eb3f95"
                             TextColor="#eb3f95"
                             Clicked="OnMentalHealthHotlineClicked"/>
-                </VerticalStackLayout>
-            </Frame>
+				</VerticalStackLayout>
+			</Frame>
 
-        </VerticalStackLayout>
-    </ScrollView>
+		</VerticalStackLayout>
+	</ScrollView>
 </ContentPage>
