@@ -346,7 +346,7 @@
                        TextColor="{StaticResource DarkTextColor}"/>
                             <Button Text="Call 999" 
                         Clicked="OnEmergencyCallClicked"
-                        BackgroundColor="{StaticResource SecondaryColor}"
+                        BackgroundColor="{StaticResource PrimaryColor}"
                         TextColor="White"
                         CornerRadius="8"
                         Margin="0,10,0,0"

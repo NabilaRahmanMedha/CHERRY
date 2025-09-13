@@ -49,7 +49,7 @@
                 <!-- Registration Form Card -->
                 <Border Grid.Row="1"
                         StrokeShape="RoundRectangle 60,0,0,0"
-                        BackgroundColor="{StaticResource InputBackgroundColor}"
+                        BackgroundColor="White"
                         Padding="30,40,30,30"
                         VerticalOptions="Fill"
                         HorizontalOptions="Fill"
