@@ -37,12 +37,12 @@
 			<Entry x:Name="CycleLengthEntry" Placeholder="e.g., 28" Keyboard="Numeric" TextColor="#333333"/>
 
 			<!-- Save Button -->
-			<Button Text="Save Changes" BackgroundColor="#6A5ACD" TextColor="White"
+            <Button Text="Save Changes" BackgroundColor="#eb3f95" TextColor="White"
                     CornerRadius="10" Padding="20,10" FontAttributes="Bold"
                     Margin="0,30,0,20" Clicked="OnSaveClicked"/>
 
 			<!-- Cancel Button -->
-			<Button Text="Cancel" BackgroundColor="Transparent" TextColor="#6A5ACD"
+            <Button Text="Cancel" BackgroundColor="White" TextColor="#eb3f95"
                     CornerRadius="10" Padding="20,10" FontAttributes="Bold"
                     Clicked="OnCancelClicked"/>
 		</StackLayout>
