@@ -1,4 +1,5 @@
 ﻿using Microsoft.Maui.Controls;
+using Microsoft.Maui.ApplicationModel.Communication; // For PhoneDialer
 
 namespace CHERRY.Views
 {
@@ -12,29 +13,53 @@ namespace CHERRY.Views
         // Navigate or API call for finding professionals
         private async void OnFindProfessionalsClicked(object sender, EventArgs e)
         {
-            // TODO: Add navigation to professional directory or API integration
             await DisplayAlert("Find Professionals", "This will show mental health professionals.", "OK");
         }
 
         // Navigate or API call for community resources
         private async void OnSupportNetworksClicked(object sender, EventArgs e)
         {
-            // TODO: Add navigation to support networks or external resources
             await DisplayAlert("Support Networks", "This will show community and peer support resources.", "OK");
         }
 
         // Emergency call handler
-        private void OnEmergencyCallClicked(object sender, EventArgs e)
+        private async void OnEmergencyCallClicked(object sender, EventArgs e)
         {
-            // TODO: Integrate with device dialer for emergency call
-            // Example: Launcher.OpenAsync("tel:999");
+            bool proceed = await DisplayAlert("Emergency Call",
+                "Are you sure you want to call emergency services (999)?", "Call", "Cancel");
+
+            if (proceed)
+            {
+                try
+                {
+                    PhoneDialer.Open("999");
+                }
+                catch (Exception ex)
+                {
+                    await DisplayAlert("Error", "Could not make the call. Please check your device.", "OK");
+                    Console.WriteLine($"Call error: {ex.Message}");
+                }
+            }
         }
 
         // Mental health hotline handler
-        private void OnMentalHealthHotlineClicked(object sender, EventArgs e)
+        private async void OnMentalHealthHotlineClicked(object sender, EventArgs e)
         {
-            // TODO: Integrate with device dialer for hotline call
-            // Example: Launcher.OpenAsync("tel:16263");
+            bool proceed = await DisplayAlert("Hotline",
+                "Do you want to call the Mental Health Hotline (16263)?", "Call", "Cancel");
+
+            if (proceed)
+            {
+                try
+                {
+                    PhoneDialer.Open("16263");
+                }
+                catch (Exception ex)
+                {
+                    await DisplayAlert("Error", "Could not make the call. Please check your device.", "OK");
+                    Console.WriteLine($"Call error: {ex.Message}");
+                }
+            }
         }
     }
 }

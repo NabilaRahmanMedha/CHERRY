@@ -24,8 +24,8 @@
             <!-- Gradient Background -->
             <Grid.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                    <GradientStop Color="#eb3f95" Offset="0.1"/>
-                    <GradientStop Color="#ea1567" Offset="0.9"/>
+                    <GradientStop Color="#eb3f95" Offset="0.3"/>
+                <GradientStop Color="#ffedf6" Offset="0.9"/>
                 </LinearGradientBrush>
             </Grid.Background>
 
@@ -64,7 +64,7 @@
 
                     <Button Text="Log in"
                     BackgroundColor="{StaticResource PrimaryLightColor}"
-                    TextColor="#ea1567"
+                    TextColor="#eb3f95"
                     FontAttributes="Bold"
                     FontSize="18"
                     CornerRadius="12"
@@ -79,9 +79,9 @@
 
                     <Button Text="Sign up"
                     BackgroundColor="Transparent"
-                    BorderColor="{StaticResource PrimaryLightColor}"
+                    BorderColor="#eb3f95"
                     BorderWidth="2"
-                    TextColor="{StaticResource PrimaryLightColor}"
+                    TextColor="#eb3f95"
                     FontAttributes="Bold"
                     FontSize="18"
                     CornerRadius="12"
