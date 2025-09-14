@@ -2,48 +2,112 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="CHERRY.Views.EditProfilePage"
-             Title="Edit Profile">
-
+             NavigationPage.HasNavigationBar="False">
+    <ContentPage.Resources>
+        <!-- Color Resources -->
+        <Color x:Key="PrimaryColor">#eb3f95</Color>
+        <Color x:Key="PrimaryLightColor">#ffedf6</Color>
+        <Color x:Key="SecondaryColor">#ea1567</Color>
+        <Color x:Key="LightBackground">#FFFFFF</Color>
+        <Color x:Key="CardBackground">#FFFFFF</Color>
+        <Color x:Key="DarkTextColor">#4E4E4E</Color>
+        <Color x:Key="MediumTextColor">#666666</Color>
+        <Color x:Key="LightTextColor">#888888</Color>
+        <Color x:Key="BorderColor">#EEEEEE</Color>
+        <Color x:Key="SuccessColor">#4CAF50</Color>
+        <Color x:Key="WarningColor">#FF9800</Color>
+    </ContentPage.Resources>
+    
 	<ScrollView>
 		<StackLayout Padding="20" Spacing="15">
 
 			<!-- Profile Image -->
-			<Frame HorizontalOptions="Center" CornerRadius="50" HeightRequest="100" WidthRequest="100"
-                   BackgroundColor="#EEEEEE" Margin="0,0,0,20">
+			<Frame HorizontalOptions="Center" 
+                   CornerRadius="50" 
+                   HeightRequest="100" 
+                   WidthRequest="100"
+                   BackgroundColor="White" 
+                   Margin="0">
 				<Grid>
-					<Image x:Name="ProfileImage" Aspect="AspectFill" HeightRequest="100" WidthRequest="100"
-                       Source="default_profile.png"/>
-					<Button Text="✏️" CornerRadius="50" WidthRequest="30" HeightRequest="30"
-                        BackgroundColor="#6A5ACD" TextColor="White" FontSize="12" Padding="0"
-                        HorizontalOptions="End" VerticalOptions="End"
-                        Clicked="OnChangePhotoClicked"/>
+					<Image x:Name="ProfileImage" 
+                           Aspect="AspectFill" 
+                           HeightRequest="100" 
+                           WidthRequest="100"
+                           Source="profile_icon.png"/>
+					<Button Text="✏️" 
+                            CornerRadius="50" WidthRequest="30" HeightRequest="30"
+                            BackgroundColor="{StaticResource PrimaryColor}" 
+                            TextColor="White" 
+                            FontSize="12" 
+                            Padding="0"
+                            HorizontalOptions="End" 
+                            VerticalOptions="End"
+                            Clicked="OnChangePhotoClicked"/>
 				</Grid>
 			</Frame>
 
 			<!-- Nickname -->
-			<Label Text="Nickname" FontSize="14" TextColor="#333333" Margin="0,10,0,5"/>
-			<Entry x:Name="NicknameEntry" Placeholder="Enter your nickname" TextColor="#333333"/>
+			<Label Text="Nickname" 
+                   FontSize="14" 
+                   TextColor="{StaticResource DarkTextColor}" 
+                   Margin="0,10,0,5"/>
+			<Entry x:Name="NicknameEntry" 
+                   Placeholder="Enter your nickname"
+                   PlaceholderColor="{StaticResource LightTextColor}"
+                   TextColor="{StaticResource DarkTextColor}"/>
 
 			<!-- Email -->
-			<Label Text="Email" FontSize="14" TextColor="#333333" Margin="0,20,0,5"/>
-			<Entry x:Name="EmailEntry" Placeholder="Enter your email" Keyboard="Email" TextColor="#333333"/>
+			<Label Text="Email" 
+                   FontSize="14" 
+                   TextColor="{StaticResource DarkTextColor}" 
+                   Margin="0,20,0,5"/>
+			<Entry x:Name="EmailEntry" 
+                   Placeholder="Enter your email"
+                   PlaceholderColor="{StaticResource LightTextColor}"
+                   Keyboard="Email" 
+                   TextColor="{StaticResource DarkTextColor}"/>
 
 			<!-- Period Length -->
-			<Label Text="Period Length (days)" FontSize="14" TextColor="#333333" Margin="0,20,0,5"/>
-			<Entry x:Name="PeriodLengthEntry" Placeholder="e.g., 5" Keyboard="Numeric" TextColor="#333333"/>
+			<Label Text="Period Length (days)" 
+                   FontSize="14" 
+                   TextColor="{StaticResource DarkTextColor}" 
+                   Margin="0,20,0,5"/>
+			<Entry x:Name="PeriodLengthEntry" 
+                   Placeholder="e.g., 5"
+                   PlaceholderColor="{StaticResource LightTextColor}"
+                   Keyboard="Numeric" 
+                   TextColor="{StaticResource DarkTextColor}"/>
 
 			<!-- Cycle Length -->
-			<Label Text="Cycle Length (days)" FontSize="14" TextColor="#333333" Margin="0,20,0,5"/>
-			<Entry x:Name="CycleLengthEntry" Placeholder="e.g., 28" Keyboard="Numeric" TextColor="#333333"/>
+			<Label Text="Cycle Length (days)" 
+                   FontSize="14" 
+                   TextColor="{StaticResource DarkTextColor}"
+                   Margin="0,20,0,5"/>
+            <Entry x:Name="CycleLengthEntry" 
+                   Placeholder="e.g., 28" 
+                   PlaceholderColor="{StaticResource LightTextColor}" 
+                   Keyboard="Numeric" 
+                   TextColor="{StaticResource DarkTextColor}"/>
 
-			<!-- Save Button -->
-            <Button Text="Save Changes" BackgroundColor="#eb3f95" TextColor="White"
-                    CornerRadius="10" Padding="20,10" FontAttributes="Bold"
-                    Margin="0,30,0,20" Clicked="OnSaveClicked"/>
+            <!-- Save Button -->
+            <Button Text="Save Changes" 
+                    BackgroundColor="#eb3f95" 
+                    TextColor="White"
+                    CornerRadius="10" 
+                    Padding="20,10" 
+                    FontAttributes="Bold"
+                    Margin="0,30,0,20" 
+                    Clicked="OnSaveClicked"/>
 
 			<!-- Cancel Button -->
-            <Button Text="Cancel" BackgroundColor="White" TextColor="#eb3f95"
-                    CornerRadius="10" Padding="20,10" FontAttributes="Bold"
+            <Button Text="Cancel" 
+                    BackgroundColor="{StaticResource PrimaryLightColor}" 
+                    TextColor="#eb3f95"
+                    CornerRadius="10" 
+                    Padding="20,10" 
+                    FontAttributes="Bold"
+                    BorderWidth="2"
+                    BorderColor="{StaticResource PrimaryColor}"
                     Clicked="OnCancelClicked"/>
 		</StackLayout>
 	</ScrollView>

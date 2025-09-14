@@ -280,9 +280,43 @@ namespace CHERRY.Views
             }
         }
 
-        private async void OnMenuClicked(object sender, EventArgs e)
+        private bool isMenuVisible = false;
+
+        private void OnMenuClicked(object sender, EventArgs e)
         {
-            await DisplayAlert("Settings", "Here you can change app settings.", "OK");
+            if (isMenuVisible)
+            {
+                HideMenu();
+            }
+            else
+            {
+                ShowMenu();
+            }
+        }
+
+        private void ShowMenu()
+        {
+            // Create menu content
+            var menuView = new MenuFlyoutView();
+
+            // Add menu to frame
+            MenuFrame.Content = menuView;
+
+            // Show overlay
+            MenuOverlay.IsVisible = true;
+            isMenuVisible = true;
+        }
+
+        private void HideMenu()
+        {
+            MenuOverlay.IsVisible = false;
+            isMenuVisible = false;
+        }
+
+        // Add this to handle tapping outside the menu to close it
+        private void OnOverlayTapped(object sender, TappedEventArgs e)
+        {
+            HideMenu();
         }
 
         private async void OnEmergencyClicked(object sender, EventArgs e)
