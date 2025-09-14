@@ -269,7 +269,15 @@ namespace CHERRY.Views
 
         private async void OnSettingsClicked(object sender, EventArgs e)
         {
-            await DisplayAlert("Settings", "Here you can change app settings.", "OK");
+            try
+            {
+                // Navigate to SettingsPage
+                await Shell.Current.GoToAsync(nameof(SettingsPage));
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Error", $"Failed to open Settings: {ex.Message}", "OK");
+            }
         }
 
         private async void OnMenuClicked(object sender, EventArgs e)
