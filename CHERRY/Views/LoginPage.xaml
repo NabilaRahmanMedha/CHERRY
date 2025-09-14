@@ -35,10 +35,10 @@
                 <!-- Header Section -->
                 <VerticalStackLayout Grid.Row="0"
                                     Spacing="10"
-                                    Padding="40">
+                                    Padding="20">
 
                     <Image Source="logo_icon.png"
-                        WidthRequest="190"
+                        WidthRequest="70"
                         HeightRequest="95"
                         Aspect="Fill"
                         HorizontalOptions="Center" />
@@ -48,7 +48,7 @@
                 <!-- Login Form Section -->
                 <Border Grid.Row="1"
                         StrokeShape="RoundRectangle 60,0,0,0"
-                        BackgroundColor="{StaticResource InputBackgroundColor}"
+                        BackgroundColor="white"
                         Padding="30,40,30,30"
                         VerticalOptions="Fill"
                         HorizontalOptions="Fill"

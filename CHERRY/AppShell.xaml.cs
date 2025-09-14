@@ -25,6 +25,8 @@ namespace CHERRY
             Routing.RegisterRoute(nameof(ReportsPage), typeof(ReportsPage));
             Routing.RegisterRoute(nameof(EmergencyPage), typeof(EmergencyPage));
             Routing.RegisterRoute(nameof(IntroPage), typeof(IntroPage));
+            Routing.RegisterRoute(nameof(AboutCherryPage), typeof(AboutCherryPage));
+            Routing.RegisterRoute(nameof(SettingsPage), typeof(SettingsPage));
         }
     }
 }

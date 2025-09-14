@@ -94,7 +94,14 @@ namespace CHERRY.Views
         // Add other missing event handlers that might be in your XAML
         private async void OnGraphReportClicked(object sender, EventArgs e)
         {
-            await DisplayAlert("My Goals", "Feature coming soon!", "OK");
+            try
+            {
+                await Shell.Current.GoToAsync($"{nameof(ReportsPage)}");
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Error", $"Failed to open Report Page: {ex.Message}", "OK");
+            }
         }
 
         private async void OnReferAFriendClicked(object sender, EventArgs e)
@@ -104,12 +111,19 @@ namespace CHERRY.Views
 
         private async void OnAboutCherryClicked(object sender, EventArgs e)
         {
-            await DisplayAlert("Health Report", "Feature coming soon!", "OK");
+            await Navigation.PushAsync(new AboutCherryPage());
         }
 
         private async void OnCycleOvulationClicked(object sender, EventArgs e)
         {
-            await DisplayAlert("Terms and Conditions", "Feature coming soon!", "OK");
+            try
+            {
+                await Shell.Current.GoToAsync($"{nameof(CyclePage)}");
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Error", $"Failed to open Cycle Page: {ex.Message}", "OK");
+            }
         }
 
         private async void OnDeleteProfileClicked(object sender, EventArgs e)

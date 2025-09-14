@@ -325,9 +325,9 @@ namespace CHERRY.Views
             await Navigation.PushAsync(new WomensHealthPage());
         }
 
-        private async void OnUrgentCareClicked(object sender, EventArgs e)
+        private async void OnMentalHealthClicked(object sender, EventArgs e)
         {
-            await Navigation.PushAsync(new UrgentCarePage());
+            await Navigation.PushAsync(new MentalHealthSupportPage());
         }
 
         private async void OnHealthInfoClicked(object sender, EventArgs e)

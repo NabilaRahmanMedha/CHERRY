@@ -213,7 +213,7 @@
                                VerticalOptions="Center"/>
                         <Label Text="Graphs and Reports" 
                                Grid.Column="1"
-                               TextColor="{StaticResource PrimaryDarkColor}"
+                               TextColor="Gray"
                                FontSize="16"
                                VerticalOptions="Center"/>
                         <Label Grid.Column="2"
@@ -241,7 +241,7 @@
                                VerticalOptions="Center"/>
                         <Label Text="Cycle and Ovulation" 
                                Grid.Column="1"
-                               TextColor="{StaticResource PrimaryDarkColor}"
+                               TextColor="Gray"
                                FontSize="16"
                                VerticalOptions="Center"/>       
                         <Label Grid.Column="2"
@@ -269,7 +269,7 @@
                                VerticalOptions="Center"/>
                         <Label Text="Refer a Friend" 
                                Grid.Column="1"
-                               TextColor="{StaticResource PrimaryDarkColor}"
+                               TextColor="Gray"
                                FontSize="16"
                                VerticalOptions="Center"/>
                         <Label Grid.Column="2"
@@ -291,13 +291,13 @@
                         StrokeThickness="1"
                         Padding="15">
                     <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
-                        <Image Source="health_icon.png"
+                        <Image Source="cherrymate.png"
                                WidthRequest="24"
                                HeightRequest="24"
                                VerticalOptions="Center"/>
                         <Label Text="About Cherry" 
                                Grid.Column="1"
-                               TextColor="{StaticResource PrimaryDarkColor}"
+                               TextColor="Gray"
                                FontSize="16"
                                VerticalOptions="Center"/>
                         <Label Grid.Column="2"
