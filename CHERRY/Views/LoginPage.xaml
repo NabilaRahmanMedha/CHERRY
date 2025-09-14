@@ -29,7 +29,7 @@
                     </LinearGradientBrush>
                 </BoxView.Background>
             </BoxView>
-
+            
             <Grid RowDefinitions="Auto,*">
 
                 <!-- Header Section -->
@@ -53,6 +53,12 @@
                         VerticalOptions="Fill"
                         HorizontalOptions="Fill"
                         Margin="-2">
+                    <Border.Shadow>
+                        <Shadow Brush="{StaticResource GrayTextColor}"
+                                Opacity="0.6"
+                                Radius="10"
+                                Offset="-5,-5" />
+                    </Border.Shadow>
 
                     <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
                         RowSpacing="20"
@@ -97,7 +103,7 @@
 
                         <!-- Password Input -->
                         <VerticalStackLayout Grid.Row="2" Spacing="3"
-                                             Margin="10,-20,10,0">
+                                             Margin="10,-10,10,0">
 
                             <Label Text="Password" 
                                    FontSize="14"
@@ -194,6 +200,7 @@
                     </Grid>
                 </Border>
             </Grid>
+            
         </Grid>
     </ScrollView>
 </ContentPage>
