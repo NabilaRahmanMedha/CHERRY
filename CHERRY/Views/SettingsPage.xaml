@@ -1,0 +1,137 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="CHERRY.Views.SettingsPage"
+             Title="Settings"
+             BackgroundColor="#fdf6f9">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="20">
+
+            <!-- Account Settings -->
+            <Frame CornerRadius="20" Padding="20" BackgroundColor="#ffffff" HasShadow="True">
+                <VerticalStackLayout Spacing="15">
+                    <Label Text="👤 Account Settings" FontSize="20" FontAttributes="Bold" TextColor="#34495e"/>
+
+                    <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
+                        <Image Source="profile_icon.png" WidthRequest="24" HeightRequest="24"/>
+                        <Label Text="Edit Profile" FontSize="16" VerticalOptions="Center"/>
+                    </HorizontalStackLayout>
+
+                    <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
+                        <Image Source="password_icon.png" WidthRequest="24" HeightRequest="24"/>
+                        <Label Text="Change Password" FontSize="16" VerticalOptions="Center"/>
+                    </HorizontalStackLayout>
+
+                    <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
+                        <Image Source="delete_icon.png" WidthRequest="24" HeightRequest="24"/>
+                        <Label Text="Delete Account" FontSize="16" TextColor="#e81f40" VerticalOptions="Center"/>
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Notifications -->
+            <Frame CornerRadius="20" Padding="20" BackgroundColor="#ffffff" HasShadow="True">
+                <VerticalStackLayout Spacing="15">
+                    <Label Text="🔔 Notifications" FontSize="20" FontAttributes="Bold" TextColor="#34495e"/>
+
+                    <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
+                        <Label Text="Period Reminders" FontSize="16" VerticalOptions="Center"/>
+                        <Switch HorizontalOptions="EndAndExpand"/>
+                    </HorizontalStackLayout>
+
+                    <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
+                        <Label Text="Ovulation Alerts" FontSize="16" VerticalOptions="Center"/>
+                        <Switch HorizontalOptions="EndAndExpand"/>
+                    </HorizontalStackLayout>
+
+                    <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
+                        <Label Text="Daily Tips" FontSize="16" VerticalOptions="Center"/>
+                        <Switch HorizontalOptions="EndAndExpand"/>
+                    </HorizontalStackLayout>
+
+                    <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
+                        <Label Text="Chatbot Notifications" FontSize="16" VerticalOptions="Center"/>
+                        <Switch HorizontalOptions="EndAndExpand"/>
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- App Preferences -->
+            <Frame CornerRadius="20" Padding="20" BackgroundColor="#ffffff" HasShadow="True">
+                <VerticalStackLayout Spacing="15">
+                    <Label Text="⚙ App Preferences" FontSize="20" FontAttributes="Bold" TextColor="#34495e"/>
+
+                    <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
+                        <Label Text="Theme" FontSize="16" VerticalOptions="Center"/>
+                        <Picker HorizontalOptions="EndAndExpand">
+                            <Picker.ItemsSource>
+                                <x:Array Type="{x:Type x:String}">
+                                    <x:String>Light</x:String>
+                                    <x:String>Dark</x:String>
+                                    <x:String>System Default</x:String>
+                                </x:Array>
+                            </Picker.ItemsSource>
+                        </Picker>
+                    </HorizontalStackLayout>
+
+                    <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
+                        <Label Text="Units" FontSize="16" VerticalOptions="Center"/>
+                        <Picker HorizontalOptions="EndAndExpand">
+                            <Picker.ItemsSource>
+                                <x:Array Type="{x:Type x:String}">
+                                    <x:String>Days</x:String>
+                                    <x:String>Weeks</x:String>
+                                </x:Array>
+                            </Picker.ItemsSource>
+                        </Picker>
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+            </Frame>
+
+            
+
+            <!-- Support -->
+            <Frame CornerRadius="20" Padding="20" BackgroundColor="#ffffff" HasShadow="True">
+                <VerticalStackLayout Spacing="15">
+                    <Label Text="💬 Support" FontSize="20" FontAttributes="Bold" TextColor="#34495e"/>
+
+                    <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
+                        <Image Source="faq_icon.png" WidthRequest="24" HeightRequest="24"/>
+                        <Label Text="FAQ / Help" FontSize="16" VerticalOptions="Center"/>
+                    </HorizontalStackLayout>
+
+                    <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
+                        <Image Source="contact_icon.png" WidthRequest="24" HeightRequest="24"/>
+                        <Label Text="Contact Support" FontSize="16" VerticalOptions="Center"/>
+                    </HorizontalStackLayout>
+
+                    <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
+                        <Image Source="terms_icon.png" WidthRequest="24" HeightRequest="24"/>
+                        <Label Text="Terms &amp; Privacy" FontSize="16" VerticalOptions="Center"/>
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- About & Logout -->
+            <Frame CornerRadius="20" Padding="20" BackgroundColor="#ffffff" HasShadow="True">
+                <VerticalStackLayout Spacing="15">
+                    <Label Text="ℹ About &amp; Logout" FontSize="20" FontAttributes="Bold" TextColor="#34495e"/>
+
+                    <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
+                        <Image Source="info_icon.png" WidthRequest="24" HeightRequest="24"/>
+                        <Label Text="About Cherry" FontSize="16" VerticalOptions="Center"/>
+                    </HorizontalStackLayout>
+
+                    <Button Text="Log Out"
+                            BackgroundColor="#eb3f40"
+                            TextColor="white"
+                            CornerRadius="25"
+                            HeightRequest="45"
+                            Clicked="OnLogoutClicked"/>
+                </VerticalStackLayout>
+            </Frame>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
