@@ -9,9 +9,15 @@
         <VerticalStackLayout Padding="20" Spacing="20">
 
             <!-- Account Settings -->
-            <Frame CornerRadius="20" Padding="20" BackgroundColor="#ffffff" HasShadow="True">
+            <Frame CornerRadius="20" 
+                   Padding="20" 
+                   BackgroundColor="#ffffff" 
+                   HasShadow="True">
                 <VerticalStackLayout Spacing="15">
-                    <Label Text="👤 Account Settings" FontSize="20" FontAttributes="Bold" TextColor="#34495e"/>
+                    <Label Text="👤 Account Settings" 
+                           FontSize="20" 
+                           FontAttributes="Bold" 
+                           TextColor="#34495e"/>
 
                     <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
                         <Image Source="profile_icon.png" WidthRequest="24" HeightRequest="24"/>

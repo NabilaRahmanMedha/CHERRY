@@ -61,6 +61,8 @@ namespace CHERRY
             builder.Services.AddTransient<ReportsPage>();
             builder.Services.AddTransient<EmergencyPage>();
             builder.Services.AddTransient<IntroPage>();
+            builder.Services.AddTransient<MenuFlyoutView>();
+            builder.Services.AddTransient<AboutCherryPage>();
 
             // Register AppShell
             builder.Services.AddSingleton<AppShell>();
