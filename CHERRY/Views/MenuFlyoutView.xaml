@@ -1,0 +1,105 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="CHERRY.Views.MenuFlyoutView"
+             x:Name="MainMenuView">
+    <ContentView.Resources>
+        <!-- Color Resources -->
+        <Color x:Key="PrimaryColor">#eb3f95</Color>
+        <Color x:Key="PrimaryLightColor">#ffedf6</Color>
+        <Color x:Key="SecondaryColor">#ea1567</Color>
+        <Color x:Key="LightBackground">#FFFFFF</Color>
+        <Color x:Key="CardBackground">#FFFFFF</Color>
+        <Color x:Key="DarkTextColor">#4E4E4E</Color>
+        <Color x:Key="MediumTextColor">#666666</Color>
+        <Color x:Key="LightTextColor">#888888</Color>
+        <Color x:Key="BorderColor">#EEEEEE</Color>
+        <Color x:Key="SuccessColor">#4CAF50</Color>
+        <Color x:Key="WarningColor">#FF9800</Color>
+    </ContentView.Resources>
+
+    <VerticalStackLayout Spacing="0" 
+                         BackgroundColor="{StaticResource PrimaryLightColor}"
+                         HeightRequest="1000"
+                         Padding="10">
+
+        <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
+            <!-- Profile Button -->
+            <Grid Grid.Row="0"
+                  />
+            <Button Grid.Row="1"
+                    Text="Profile"
+                    x:Name="ProfileButton"
+                    Clicked="OnProfileClicked"
+                    BackgroundColor="Transparent"
+                    TextColor="{StaticResource DarkTextColor}"
+                    HorizontalOptions="Fill"
+                    HeightRequest="50"
+                    CornerRadius="5"/>
+
+            <!-- Calendar Button -->
+            <Button Grid.Row="2"
+                    Text="Calendar"
+                    x:Name="CalendarButton"
+                    Clicked="OnCalendarClicked"
+                    BackgroundColor="Transparent"
+                    TextColor="{StaticResource DarkTextColor}"
+                    HorizontalOptions="Fill"
+                    HeightRequest="50"
+                    CornerRadius="5"/>
+
+            <!-- Settings Button -->
+            <Button Grid.Row="3"
+                    Text="Settings"
+                    x:Name="SettingsButton"
+                    Clicked="OnSettingsClicked"
+                    BackgroundColor="Transparent"
+                    TextColor="{StaticResource DarkTextColor}"
+                    HorizontalOptions="Fill"
+                    HeightRequest="50"
+                    CornerRadius="5"/>
+
+            <!-- Help Button -->
+            <Button Grid.Row="4"
+                    Text="Help and Support"
+                    x:Name="HelpButton"
+                    Clicked="OnHelpClicked"
+                    BackgroundColor="Transparent"
+                    TextColor="{StaticResource DarkTextColor}"
+                    HorizontalOptions="Fill"
+                    HeightRequest="50"
+                    CornerRadius="5"/>
+
+            <!-- About Button -->
+            <Button Grid.Row="5"
+                    Text="About"
+                    x:Name="AboutButton"
+                    Clicked="OnAboutClicked"
+                    BackgroundColor="Transparent"
+                    TextColor="{StaticResource DarkTextColor}"
+                    HorizontalOptions="Fill"
+                    HeightRequest="50"
+                    CornerRadius="5"/>
+
+            <!-- Separator -->
+            <BoxView Grid.Row="6"
+                     HeightRequest="1" 
+                     Color="{StaticResource LightTextColor}" 
+                     Margin="10,5"
+                     HorizontalOptions="Fill"/>
+
+            <!-- Logout Button -->
+            <Button Grid.Row="7"
+                    Text="Logout"
+                    x:Name="LogoutButton"
+                    Clicked="OnLogoutClicked"
+                    BackgroundColor="Transparent"
+                    TextColor="{StaticResource SecondaryColor}"
+                    HorizontalOptions="Fill"
+                    HeightRequest="50"
+                    CornerRadius="5"
+                    FontAttributes="Bold"/>
+        </Grid>
+        
+    </VerticalStackLayout>
+</ContentView>

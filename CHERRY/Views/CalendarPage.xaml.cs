@@ -97,7 +97,7 @@ namespace CHERRY.Views
             _ovulationDays = new List<DateTime>();
             foreach (var periodStartDate in predictedPeriodStartDates)
             {
-                DateTime ovulationStart = periodStartDate.AddDays(-17); // 5 days before ovulation + ovulation day
+                DateTime ovulationStart = periodStartDate.AddDays(-15); // 5 days before ovulation + ovulation day
                 DateTime ovulationEnd = periodStartDate.AddDays(-9);    // 4 days after ovulation
 
                 for (DateTime date = ovulationStart; date <= ovulationEnd; date = date.AddDays(1))
@@ -294,6 +294,18 @@ namespace CHERRY.Views
 
         private async void OnDayTapped(DateTime date, bool isFutureDate, bool isPredictedDay, bool isOvulationDay)
         {
+            // Block already marked days
+            var existingPeriod = _cycleService.GetCycleHistory()
+                .FirstOrDefault(c => date >= c.StartDate && date <= c.EndDate);
+
+            if (existingPeriod != null)
+            {
+                await DisplayAlert("Already Marked",
+                    $"{date:MMM d} is already part of a marked period ({existingPeriod.StartDate:MMM d} - {existingPeriod.EndDate:MMM d}).",
+                    "OK");
+                return;
+            }
+
             if (isFutureDate)
             {
                 if (isPredictedDay)
@@ -309,74 +321,63 @@ namespace CHERRY.Views
                 return;
             }
 
-            // Two-tap period marking logic
+            // ---- Two-tap logic ----
             if (_selectedStartDate == null)
             {
-                // First tap - select start date
+                // ✅ First tap (start date)
                 _selectedStartDate = date;
                 await DisplayAlert("Start Date Selected",
-                    $"Selected {date:MMM d} as period start. Tap the end date.", "OK");
+                    $"Selected {date:MMM d} as period start", "OK");
                 UpdateCalendar();
+                return;
             }
-            else
+
+            // ✅ Second tap (end date, can be in another month)
+            DateTime startDate = _selectedStartDate.Value;
+            DateTime endDate = date;
+
+            if (endDate < startDate)
             {
-                // Second tap - select end date and save period
-                DateTime startDate = _selectedStartDate.Value;
-                DateTime endDate = date;
+                await DisplayAlert("Invalid Selection",
+                    "End date cannot be before start date.", "OK");
+                _selectedStartDate = null;
+                UpdateCalendar();
+                return;
+            }
 
-                if (endDate < startDate)
+            int duration = (endDate - startDate).Days + 1;
+
+            bool confirm = await DisplayAlert("Confirm Period",
+                $"Mark period from {startDate:MMM d} to {endDate:MMM d} ({duration} days)?",
+                "Yes", "No");
+
+            if (confirm)
+            {
+                // Check overlap across full range
+                var overlap = _cycleService.GetCycleHistory()
+                    .FirstOrDefault(c => startDate <= c.EndDate && endDate >= c.StartDate);
+
+                if (overlap != null)
                 {
-                    await DisplayAlert("Invalid Selection",
-                        "End date cannot be before start date.", "OK");
-                    _selectedStartDate = null;
-                    UpdateCalendar();
-                    return;
+                    await DisplayAlert("Overlap Detected",
+                        "This period overlaps with an existing period.", "OK");
                 }
-
-                int duration = (endDate - startDate).Days + 1;
-
-                // Confirm period entry
-                bool confirm = await DisplayAlert("Confirm Period",
-                    $"Mark period from {startDate:MMM d} to {endDate:MMM d} ({duration} days)?",
-                    "Yes", "No");
-
-                if (confirm)
+                else
                 {
-                    // Check if this period overlaps with existing period
-                    var existingPeriod = _cycleService.GetCycleHistory()
-                        .FirstOrDefault(c =>
-                            (startDate >= c.StartDate && startDate <= c.EndDate) ||
-                            (endDate >= c.StartDate && endDate <= c.EndDate));
-
-                    if (existingPeriod != null)
-                    {
-                        bool overwrite = await DisplayAlert("Overlap Detected",
-                            "This period overlaps with an existing period. Overwrite?",
-                            "Yes", "No");
-
-                        if (!overwrite)
-                        {
-                            _selectedStartDate = null;
-                            UpdateCalendar();
-                            return;
-                        }
-                    }
-
-                    // Add period locally and send to backend
                     _cycleService.AddPeriodWithDates(startDate, endDate);
                     _ = SaveToServer(startDate, endDate);
 
                     await DisplayAlert("Period Added",
                         $"Period marked for {duration} days.", "OK");
 
-                    // Reload data and update UI
                     LoadCalendarData();
                     UpdateCalendar();
                     UpdateStats();
                 }
-
-                _selectedStartDate = null;
             }
+
+            // ✅ Always reset after second tap
+            _selectedStartDate = null;
         }
 
         private async Task SyncFromServer()
@@ -416,14 +417,12 @@ namespace CHERRY.Views
         private void OnPrevMonthClicked(object sender, EventArgs e)
         {
             _currentDate = _currentDate.AddMonths(-1);
-            _selectedStartDate = null; // Reset selection when changing months
             UpdateCalendar();
         }
 
         private void OnNextMonthClicked(object sender, EventArgs e)
         {
             _currentDate = _currentDate.AddMonths(1);
-            _selectedStartDate = null; // Reset selection when changing months
             UpdateCalendar();
         }
 
@@ -514,7 +513,7 @@ namespace CHERRY.Views
         {
             int currentLength = _cycleService.GetAverageCycleLength();
             string result = await DisplayPromptAsync("Set Cycle Length",
-                "Enter your average cycle length (21-35 days is typical):",
+                "Enter your average cycle length:",
                 keyboard: Keyboard.Numeric,
                 initialValue: currentLength > 0 ? currentLength.ToString() : "",
                 maxLength: 2);

@@ -62,7 +62,8 @@
                             <Border.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="OnProfileClicked" />
                             </Border.GestureRecognizers>
-                            <Image Source="profile_icon.png"
+                            <Image x:Name="HeaderProfileImage"
+                                   Source="profile_icon.png"
                                    Aspect="AspectFill"
                                    HorizontalOptions="Fill"
                                    VerticalOptions="Fill"/>
@@ -83,7 +84,8 @@
                                      HeightRequest="28"
                                      BackgroundColor="Transparent"
                                      HorizontalOptions="End"
-                                     VerticalOptions="Center"/>
+                                     VerticalOptions="Center"
+                                     Clicked="OnMenuClicked"/>
 
                         <Label  Grid.Column="1" Grid.Row="1"
                                 Text="Prediction"
@@ -447,6 +449,23 @@
                 </Frame>
             </Grid>
         </ScrollView>
+        <AbsoluteLayout x:Name="MenuOverlay" 
+                        Grid.RowSpan="6" 
+                        IsVisible="False"
+                        InputTransparent="False"
+                        BackgroundColor="#80000000" 
+                        VerticalOptions="Fill"
+                        HorizontalOptions="Fill">
+
+            <AbsoluteLayout.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OnOverlayTapped"/>
+            </AbsoluteLayout.GestureRecognizers>
+            <Border x:Name="MenuFrame"
+                   BackgroundColor="#ffedf6"
+                   AbsoluteLayout.LayoutFlags="PositionProportional"
+                   AbsoluteLayout.LayoutBounds="1,0,-1,-1">
+            </Border>
+        </AbsoluteLayout>
     </Grid>
 
 </ContentPage>

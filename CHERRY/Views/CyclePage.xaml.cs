@@ -9,6 +9,7 @@ using AndroidColor = Android.Graphics.Color;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 
 namespace CHERRY.Views
 {
@@ -20,12 +21,14 @@ namespace CHERRY.Views
         {
             InitializeComponent();
             UpdateUI();
+            _ = LoadHeaderProfileImageAsync();
         }
 
         protected override void OnAppearing()
         {
             base.OnAppearing();
             UpdateUI();
+            _ = LoadHeaderProfileImageAsync();
         }
 
         protected override void OnDisappearing()
@@ -57,6 +60,37 @@ namespace CHERRY.Views
 #endif
             }
             catch { }
+        }
+
+        private async System.Threading.Tasks.Task LoadHeaderProfileImageAsync()
+        {
+            try
+            {
+                var profileApi = ServiceHelper.GetService<ProfileApiService>();
+                var profile = await profileApi.GetProfileAsync();
+                if (profile != null && !string.IsNullOrWhiteSpace(profile.ProfileImageUrl))
+                {
+                    var httpClient = ServiceHelper.GetService<HttpClient>();
+                    if (httpClient?.BaseAddress != null)
+                    {
+                        var relative = profile.ProfileImageUrl.StartsWith("/") ? profile.ProfileImageUrl.Substring(1) : profile.ProfileImageUrl;
+                        var absolute = new Uri(httpClient.BaseAddress, relative);
+                        HeaderProfileImage.Source = ImageSource.FromUri(absolute);
+                    }
+                    else
+                    {
+                        HeaderProfileImage.Source = ImageSource.FromUri(new Uri(profile.ProfileImageUrl));
+                    }
+                }
+                else
+                {
+                    HeaderProfileImage.Source = "profile_icon.png";
+                }
+            }
+            catch
+            {
+                HeaderProfileImage.Source = "profile_icon.png";
+            }
         }
 
         private void UpdateUI()
@@ -280,9 +314,43 @@ namespace CHERRY.Views
             }
         }
 
-        private async void OnMenuClicked(object sender, EventArgs e)
+        private bool isMenuVisible = false;
+
+        private void OnMenuClicked(object sender, EventArgs e)
         {
-            await DisplayAlert("Settings", "Here you can change app settings.", "OK");
+            if (isMenuVisible)
+            {
+                HideMenu();
+            }
+            else
+            {
+                ShowMenu();
+            }
+        }
+
+        private void ShowMenu()
+        {
+            // Create menu content
+            var menuView = new MenuFlyoutView();
+
+            // Add menu to frame
+            MenuFrame.Content = menuView;
+
+            // Show overlay
+            MenuOverlay.IsVisible = true;
+            isMenuVisible = true;
+        }
+
+        private void HideMenu()
+        {
+            MenuOverlay.IsVisible = false;
+            isMenuVisible = false;
+        }
+
+        // Add this to handle tapping outside the menu to close it
+        private void OnOverlayTapped(object sender, TappedEventArgs e)
+        {
+            HideMenu();
         }
 
         private async void OnEmergencyClicked(object sender, EventArgs e)

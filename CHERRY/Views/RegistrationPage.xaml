@@ -54,6 +54,12 @@
                         VerticalOptions="Fill"
                         HorizontalOptions="Fill"
                         Margin="-2">
+                    <Border.Shadow>
+                        <Shadow Brush="{StaticResource GrayTextColor}"
+                                Opacity="0.6"
+                                Radius="10"
+                                Offset="-5,-5" />
+                    </Border.Shadow>
 
                     <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
                           RowSpacing="20"
