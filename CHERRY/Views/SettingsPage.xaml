@@ -22,16 +22,25 @@
                     <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
                         <Image Source="profile_icon.png" WidthRequest="24" HeightRequest="24"/>
                         <Label Text="Edit Profile" FontSize="16" VerticalOptions="Center"/>
+                        <HorizontalStackLayout.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnEditProfileClicked" />
+                        </HorizontalStackLayout.GestureRecognizers>
                     </HorizontalStackLayout>
 
                     <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
                         <Image Source="password_icon.png" WidthRequest="24" HeightRequest="24"/>
                         <Label Text="Change Password" FontSize="16" VerticalOptions="Center"/>
+                        <HorizontalStackLayout.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnChangePasswordClicked" />
+                        </HorizontalStackLayout.GestureRecognizers>
                     </HorizontalStackLayout>
 
                     <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
                         <Image Source="delete_icon.png" WidthRequest="24" HeightRequest="24"/>
                         <Label Text="Delete Account" FontSize="16" TextColor="#e81f40" VerticalOptions="Center"/>
+                        <HorizontalStackLayout.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnDeleteAccountClicked" />
+                        </HorizontalStackLayout.GestureRecognizers>
                     </HorizontalStackLayout>
                 </VerticalStackLayout>
             </Frame>
@@ -43,22 +52,22 @@
 
                     <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
                         <Label Text="Period Reminders" FontSize="16" VerticalOptions="Center"/>
-                        <Switch HorizontalOptions="EndAndExpand"/>
+                        <Switch x:Name="PeriodSwitch" Toggled="OnPeriodRemindersToggled" HorizontalOptions="EndAndExpand"/>
                     </HorizontalStackLayout>
 
                     <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
                         <Label Text="Ovulation Alerts" FontSize="16" VerticalOptions="Center"/>
-                        <Switch HorizontalOptions="EndAndExpand"/>
+                        <Switch x:Name="OvulationSwitch" Toggled="OnOvulationAlertsToggled" HorizontalOptions="EndAndExpand"/>
                     </HorizontalStackLayout>
 
                     <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
                         <Label Text="Daily Tips" FontSize="16" VerticalOptions="Center"/>
-                        <Switch HorizontalOptions="EndAndExpand"/>
+                        <Switch x:Name="DailyTipsSwitch" Toggled="OnDailyTipsToggled" HorizontalOptions="EndAndExpand"/>
                     </HorizontalStackLayout>
 
                     <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
                         <Label Text="Chatbot Notifications" FontSize="16" VerticalOptions="Center"/>
-                        <Switch HorizontalOptions="EndAndExpand"/>
+                        <Switch x:Name="ChatbotSwitch" Toggled="OnChatbotNotificationsToggled" HorizontalOptions="EndAndExpand"/>
                     </HorizontalStackLayout>
                 </VerticalStackLayout>
             </Frame>
@@ -70,7 +79,7 @@
 
                     <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
                         <Label Text="Theme" FontSize="16" VerticalOptions="Center"/>
-                        <Picker HorizontalOptions="EndAndExpand">
+                        <Picker x:Name="ThemePicker" SelectedIndexChanged="OnThemeChanged" HorizontalOptions="EndAndExpand">
                             <Picker.ItemsSource>
                                 <x:Array Type="{x:Type x:String}">
                                     <x:String>Light</x:String>
@@ -83,7 +92,7 @@
 
                     <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
                         <Label Text="Units" FontSize="16" VerticalOptions="Center"/>
-                        <Picker HorizontalOptions="EndAndExpand">
+                        <Picker x:Name="UnitsPicker" SelectedIndexChanged="OnUnitsChanged" HorizontalOptions="EndAndExpand">
                             <Picker.ItemsSource>
                                 <x:Array Type="{x:Type x:String}">
                                     <x:String>Days</x:String>
@@ -105,16 +114,25 @@
                     <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
                         <Image Source="faq_icon.png" WidthRequest="24" HeightRequest="24"/>
                         <Label Text="FAQ / Help" FontSize="16" VerticalOptions="Center"/>
+                        <HorizontalStackLayout.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnFaqClicked" />
+                        </HorizontalStackLayout.GestureRecognizers>
                     </HorizontalStackLayout>
 
                     <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
                         <Image Source="contact_icon.png" WidthRequest="24" HeightRequest="24"/>
                         <Label Text="Contact Support" FontSize="16" VerticalOptions="Center"/>
+                        <HorizontalStackLayout.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnContactSupportClicked" />
+                        </HorizontalStackLayout.GestureRecognizers>
                     </HorizontalStackLayout>
 
                     <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
                         <Image Source="terms_icon.png" WidthRequest="24" HeightRequest="24"/>
                         <Label Text="Terms &amp; Privacy" FontSize="16" VerticalOptions="Center"/>
+                        <HorizontalStackLayout.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnTermsPrivacyClicked" />
+                        </HorizontalStackLayout.GestureRecognizers>
                     </HorizontalStackLayout>
                 </VerticalStackLayout>
             </Frame>
@@ -127,6 +145,9 @@
                     <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
                         <Image Source="info_icon.png" WidthRequest="24" HeightRequest="24"/>
                         <Label Text="About Cherry" FontSize="16" VerticalOptions="Center"/>
+                        <HorizontalStackLayout.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnAboutCherryClicked" />
+                        </HorizontalStackLayout.GestureRecognizers>
                     </HorizontalStackLayout>
 
                     <Button Text="Log Out"
