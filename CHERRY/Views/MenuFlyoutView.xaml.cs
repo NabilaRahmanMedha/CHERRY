@@ -29,12 +29,15 @@ namespace CHERRY.Views
 
         private async void OnSettingsClicked(object sender, EventArgs e)
         {
-            await Shell.Current.GoToAsync("//SettingsPage");
+            await Shell.Current.GoToAsync(nameof(SettingsPage));
         }
 
         private async void OnHelpClicked(object sender, EventArgs e)
         {
-            await Shell.Current.GoToAsync("//help");
+            await Application.Current.MainPage.DisplayAlert(
+                "Help & Support",
+                "Help & Support is coming soon.",
+                "OK");
         }
 
         private async void OnAboutClicked(object sender, EventArgs e)
