@@ -62,7 +62,8 @@
                             <Border.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="OnProfileClicked" />
                             </Border.GestureRecognizers>
-                            <Image Source="profile_icon.png"
+                            <Image x:Name="HeaderProfileImage"
+                                   Source="profile_icon.png"
                                    Aspect="AspectFill"
                                    HorizontalOptions="Fill"
                                    VerticalOptions="Fill"/>
