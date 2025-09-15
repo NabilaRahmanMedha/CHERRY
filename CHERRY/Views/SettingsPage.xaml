@@ -137,27 +137,7 @@
                 </VerticalStackLayout>
             </Frame>
 
-            <!-- About & Logout -->
-            <Frame CornerRadius="20" Padding="20" BackgroundColor="#ffffff" HasShadow="True">
-                <VerticalStackLayout Spacing="15">
-                    <Label Text="ℹ About &amp; Logout" FontSize="20" FontAttributes="Bold" TextColor="#34495e"/>
-
-                    <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
-                        <Image Source="info_icon.png" WidthRequest="24" HeightRequest="24"/>
-                        <Label Text="About Cherry" FontSize="16" VerticalOptions="Center"/>
-                        <HorizontalStackLayout.GestureRecognizers>
-                            <TapGestureRecognizer Tapped="OnAboutCherryClicked" />
-                        </HorizontalStackLayout.GestureRecognizers>
-                    </HorizontalStackLayout>
-
-                    <Button Text="Log Out"
-                            BackgroundColor="#eb3f40"
-                            TextColor="white"
-                            CornerRadius="25"
-                            HeightRequest="45"
-                            Clicked="OnLogoutClicked"/>
-                </VerticalStackLayout>
-            </Frame>
+            
 
         </VerticalStackLayout>
     </ScrollView>
