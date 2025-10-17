@@ -17,7 +17,7 @@ namespace CHERRY.Services
 		public GeminiService(HttpClient httpClient)
 		{
 			_httpClient = httpClient;
-			_apiKey = "AIzaSyAXlrEtKZxWbr7hoCGmd-EYvoXh0D9u7vw"; // injected later via Configure
+			_apiKey = "put_your_own_api"; // injected later via Configure
 		}
 
 		public void Configure(string apiKey)
